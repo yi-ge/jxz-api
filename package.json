@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "babel-node bin/www",
-    "dev": "supervisor --exec babel-node  bin/www"
+    "dev": "supervisor -x babel-node bin/www"
   },
   "repository": {
     "type": "git",
