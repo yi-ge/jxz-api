@@ -8,7 +8,7 @@ class base {
             freezeTableName: name,
             timestamps: false
         },config || {}));
-        //this.sequlize.sync({force: false});
+        //this.sequlize.sync({force: true});
     }
 
     /**
