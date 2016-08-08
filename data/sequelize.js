@@ -3,7 +3,7 @@
  */
 import Sequelize from 'sequelize';
 import config from './database.config.json';
-const sequelize = new Sequelize('test', 'root', 'tiger', {
+const sequelize = new Sequelize(config.database, config.username, config.password, {
     host: config.host,
     port:config.port || 3306,
     dialect: 'mysql',
