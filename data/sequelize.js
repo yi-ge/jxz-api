@@ -2,9 +2,10 @@
  * Created by NX on 2016/8/4.
  */
 import Sequelize from 'sequelize';
-
+import config from './database.config.json';
 const sequelize = new Sequelize('test', 'root', 'tiger', {
-    host: 'localhost',
+    host: config.host,
+    port:config.port || 3306,
     dialect: 'mysql',
     pool: {
         max: 5,
