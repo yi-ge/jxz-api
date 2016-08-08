@@ -12,6 +12,4 @@ const User = {
     }
 };
 
-export {
-    User,
-};
+export default User;

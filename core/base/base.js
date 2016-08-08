@@ -11,7 +11,7 @@ class base {
         //this.sequlize.sync({force: true});
     }
 
-    /**
+    /**1
      * 执行原生sql
      * @param sql
      * @param option

@@ -1,7 +1,7 @@
 /**
  * Created by NX on 2016/8/8.
  */
-import {User} from './../sequelize.config.js';
+import User from './user.config';
 import base from './../base';
 
 class user extends base{
