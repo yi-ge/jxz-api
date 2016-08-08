@@ -1,5 +1,5 @@
 import Sequelize from 'sequelize';
-const User = {
+export default {
     id:{
         type: Sequelize.INTEGER,
         primaryKey:true
@@ -11,5 +11,3 @@ const User = {
         type: Sequelize.STRING
     }
 };
-
-export default User;
