@@ -2,7 +2,8 @@
  * Created by NX on 2016/8/4.
  */
 import Sequelize from 'sequelize';
-import config from './database.config.json';
+import {dev239,localhost} from './database.config.json';
+const config = localhost;
 const sequelize = new Sequelize(config.database, config.username, config.password, {
     host: config.host,
     port:config.port || 3306,

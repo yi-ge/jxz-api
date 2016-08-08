@@ -1,7 +1,16 @@
 {
-  "host": "localhost",
-  "port": "3306",
-  "database":"test",
-  "username":"root",
-  "password":"tiger"
+  "dev239": {
+    "host": "192.168.10.239",
+    "port": "3306",
+    "database": "jxz",
+    "username": "mylive",
+    "password": "devsgo"
+  },
+  "localhost": {
+    "host": "192.168.10.239",
+    "port": "3306",
+    "database": "jxz",
+    "username": "mylive",
+    "password": "devsgo"
+  }
 }
