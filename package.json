@@ -29,6 +29,7 @@
     "sequelize": "^3.23.6"
   },
   "devDependencies": {
+    "babel-plugin-transform-async-to-generator": "^6.8.0",
     "nodemon": "^1.10.0"
   }
 }

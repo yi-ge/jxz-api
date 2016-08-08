@@ -1,7 +1,7 @@
 import Sequelize from 'sequelize';
 const User = {
     id:{
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
         primaryKey:true
     },
     firstName: {

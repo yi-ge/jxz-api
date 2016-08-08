@@ -8,21 +8,26 @@ class base {
             freezeTableName: name,
             timestamps: false
         },config || {}));
+        //this.sequlize.sync({force: false});
     }
 
+    /**
+     * 执行原生sql
+     * @param sql
+     * @param option
+     * @returns {Promise}
+     */
+    static query(sql,option){
+        return sequelize.query(sql,option);
+    }
+
+    /**
+     * 查询第一个
+     * @param option
+     * @returns {*}
+     */
     findOne(option) {
         return this.sequlize.findOne(option);
-    }
-
-    findById(id) {
-        return this.sequlize.findById(id);
-    }
-
-    insert(base){
-        console.log("=============");
-        console.log(base);
-        console.log("=============");
-        return this.sequlize.create(base);
     }
 }
 export default base;
