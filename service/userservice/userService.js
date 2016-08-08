@@ -1,11 +1,11 @@
-/**
- * Created by NX on 2016/8/8.
- */
-
 import {user} from './../../core';
-
 class userService{
-    constructor(){}
+    findOne(){
+        return user.findOne();
+    }
+    insert(users){
+        return user.insert(users);
+    }
 }
 
 export default new userService();
