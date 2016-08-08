@@ -15,7 +15,7 @@ app.use(express.static(path.join(__dirname, 'public')));
  */
 import {
     test
-} from "./routes/index";
+} from "./routes";
 
 app.use('/', test);
 
