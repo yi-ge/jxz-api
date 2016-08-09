@@ -1,13 +1,13 @@
 /**
  * Created by NX on 2016/8/8.
  */
-import User from './user.config';
-import base from './../base';
+import user from './user.config';
+import Base from './../base';
 
-class user extends base{
+class User extends Base{
     constructor(){
-        super("user",User);
+        super("user",user);
     }
 }
 
-export default new user();
+export default new User();

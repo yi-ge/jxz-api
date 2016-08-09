@@ -2,7 +2,7 @@
  * Created by NX on 2016/8/8.
  */
 import sequelize from './../../data/sequelize';
-class base {
+class Base {
     constructor(name, option, config) {
         this.sequlize = sequelize.define("user", option, Object.assign({
             freezeTableName: name,
@@ -46,4 +46,4 @@ class base {
         return this.sequlize.findOne(option);
     }
 }
-export default base;
+export default Base;

@@ -1,7 +1,7 @@
 /**
  * Created by NX on 2016/8/8.
  */
-import user from './user';
+import User from './user';
 export {
-    user,
+    User,
 }

@@ -1,7 +1,7 @@
 /**
  * Created by NX on 2016/8/8.
  */
-import userService from './userservice';
+import UserService from './userservice';
 export {
-    userService,
+    UserService,
 }
