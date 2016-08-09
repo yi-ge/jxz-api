@@ -3,7 +3,7 @@
  */
 import Sequelize from 'sequelize';
 import {dev239,localhost} from './database.config.json';
-const config = dev239;
+const config = localhost;
 const sequelize = new Sequelize(config.database, config.username, config.password, {
     host: config.host,
     port:config.port || 3306,
