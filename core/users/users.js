@@ -39,7 +39,8 @@ class Users extends Base {
 
     insert(user){
         user.last_login_ip = this.ipToInt(user.last_login_ip);
-        return Users.insert(user);
+        user.id = this.generateId();
+        return this.sequlize.create(user);
     }
 
 }
