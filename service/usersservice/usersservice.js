@@ -7,8 +7,6 @@ class UsersService{
         });
     }
     insert(user){
-        user.last_login_ip = Users.ipToInt(user.last_login_ip);
-        console.log(user);
         return Users.insert(user);
     }
 }

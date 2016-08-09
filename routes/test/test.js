@@ -28,8 +28,8 @@ router.get('/', function (req, res, next) {
         integral:54321,
         is_cover:1,
     }).then((user)=>{
-        res.json(user.dataValues);
         console.log(user.dataValues);
+        res.json(user.dataValues);
     });
 });
 
