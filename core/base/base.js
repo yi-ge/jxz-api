@@ -8,11 +8,43 @@ class Base {
             freezeTableName: name,
             timestamps: false
         }, config || {}));
-        //this.sequlize.sync({force: true});
     }
 
+    /**
+     * IP转换为INTEGER
+     * @param ip
+     * @returns {number}
+     */
+    ipToInt(ip) {
+        let REG = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
+        let result = REG.exec(ip);
+        if (!result) return -1;
+        return (parseInt(result[1]) << 24
+            | parseInt(result[2]) << 16
+            | parseInt(result[3]) << 8
+            | parseInt(result[4])) >>> 0;
+    }
+
+    /**
+     * INTEGER转换为IP
+     * @param INT
+     * @returns {string}
+     */
+    intToIp(INT) {
+        if (INT < 0 || INT > 0xFFFFFFFF) {
+            throw ("The number is not normal!");
+        }
+        return (INT >>> 24) + "." + (INT >> 16 & 0xFF) + "." + (INT >> 8 & 0xFF) + "." + (INT & 0xFF);
+    }
+
+    /**
+     * 格式化时间
+     * @param date
+     * @param fmt
+     * @returns {*}
+     */
     formatDate(date, fmt) {
-        if(!(date instanceof Date)) date = new Date(date);
+        !(date instanceof Date) &&  (date = new Date(date));
         let o = {
             "M+": date.getMonth() + 1, //月份
             "d+": date.getDate(), //日

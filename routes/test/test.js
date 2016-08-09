@@ -3,11 +3,11 @@ import {UsersService} from './../../service';
 const router = express.Router();
 
 router.get('/', function (req, res, next) {
-    UsersService.findOne({
+    UsersService.insert({
         account_name:"237617561",
         phone:15928681754,
-        user_name:"倪祥",
-        nickname:"痕舞影",
+        user_name:"文浩君",
+        nickname:"大保健",
         six:1,
         email:"237617561@qq.com",
         avatar:"http:www.baidu.com",
