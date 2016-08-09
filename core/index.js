@@ -2,10 +2,12 @@
  * Created by NX on 2016/8/8.
  */
 import Users from './users';
-import activitys from './activitys';
-import activitysapply from './activitysapply';
+import Activitys from './activitys';
+import ActivitysApply from './activitysapply';
+import ActivitysLocation from './activityslocation';
 export {
     Users,
-    activitys,
-    activitysapply,
+    Activitys,
+    ActivitysApply,
+    ActivitysLocation,
 }
