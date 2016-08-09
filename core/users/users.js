@@ -29,7 +29,6 @@ class Users extends Base {
     }
 
     formatUser(user) {
-        console.log(user);
         user.last_login_ip = this.intToIp(user.last_login_ip);
         return user;
     }
