@@ -2,8 +2,9 @@ import express from "express";
 import {UsersService} from './../../service';
 const router = express.Router();
 
-router.get('/', function (req, res, next) {
-    UsersService.insert({
+router.post('/test', function (req, res, next) {
+    console.log(req.body);
+    UsersService.findOne({
         account_name:"237617561",
         phone:15928681754,
         user_name:"文浩君",
