@@ -4,7 +4,7 @@
 import sequelize from './../../data/sequelize';
 class Base {
     constructor(name, option, config) {
-        this.sequlize = sequelize.define("user", option, Object.assign({
+        this.sequlize = sequelize.define(name, option, Object.assign({
             freezeTableName: name,
             timestamps: false
         },config || {}));
@@ -14,7 +14,6 @@ class Base {
     generateId(){
         return new Date().getTime() + parseInt(Math.random() * 10000);
     }
-
 
     /**1
      * 执行原生sql
@@ -32,9 +31,7 @@ class Base {
      * @returns {Promise.<Instance>}
      */
     insert(model){
-        Object.assign({
-            id:this.generateId()
-        },model || {});
+        model = Object.assign({id:this.generateId()},model || {});
         return this.sequlize.create(model);
     }
     /**

@@ -1,6 +1,6 @@
 {
-	"name": "user",
+	"name": "users",
 	"version": "2.0.0",
 	"private": true,
-	"main": "./user.js"
+	"main": "./users.js"
 }

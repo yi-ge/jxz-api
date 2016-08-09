@@ -2,7 +2,8 @@
 SQLyog Ultimate v11.13 (64 bit)
 MySQL - 5.6.30-log : Database - jxz
 *********************************************************************
-*/
+*/
+
 
 /*!40101 SET NAMES utf8 */;
 
@@ -737,7 +738,7 @@ CREATE TABLE `users` (
   `user_name` varchar(18) COLLATE utf8_bin DEFAULT NULL COMMENT '用户名',
   `nickname` varchar(18) COLLATE utf8_bin DEFAULT NULL COMMENT '昵称',
   `six` tinyint(4) DEFAULT NULL COMMENT '性别0是女1是男9是其他',
-  `email` varchar(60) COLLATE utf8_bin DEFAULT NULL COMMENT 'mail',
+  `email` varchar(60) COLLATE utf8_bin DEFAULT NULL COMMENT 'email',
   `avatar` varchar(200) COLLATE utf8_bin DEFAULT NULL COMMENT '头像',
   `account_money` decimal(10,2) DEFAULT NULL COMMENT '账户金额',
   `lock_money` decimal(10,2) DEFAULT NULL COMMENT '锁住金额',
