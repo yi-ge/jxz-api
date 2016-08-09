@@ -28,6 +28,10 @@ class Base {
         return fmt;
     }
 
+    /**
+     * 生成Id
+     * @returns {number}
+     */
     generateId() {
         return new Date().getTime() + parseInt(Math.random() * 10000);
     }
