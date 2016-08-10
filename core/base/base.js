@@ -18,7 +18,7 @@ class Base {
     ipToInt(ip) {
         let REG = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
         let result = REG.exec(ip);
-        if (!result) return -1;
+        if (!result) return 0;
         return (parseInt(result[1]) << 24
             | parseInt(result[2]) << 16
             | parseInt(result[3]) << 8
@@ -44,7 +44,7 @@ class Base {
      * @returns {*}
      */
     formatDate(date, fmt) {
-        !(date instanceof Date) &&  (date = new Date(date));
+        !(date instanceof Date) && (date = new Date(date));
         let o = {
             "M+": date.getMonth() + 1, //月份
             "d+": date.getDate(), //日
@@ -68,7 +68,15 @@ class Base {
         return new Date().getTime() + parseInt(Math.random() * 10000);
     }
 
-    /**1
+    /**
+     * 生成添加时的模型
+     * @returns {{}}
+     */
+    createModel(){
+        return {id:this.generateId()};
+    }
+
+    /**
      * 执行原生sql
      * @param sql
      * @param option
@@ -83,18 +91,26 @@ class Base {
      * @param model
      * @returns {Promise.<Instance>}
      */
-    insert(model) {
-        model = Object.assign({id: this.generateId()}, model || {});
-        return this.sequlize.create(model);
+    insert(model, option) {
+        return this.sequlize.create(model, option);
     }
 
     /**
-     * 查询第一个
-     * @param option
+     * 查询所有
+     * @param option 查询条件
      * @returns {*}
      */
-    findOne(option) {
-        return this.sequlize.findOne(option);
+    findAll(option) {
+        return this.sequlize.findAndCountAll(option);
+    }
+
+    /**
+     * 事务管理
+     * @param fn
+     * @returns {*}
+     */
+    transaction(fn) {
+        return sequelize.transaction(fn);
     }
 }
 export default Base;

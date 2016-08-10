@@ -13,10 +13,10 @@ app.use(express.static(path.join(__dirname, 'public')));
  * 路由
  */
 import {
-    test,
+    user,
 } from "./routes";
 
-app.use('/', test);
+app.use('/user', user);
 
 // catch 404 and forward to error handler
 app.use((req, res, next)=> {
