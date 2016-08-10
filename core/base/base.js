@@ -101,9 +101,13 @@ class Base {
      * @returns {*}
      */
     findAll(option) {
-        return this.sequlize.findAndCountAll(option);
+        return this.sequlize.findAll(option);
     }
 
+
+    findById(id , options){
+        return this.sequlize.findById(id,options);
+    }
     /**
      * 事务管理
      * @param fn
