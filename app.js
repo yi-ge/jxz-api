@@ -16,7 +16,6 @@ import {
     wetchat,
     manage,
 } from "./routes";
-
 app.use('/', wetchat);
 app.use('/manage', manage);
 
