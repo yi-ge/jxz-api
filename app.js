@@ -13,10 +13,12 @@ app.use(express.static(path.join(__dirname, 'public')));
  * 路由
  */
 import {
-    user,
+    wetchat,
+    manage,
 } from "./routes";
 
-app.use('/user', user);
+app.use('/', wetchat);
+app.use('/manage', manage);
 
 // catch 404 and forward to error handler
 app.use((req, res, next)=> {

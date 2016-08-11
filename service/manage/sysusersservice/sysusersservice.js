@@ -1,4 +1,4 @@
-import {SysUsers} from './../../core';
+import {SysUsers} from './../../../core';
 class SysUserService {
 
 }

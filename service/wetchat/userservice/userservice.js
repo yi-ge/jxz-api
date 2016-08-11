@@ -1,5 +1,4 @@
-import {Users} from './../../core';
-import {UserOauthOpenid} from './../../core';
+import {Users,UserOauthOpenid} from './../../../core';
 class UserService {
     registry(openid) {
         return Users.transaction(t=> {

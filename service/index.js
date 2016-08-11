@@ -1,9 +1,9 @@
 /**
  * Created by NX on 2016/8/8.
  */
-import UserService from './userservice';
-import SysUsersService from './sysusersservice';
+import wetchat from './wetchat';
+import manage from './manage';
 export {
-    UserService,
-    SysUsersService,
+    wetchat,
+    manage,
 }

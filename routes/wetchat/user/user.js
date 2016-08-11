@@ -1,5 +1,5 @@
 import express from "express";
-import {UserService} from './../../service';
+import {UserService} from './../../../service/wetchat';
 const router = express.Router();
 
 router.get('/register',(req,res,next)=>{
