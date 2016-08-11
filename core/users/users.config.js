@@ -101,5 +101,9 @@ export default {
     is_cover: {
         type: DataTypes.INTEGER(4),
         allowNull: true
+    },
+    passwd: {
+        type: DataTypes.STRING,
+        allowNull: true
     }
 };

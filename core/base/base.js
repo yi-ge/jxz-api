@@ -1,6 +1,4 @@
-/**
- * Created by NX on 2016/8/8.
- */
+import CryptoJS from 'crypto-js';
 import sequelize from './../../data/sequelize';
 class Base {
     constructor(name, option, config) {
@@ -8,6 +6,10 @@ class Base {
             freezeTableName: name,
             timestamps: false
         }, config || {}));
+    }
+
+    encrypMD5(str){
+        return CryptoJS.SHA1(str).toString();
     }
 
     /**

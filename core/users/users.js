@@ -9,10 +9,6 @@ class Users extends Base {
     constructor() {
         super("users", users, {
             tableName: 'users'
-        },{
-            classMethods:{
-
-            }
         });
     }
 

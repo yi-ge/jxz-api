@@ -103,6 +103,10 @@ module.exports = function(sequelize, DataTypes) {
     is_cover: {
       type: DataTypes.INTEGER(4),
       allowNull: true
+    },
+    passwd: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }, {
     tableName: 'users'

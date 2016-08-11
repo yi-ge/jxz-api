@@ -82,5 +82,9 @@ export default {
         type: DataTypes.DATE,
         allowNull: false,
         defaultValue: '0000-00-00 00:00:00'
+    },
+    passwd: {
+        type: DataTypes.STRING,
+        allowNull: true
     }
 };
