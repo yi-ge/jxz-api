@@ -7,8 +7,9 @@ class UserService {
      */
     registryJXZ(openid) {
         return UsersOpenid.transaction(t=> {
-            return UsersOpenid.insert(UsersOpenid.createModel(openid), {transation: t})
+            return UsersOpenid.insert(UsersOpenid.createModel(openid), {transaction: t})
                 .then(result=> {
+                    throw new Error("openid不能为空");
                     return UsersOpenid.formatUsersOpenid(result);
                 });
         });
@@ -23,7 +24,7 @@ class UserService {
         return UsersOpenid.transaction(t=> {
             return UsersOpenid.findAll({
                 where: {openid: openid},
-                transation: t,
+                transaction: t,
                 lock: t.LOCK.UPDATE,
             }).then(result=> {
                 if (result.length == 0) return this.registryJXZ(openid);

@@ -8,21 +8,17 @@ const router = express.Router();
 router.post('/registerjxz', (req, res, next)=> {
     let openid = req.body.openid;
     console.log(req);
-    if(!!openid) {
-        UserService.registryJXZ(openid).then(result=> {
-            res.json(result);
-        }).catch(e=> {
-            res.json({code: 1, msg: '精选者注册失败'});
-        });
-    }else {
-        res.json({code:1,msg:'为获取到openid'});
-    }
+    UserService.registryJXZ(openid).then(result=> {
+        res.json(result);
+    }).catch(e=> {
+        res.json({code: 1, msg: '精选者注册失败'});
+    });
 });
 
 /**
  * 获取精选者信息
  */
-router.get('/getjxzinfo', (req, res, next)=> {
+router.post('/getjxzinfo', (req, res, next)=> {
     let openid = req.query.openid;
     UserService.findJXZToOpenid(openid).then(user=> {
         res.json(user);
