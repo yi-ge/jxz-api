@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 
-import user from './user';
+import user from './users';
 
 /**
  * 管理端 用户模块

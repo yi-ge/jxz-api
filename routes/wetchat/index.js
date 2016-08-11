@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import user from './user';
+import user from './users';
 
 /**
  * 微信端 用户模块
