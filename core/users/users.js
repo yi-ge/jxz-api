@@ -4,10 +4,15 @@
 import users from './users.config';
 import Base from './../base';
 
+import UserOauthOpenid from './../useroauthopenid';
 class Users extends Base {
     constructor() {
         super("users", users, {
             tableName: 'users'
+        },{
+            classMethods:{
+
+            }
         });
     }
 

@@ -1,7 +1,7 @@
 import {Users} from './../../core';
 import {UserOauthOpenid} from './../../core';
 class UserService {
-    async registry(openid) {
+    registry(openid) {
         return Users.transaction(t=> {
             let u;
             return Users.insert(Users.createModel(), {transaction: t})
@@ -9,23 +9,22 @@ class UserService {
                     u = user;
                     return UserOauthOpenid.insert(UserOauthOpenid.createModel(user.id, openid), {transaction: t});
                 }).then(useroauth=> {
-                    return Object.assign(useroauth.dataValues, {user: u.dataValues});
+                    return Object.assign(UserOauthOpenid.formatUsersOauthOpenid(useroauth.dataValues), {user: Users.formatUser(u.dataValues)});
                 });
         });
     }
 
     findByOpenid(openid) {
-        return Users.transaction(t=> {
-            return UserOauthOpenid.findAll({where: {openid: openid}, lock: t.LOCK.UPDATE})
+        return UserOauthOpenid.transaction(t=> {
+            return UserOauthOpenid.findAll({
+                    where: {openid: openid},
+                    include: [{model:Users.sequlize}],
+                    transation: t,
+                    lock: t.LOCK.UPDATE,
+                })
                 .then(result=> {
-                    let count = result.length;
-                    if (count == 0) return this.registry(openid);
-                    else {
-                        let useroauth = result[0];
-                        return Users.findById(useroauth.user_id,{lock: t.LOCK.UPDATE}).then(user=> {
-                            return Object.assign(useroauth.dataValues, {user: user.dataValues});
-                        });
-                    }
+                    if (result.length == 0) return this.registry(openid);
+                    return Object.assign(UserOauthOpenid.formatUsersOauthOpenid(result[0].dataValues), {user: Users.formatUser(result[0].user.dataValues)});
                 });
         });
     }
