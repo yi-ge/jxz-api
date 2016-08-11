@@ -11,7 +11,7 @@ router.post('/registerjxz', (req, res, next)=> {
     UserService.registryJXZ(openid).then(result=> {
         res.json(result);
     }).catch(e=> {
-        res.json({code: 1, msg: '精选者注册失败'});
+        res.json({code: 1, msg: 'openid不能为空'});
     });
 });
 
@@ -19,12 +19,13 @@ router.post('/registerjxz', (req, res, next)=> {
  * 获取精选者信息
  */
 router.post('/getjxzinfo', (req, res, next)=> {
-    let openid = req.query.openid;
-    UserService.findJXZToOpenid(openid).then(user=> {
-        res.json(user);
-    }).catch((e)=> {
-        console.log(e);
-        res.json({code: 1, msg: "获取竞选者信息失败"});
+    let openid = req.body.openid;
+    console.log(openid);
+    UserService.findJXZToOpenid(openid).then(result=> {
+        console.log(result);
+        res.json(result);
+    }).catch(e=> {
+        res.json({code: 1, msg: "openid不能为空"});
     });
 });
 
