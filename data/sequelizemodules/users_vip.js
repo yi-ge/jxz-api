@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('users', {
+  return sequelize.define('users_vip', {
     id: {
       type: DataTypes.BIGINT,
       allowNull: false,
@@ -11,8 +11,37 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
+    user_name: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    passwd: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
     phone: {
       type: DataTypes.BIGINT,
+      allowNull: true
+    },
+    sex: {
+      type: DataTypes.INTEGER(4),
+      allowNull: true,
+      defaultValue: '2'
+    },
+    city: {
+      type: DataTypes.BIGINT,
+      allowNull: true
+    },
+    region: {
+      type: DataTypes.BIGINT,
+      allowNull: true
+    },
+    address: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    email: {
+      type: DataTypes.STRING,
       allowNull: true
     },
     creater: {
@@ -38,10 +67,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       defaultValue: '1'
     },
-    device_id: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
     last_login_ip: {
       type: DataTypes.INTEGER(10),
       allowNull: true
@@ -50,38 +75,8 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: '0000-00-00 00:00:00'
-    },
-    is_activate: {
-      type: DataTypes.INTEGER(4),
-      allowNull: true
-    },
-    personalized: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    join_date: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: '0000-00-00 00:00:00'
-    },
-    user_vip_id: {
-      type: DataTypes.BIGINT,
-      allowNull: true
-    },
-    user_name: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    sex: {
-      type: DataTypes.INTEGER(4),
-      allowNull: true,
-      defaultValue: '2'
-    },
-    avatar: {
-      type: DataTypes.STRING,
-      allowNull: true
     }
   }, {
-    tableName: 'users'
+    tableName: 'users_vip'
   });
 };

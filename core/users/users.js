@@ -12,17 +12,30 @@ class Users extends Base {
         });
     }
 
-    createModel(lastloginip) {
+    createModel(user_name,sex,avatar,lastloginip) {
         let model = {
             id:this.generateId(),
             created_at: new Date(),
             updated_at: new Date(),
-            last_login_ip:this.ipToInt(lastloginip),
+            user_name:user_name,
+            avatar:avatar,
+            sex:this.getSexValue(sex),
+            last_login_ip:this.ipToInt(lastloginip || "0.0.0.0"),
             last_login_date:new Date(),
             join_date:new Date(),
         };
         return model;
     }
+
+    getSexValue(str){
+        let value = 2;
+        switch (str){
+            case "男" : value = 0;break;
+            case "女" :value = 1;bareak;
+        }
+        return value;
+    }
+
 
     formatUser(user) {
         user.last_login_ip = this.intToIp(user.last_login_ip);
@@ -34,7 +47,6 @@ class Users extends Base {
     }
 
     insert(user, option) {
-        user.last_login_ip = this.ipToInt(user.last_login_ip);
         return super.insert(user, option);
     }
 

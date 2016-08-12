@@ -13,34 +13,6 @@ export default {
         type: DataTypes.BIGINT,
         allowNull: true
     },
-    user_name: {
-        type: DataTypes.STRING,
-        allowNull: true
-    },
-    nickname: {
-        type: DataTypes.STRING,
-        allowNull: true
-    },
-    six: {
-        type: DataTypes.INTEGER(4),
-        allowNull: true
-    },
-    email: {
-        type: DataTypes.STRING,
-        allowNull: true
-    },
-    avatar: {
-        type: DataTypes.STRING,
-        allowNull: true
-    },
-    account_money: {
-        type: DataTypes.DECIMAL,
-        allowNull: true
-    },
-    lock_money: {
-        type: DataTypes.DECIMAL,
-        allowNull: true
-    },
     creater: {
         type: DataTypes.BIGINT,
         allowNull: true
@@ -81,10 +53,6 @@ export default {
         type: DataTypes.INTEGER(4),
         allowNull: true
     },
-    set_type: {
-        type: DataTypes.CHAR(6),
-        allowNull: true
-    },
     personalized: {
         type: DataTypes.STRING,
         allowNull: true
@@ -94,15 +62,20 @@ export default {
         allowNull: false,
         defaultValue: '0000-00-00 00:00:00'
     },
-    integral: {
-        type: DataTypes.INTEGER(11),
+    user_vip_id: {
+        type: DataTypes.BIGINT,
         allowNull: true
     },
-    is_cover: {
+    user_name: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    sex: {
         type: DataTypes.INTEGER(4),
-        allowNull: true
+        allowNull: true,
+        defaultValue: '2'
     },
-    passwd: {
+    avatar: {
         type: DataTypes.STRING,
         allowNull: true
     }

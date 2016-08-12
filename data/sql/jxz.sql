@@ -2,8 +2,7 @@
 SQLyog Ultimate v11.13 (64 bit)
 MySQL - 5.6.30-log : Database - jxz
 *********************************************************************
-*/
-
+*/
 
 /*!40101 SET NAMES utf8 */;
 
@@ -722,10 +721,28 @@ CREATE TABLE `sys_users` (
   `post_roles` bigint(20) DEFAULT NULL COMMENT '岗位角色',
   `last_login_ip` int(10) unsigned DEFAULT NULL COMMENT '最后一次登陆IP',
   `last_login_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '最后一次登陆日期',
+  `passwd` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '密码',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户';
 
 /*Data for the table `sys_users` */
+
+/*Table structure for table `user_oauth` */
+
+DROP TABLE IF EXISTS `user_oauth`;
+
+CREATE TABLE `user_oauth` (
+  `id` bigint(20) NOT NULL COMMENT '主键ID，由程序生成',
+  `user_id` bigint(20) DEFAULT NULL COMMENT '用户id',
+  `type` tinyint(4) DEFAULT NULL COMMENT '类型，1微信',
+  `openid` varchar(64) COLLATE utf8_bin DEFAULT NULL COMMENT '第三方openid',
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '修改时间',
+  `status` tinyint(4) DEFAULT '1' COMMENT '状态1正常0删除',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户第三方认证表';
+
+/*Data for the table `user_oauth` */
 
 /*Table structure for table `users` */
 
@@ -735,13 +752,6 @@ CREATE TABLE `users` (
   `id` bigint(20) NOT NULL COMMENT '主键ID，由程序生成',
   `account_name` varchar(20) COLLATE utf8_bin DEFAULT NULL COMMENT '账号,手机号',
   `phone` bigint(20) DEFAULT NULL COMMENT '手机',
-  `user_name` varchar(18) COLLATE utf8_bin DEFAULT NULL COMMENT '用户名',
-  `nickname` varchar(18) COLLATE utf8_bin DEFAULT NULL COMMENT '昵称',
-  `six` tinyint(4) DEFAULT NULL COMMENT '性别0是女1是男9是其他',
-  `email` varchar(60) COLLATE utf8_bin DEFAULT NULL COMMENT 'email',
-  `avatar` varchar(200) COLLATE utf8_bin DEFAULT NULL COMMENT '头像',
-  `account_money` decimal(10,2) DEFAULT NULL COMMENT '账户金额',
-  `lock_money` decimal(10,2) DEFAULT NULL COMMENT '锁住金额',
   `creater` bigint(20) DEFAULT NULL COMMENT '创建人',
   `modifier` bigint(20) DEFAULT NULL COMMENT '修改人',
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
@@ -751,11 +761,12 @@ CREATE TABLE `users` (
   `last_login_ip` int(10) unsigned DEFAULT NULL COMMENT '最后一次登陆IP',
   `last_login_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '最后一次登陆日期',
   `is_activate` tinyint(4) DEFAULT NULL COMMENT '是否激活0未激活1激活',
-  `set_type` char(6) COLLATE utf8_bin DEFAULT NULL COMMENT '置位类型第一位代表精选者2代表会员',
   `personalized` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '个性签名',
   `join_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '加入时间',
-  `integral` int(11) DEFAULT NULL COMMENT '积分',
-  `is_cover` tinyint(4) DEFAULT NULL COMMENT '是否封面',
+  `user_vip_id` bigint(20) DEFAULT NULL COMMENT 'vip用户id',
+  `user_name` varchar(18) COLLATE utf8_bin DEFAULT NULL COMMENT '用户名',
+  `sex` tinyint(4) DEFAULT '2' COMMENT '性别,0男，1女，2保密',
+  `avatar` varchar(200) COLLATE utf8_bin DEFAULT NULL COMMENT '头像',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户';
 
@@ -910,6 +921,33 @@ CREATE TABLE `users_pay_type` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户-支付类型';
 
 /*Data for the table `users_pay_type` */
+
+/*Table structure for table `users_vip` */
+
+DROP TABLE IF EXISTS `users_vip`;
+
+CREATE TABLE `users_vip` (
+  `id` bigint(20) NOT NULL COMMENT '主键ID，由程序生成',
+  `account_name` varchar(20) COLLATE utf8_bin DEFAULT NULL COMMENT '账号,手机号?',
+  `user_name` varchar(18) COLLATE utf8_bin DEFAULT NULL COMMENT '用户名',
+  `passwd` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '密码',
+  `phone` bigint(20) DEFAULT NULL COMMENT '手机',
+  `sex` tinyint(4) DEFAULT '2' COMMENT '性别,0男，1女，2保密',
+  `city` bigint(20) DEFAULT NULL COMMENT '城市',
+  `region` bigint(20) DEFAULT NULL COMMENT '区域,引用字典',
+  `address` varchar(64) COLLATE utf8_bin DEFAULT NULL COMMENT '家庭住址',
+  `email` varchar(60) COLLATE utf8_bin DEFAULT NULL COMMENT 'mail',
+  `creater` bigint(20) DEFAULT NULL COMMENT '创建人',
+  `modifier` bigint(20) DEFAULT NULL COMMENT '修改人',
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '修改时间',
+  `status` tinyint(4) DEFAULT '1' COMMENT '状态1正常0删除2锁住',
+  `last_login_ip` int(10) unsigned DEFAULT NULL COMMENT '最后一次登陆IP',
+  `last_login_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '最后一次登陆日期',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户-vip用户';
+
+/*Data for the table `users_vip` */
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

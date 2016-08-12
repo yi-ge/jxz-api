@@ -106,9 +106,22 @@ class Base {
         return this.sequlize.findAll(option);
     }
 
-
+    /**
+     * 通过id查询
+     * @param id
+     * @param options
+     * @returns {*}
+     */
     findById(id , options){
         return this.sequlize.findById(id,options);
+    }
+    /**
+     *
+     * @param data 修改的字段
+     * @param options 条件
+     */
+    update(data,options){
+        return this.sequlize.update(data,options);
     }
     /**
      * 事务管理

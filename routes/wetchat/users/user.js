@@ -6,12 +6,11 @@ const router = express.Router();
  * 注册成为精选者
  */
 router.post('/registerjxz', (req, res, next)=> {
-    let openid = req.body.openid;
-    console.log(req);
-    UserService.registryJXZ(openid).then(result=> {
+    let openid = req.body, sex = param.sex == 1 ? "男" : param.sex == 2 ? "女" : "其他";
+    UserService.registryJXZ(param.openid, param.nickname, sex, param.headimgurl).then(result=> {
         res.json(result);
     }).catch(e=> {
-        res.json({code: 1, msg: 'openid不能为空'});
+        res.json({code: 1, msg: e.message});
     });
 });
 
@@ -19,13 +18,11 @@ router.post('/registerjxz', (req, res, next)=> {
  * 获取精选者信息
  */
 router.post('/getjxzinfo', (req, res, next)=> {
-    let openid = req.body.openid;
-    console.log(openid);
-    UserService.findJXZToOpenid(openid).then(result=> {
-        console.log(result);
+    let param = req.body, sex = param.sex == 1 ? "男" : param.sex == 2 ? "女" : "其他";
+    UserService.findJXZToOpenid(param.openid, param.nickname, sex, param.headimgurl).then(result=> {
         res.json(result);
     }).catch(e=> {
-        res.json({code: 1, msg: "openid不能为空"});
+        res.json({code: 1, msg: e.message});
     });
 });
 

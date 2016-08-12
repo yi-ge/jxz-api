@@ -11,9 +11,10 @@ class UsersOpenid extends Base {
         });
     }
 
-    createModel(openid){
+    createModel(user_id,openid){
         let model={
             id:this.generateId(),
+            user_id:user_id,
             openid:openid,
             type:1,
             created_at: new Date(),
@@ -23,8 +24,8 @@ class UsersOpenid extends Base {
     }
 
     formatUsersOpenid(jxz){
-        jxz.created_at = this.formatDate(jxz.created_at,"yyyy-MM-hh");
-        jxz.updated_at = this.formatDate(jxz.updated_at,"yyyy-MM-hh");
+        jxz.created_at = this.formatDate(jxz.created_at,"yyyy-MM-dd hh:mm:ss");
+        jxz.updated_at = this.formatDate(jxz.updated_at,"yyyy-MM-dd hh:mm:ss");
         return jxz;
     }
 }

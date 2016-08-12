@@ -13,6 +13,7 @@ router.post('/register', (req, res, next)=> {
 });
 router.post('/login', (req, res, next)=> {
     let param = req.body;
+    console.log(param);
     SysUsersService.login(param.accountname, param.password).then(result=> {
         console.log(result);
         res.json(result);
