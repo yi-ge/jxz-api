@@ -4,6 +4,7 @@
 import Users from './users';
 import UsersVip from './UsersVip';
 import SysUsers from './sysusers';
+import SysRoles from './sysroles';
 import Activitys from './activitys';
 import ActivitysApply from './activitysapply';
 import ActivitysLocation from './activityslocation';
@@ -19,6 +20,7 @@ export {
     Users, //会员
     UsersVip, //会员
     SysUsers, //后台管理员
+    SysRoles, //权限角色
     UsersOpenid, // 微信用户 精选者
     UserOauthOpenid, // 第三方用户
     Activitys,
