@@ -2,6 +2,7 @@
  * Created by NX on 2016/8/8.
  */
 import Users from './users';
+import UsersVip from './UsersVip';
 import SysUsers from './sysusers';
 import Activitys from './activitys';
 import ActivitysApply from './activitysapply';
@@ -16,6 +17,7 @@ UsersOpenid.sequlize.belongsTo(Users.sequlize,{foreignKey:"user_id",targetKey:"i
 
 export {
     Users, //会员
+    UsersVip, //会员
     SysUsers, //后台管理员
     UsersOpenid, // 微信用户 精选者
     UserOauthOpenid, // 第三方用户
