@@ -8,8 +8,24 @@ class Base {
         }, config || {}));
     }
 
-    encrypMD5(str){
+    /**
+     * md5加密
+     * @param str
+     * @returns {*|string}
+     */
+    encrypMD5(str) {
         return CryptoJS.SHA1(str).toString();
+    }
+
+    /**
+     * 返回错误的promise
+     * @param errormsg
+     * @returns {Promise}
+     */
+    errorPromise(errormsg){
+        return new Promise((resolve,reject)=>{
+            reject(errormsg);
+        });
     }
 
     /**
@@ -74,10 +90,9 @@ class Base {
      * 生成添加时的模型
      * @returns {{}}
      */
-    createModel(){
-        return {id:this.generateId()};
+    createModel() {
+        return {id: this.generateId()};
     }
-
     /**
      * 执行原生sql
      * @param sql
@@ -103,7 +118,49 @@ class Base {
      * @returns {*}
      */
     findAll(option) {
-        return this.sequlize.findAll(option);
+        return this.sequlize.findAll(option).then(result=>{
+            return {list:result};
+        });
+    }
+
+    /**
+     * 统计条数
+     * @param option
+     * @returns {*}
+     */
+    findAndCount(option) {
+        return this.sequlize.findAndCountAll(option);
+    }
+
+    /**
+     * 分页查询
+     * @param option
+     * @param page
+     * @param count
+     * @param sortType
+     * @param pagesize
+     * @returns {*|Promise.<T>}
+     */
+    findPage(option, page, count, sortType = 1, pagesize = 20) {
+        pagesize = pagesize || 20;
+        page = page || 1;
+        let pageSum = count % pagesize == 0 ? count / pagesize : parseInt(count / pagesize) + 1,
+            data = {
+                totalPage: pageSum,
+                totalRecords: count,
+                previousPage: page - 1 > 0 ? page - 1 : 1,
+                pageSize: pagesize,
+                hasPrevious: page > 1,
+                hasNext: pageSum > page,
+                sortType: sortType
+            };
+        return this.sequlize.findAll(Object.assign({
+            limit: pagesize,
+            offset: pagesize * (page - 1),
+            order: `id ${sortType == 1 ? `ASC` : `DESC`}`
+        }, option)).then(result=>{
+            return Object.assign(data,{list:result});
+        });
     }
 
     /**
@@ -112,17 +169,19 @@ class Base {
      * @param options
      * @returns {*}
      */
-    findById(id , options){
-        return this.sequlize.findById(id,options);
+    findById(id, options) {
+        return this.sequlize.findById(id, options);
     }
+
     /**
      *
      * @param data 修改的字段
      * @param options 条件
      */
-    update(data,options){
-        return this.sequlize.update(data,options);
+    update(data, options) {
+        return this.sequlize.update(data, options);
     }
+
     /**
      * 事务管理
      * @param fn

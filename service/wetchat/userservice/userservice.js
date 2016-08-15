@@ -28,12 +28,20 @@ class UserService {
      */
     updateJXZ(user_id, username, sex, avatar) {
         return Users.transaction(t=> {
-            return Users.update(
-                {user_name: username, sex: sex, avatar: avatar, updated_at: new Date()},
-                {where: {id: user_id}, transaction: t})
-                .then(users=> {
-                    return users;
-                });
+            return Users.update({
+                    user_name: username,
+                    sex: sex,
+                    avatar: avatar,
+                    updated_at: new Date(),
+                },
+                {
+                    where: {id: user_id},
+                    transaction: t,
+                    lock: t.LOCK.UPDATE,
+                }
+            ).then(users=> {
+                return users;
+            });
         });
     }
 
@@ -43,17 +51,14 @@ class UserService {
      * @returns {*}
      */
     findJXZToOpenid(openid, username, sex, avatar) {
-        return UsersOpenid.transaction(t=> {
-            if (!openid) throw new Error("openid不能为空");
-            return UsersOpenid.findAll({
-                where: {openid: openid},
-                transaction: t,
-            }).then(result=> {
-                let user_openid = result[0];
-                if (result.length == 0) return this.registryJXZ(openid, username, sex, avatar);
-                return this.updateJXZ(user_openid.user_id, username, sex, avatar).then(()=>{
-                    return user_openid;
-                });
+        if (!openid) return UsersOpenid.errorPromise("openid不能为空");
+        return UsersOpenid.findAll({
+            where: {openid: openid},
+        }).then(result=> {
+            let user_openid = result[0];
+            if (result.length == 0) return this.registryJXZ(openid, username, sex, avatar);
+            return this.updateJXZ(user_openid.user_id, username, Users.getSexValue(sex), avatar).then(()=> {
+                return user_openid;
             });
         });
     }

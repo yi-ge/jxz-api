@@ -12,10 +12,12 @@ class SysUsers extends Base {
         });
     }
 
-    createModel(accountname,passwd){
+    createModel(accountname,passwd,username,email){
         let model = {
             id:this.generateId(),
             account_name:accountname,
+            user_name:username,
+            email:email,
             created_at:new Date(),
             updated_at:new Date(),
             last_login_date:new Date(),
@@ -31,7 +33,6 @@ class SysUsers extends Base {
         delete sysUser.passwd;
         return sysUser;
     }
-
 }
 
 export default new SysUsers();

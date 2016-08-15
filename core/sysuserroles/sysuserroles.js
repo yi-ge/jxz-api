@@ -11,9 +11,11 @@ class SysUserRoles extends Base {
         });
     }
 
-    createModel(){
+    createModel(userId,rolesId){
         let model = {
-
+            id:this.generateId(),
+            user_id:userId,
+            role_id:rolesId,
         };
         return model;
     }

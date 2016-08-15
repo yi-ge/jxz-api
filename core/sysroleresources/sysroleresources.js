@@ -10,6 +10,16 @@ class SysRoleResources extends Base {
             tableName: 'sys_role_resources'
         });
     }
+
+    createModel(rolesId,resourceId,permissions){
+        let model={
+            id:this.generateId(),
+            role_id:rolesId,
+            resource_id:resourceId,
+            permissions:permissions
+        };
+        return model;
+    }
 }
 
 export default new SysRoleResources();

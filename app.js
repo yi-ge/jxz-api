@@ -16,12 +16,27 @@ import {
     wetchat,
     manage,
 } from "./routes";
+
+app.use((req, res, next)=> {
+    next();
+});
 app.use('/', wetchat);
 app.use('/manage', manage);
 
+app.use((data, req, res, next)=> {
+    console.log(data);
+    if (typeof data == 'object')
+        res.json({
+            code: 200,
+            message: "成功",
+            data: data,
+        });
+    else next();
+});
+
 // catch 404 and forward to error handler
 app.use((req, res, next)=> {
-    var err = new Error('Not Found');
+    var err = new Error('资源没找到');
     err.status = 404;
     next(err);
 });

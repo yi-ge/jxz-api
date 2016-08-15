@@ -6,11 +6,11 @@ const router = express.Router();
  * 注册成为精选者
  */
 router.post('/registerjxz', (req, res, next)=> {
-    let openid = req.body, sex = param.sex == 1 ? "男" : param.sex == 2 ? "女" : "其他";
+    let param = req.body, sex = param.sex == 1 ? "男" : param.sex == 2 ? "女" : "其他";
     UserService.registryJXZ(param.openid, param.nickname, sex, param.headimgurl).then(result=> {
-        res.json(result);
+        next(result);
     }).catch(e=> {
-        res.json({code: 1, msg: e.message});
+        res.json({code: 1000, msg: message});
     });
 });
 
@@ -19,11 +19,13 @@ router.post('/registerjxz', (req, res, next)=> {
  */
 router.post('/getjxzinfo', (req, res, next)=> {
     let param = req.body, sex = param.sex == 1 ? "男" : param.sex == 2 ? "女" : "其他";
-    UserService.findJXZToOpenid(param.openid, param.nickname, sex, param.headimgurl).then(result=> {
-        res.json(result);
-    }).catch(e=> {
-        res.json({code: 1, msg: e.message});
-    });
+    UserService.findJXZToOpenid(param.openid, param.nickname, sex, param.headimgurl)
+        .then(result=> {
+            next(result);
+        })
+        .catch(message=> {
+            res.json({code: 1000, message: message});
+        });
 });
 
 
