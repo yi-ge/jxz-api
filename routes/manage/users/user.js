@@ -31,7 +31,15 @@ router.post('/updateuser', (req, res, next)=> {
         res.json({code: 1000, message: "状态更新失败"});
     });
 });
-
+//编辑管理员信息
+router.post('/edituser',(req,res,next)=>{
+    let id = req.body.id,user_name=req.body.user_name,email=req.body.email;
+    SysUsersService.editSysUsers(id,user_name,email).then(result=>{
+        next(result);
+    }).catch(e=>{
+        res.json({code: 1000, message: "编辑失败"});
+    });
+});
 //查询用户列表
 router.post('/finduserlist', (req, res, next)=> {
     let page = req.body.page;

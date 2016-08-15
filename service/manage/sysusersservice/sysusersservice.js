@@ -97,7 +97,24 @@ class SysUserService {
         }).catch(e=> {
             console.log(e);
             throw e;
-        })
+        });
+    }
+
+    editSysUsers(id, user_name, email) {
+        return SysUsers.transaction(t=>{
+            return SysUsers.update({user_name:user_name,email:email},{
+                where:{id:id},
+                transaction:t,
+                lock: t.LOCK.UPDATE,
+            });
+        }).then(result=> {
+            return SysUsers.findById(id);
+        }).then(result=> {
+            return SysUsers.formaySysUser(result.dataValues);
+        }).catch(e=> {
+            console.log(e);
+            throw e;
+        });
     }
 }
 export default new SysUserService();

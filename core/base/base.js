@@ -114,6 +114,15 @@ class Base {
     }
 
     /**
+     * 批量添加
+     * @param insertList
+     * @param option
+     * @returns {Promise.<Array.<Instance>>}
+     */
+    bulkCreate(insertList,option){
+        return this.sequlize.bulkCreate(insertList,option);
+    }
+    /**
      * 查询所有
      * @param option 查询条件
      * @returns {*}
