@@ -33,7 +33,7 @@ class SysUserService {
      * @returns {*|Promise.<T>}
      */
     login(accountname, password) {
-        return SysUsers.findAll(
+        return SysUsers.findList(
             {
                 where: {
                     account_name: accountname,
@@ -75,6 +75,29 @@ class SysUserService {
         }).catch(e=> {
             console.log(e);
         });
+    }
+
+    /**
+     * 修改管理员状态
+     * @param id
+     * @param status
+     * @returns {Promise.<T>}
+     */
+    updateSysUsersStatus(id, status) {
+        return SysUsers.transaction(t=> {
+            return SysUsers.update({status: status}, {
+                where: {id: id},
+                transaction: t,
+                lock: t.LOCK.UPDATE,
+            });
+        }).then(result=> {
+            return SysUsers.findById(id);
+        }).then(result=> {
+            return SysUsers.formaySysUser(result.dataValues);
+        }).catch(e=> {
+            console.log(e);
+            throw e;
+        })
     }
 }
 export default new SysUserService();

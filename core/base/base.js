@@ -22,8 +22,8 @@ class Base {
      * @param errormsg
      * @returns {Promise}
      */
-    errorPromise(errormsg){
-        return new Promise((resolve,reject)=>{
+    errorPromise(errormsg) {
+        return new Promise((resolve, reject)=> {
             reject(errormsg);
         });
     }
@@ -93,6 +93,7 @@ class Base {
     createModel() {
         return {id: this.generateId()};
     }
+
     /**
      * 执行原生sql
      * @param sql
@@ -117,12 +118,11 @@ class Base {
      * @param option 查询条件
      * @returns {*}
      */
-    findAll(option) {
-        return this.sequlize.findAll(option).then(result=>{
-            return {list:result};
+    findList(option) {
+        return this.sequlize.findAll(option).then(result=> {
+            return {list: result};
         });
     }
-
     /**
      * 统计条数
      * @param option
@@ -141,8 +141,8 @@ class Base {
      * @param pagesize
      * @returns {*|Promise.<T>}
      */
-    findPage(option, page, count, sortType = 1, pagesize = 10) {
-        pagesize = pagesize || 20;
+    findPage(option, page, count, sortType = 1, pagesize = 20) {
+        pagesize = pagesize;
         page = page || 1;
         let pageSum = count % pagesize == 0 ? count / pagesize : parseInt(count / pagesize) + 1,
             data = {
@@ -158,8 +158,8 @@ class Base {
             limit: pagesize,
             offset: pagesize * (page - 1),
             order: `id ${sortType == 1 ? `ASC` : `DESC`}`
-        }, option)).then(result=>{
-            return Object.assign(data,{list:result});
+        }, option)).then(result=> {
+            return Object.assign(data, {list: result});
         });
     }
 

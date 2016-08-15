@@ -52,7 +52,7 @@ class UserService {
      */
     findJXZToOpenid(openid, username, sex, avatar) {
         if (!openid) return UsersOpenid.errorPromise("openid不能为空");
-        return UsersOpenid.findAll({
+        return UsersOpenid.findList({
             where: {openid: openid},
         }).then(result=> {
             let user_openid = result[0];

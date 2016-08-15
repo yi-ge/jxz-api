@@ -36,16 +36,93 @@ class RolesService {
      * 修改角色状态
      * @param status
      */
-    updateRolesStatus(rolesId, status) {
+    updateRolesStatus(id, status) {
         return SysRoles.transaction(t=> {
             return SysRoles.update({status: status}, {
-                where: {id: rolesId},
+                where: {id: id},
                 transaction: t,
                 lock: t.LOCK.UPDATE
-            }).then(roles=> {
-                return roles;
+            }).catch(e=> {
+                console.log(e);
+                throw e;
             });
+        }).then(result=> {
+            return SysRoles.findById(id);
         });
+    }
+
+    /**
+     * 编辑权限
+     * @param id
+     * @param name
+     * @param role_desc
+     * @param set_type
+     * @returns {Promise.<T>}
+     */
+    editRoles(id, name, role_desc, set_type) {
+        return SysRoles.transaction(t=> {
+            return SysRoles.update({name: name, role_desc: role_desc, set_type: set_type, updated_at: new Date()}, {
+                where: {id: id},
+                transaction: t,
+                lock: t.LOCK.UPDATE,
+            });
+        }).then(()=> {
+            return SysRoles.findById(id);
+        }).then(result=> {
+            return SysRoles.formatSysRoles(result.dataValues);
+        }).catch(e=> {
+            console.log(e);
+            throw e;
+        });
+    }
+
+    /**
+     * 修改权限状态
+     * @param id
+     * @param status
+     * @returns {*}
+     */
+    updateResourceStatus(id, status) {
+        return SysResources.transaction(t=> {
+            return SysResources.update({status: status}, {
+                where: {id: id},
+                transaction: t,
+                lock: t.LOCK.UPDATE
+            }).catch(e=> {
+                console.log(e);
+                throw e;
+            });
+        }).then(result=> {
+            return SysResources.findById(id);
+        }).catch(e=> {
+            console.log(e);
+            throw e;
+        });
+    }
+
+    /**
+     * 编辑权限
+     * @param id
+     * @param name
+     * @param role_desc
+     * @param set_type
+     * @returns {Promise.<T>}
+     */
+    editResource(id, name, res_desc, url) {
+        return SysResources.transaction(t=> {
+            return SysResources.update({name: name, res_desc: res_desc, url: url, updated_at: new Date()}, {
+                where: {id: id},
+                transaction: t,
+                lock: t.LOCK.UPDATE,
+            });
+        }).then(()=> {
+            return SysResources.findById(id);
+        }).then(result=> {
+            return SysResources.formatSysResources(result.dataValues);
+        }).catch(e=> {
+            console.log(e);
+            throw e;
+        })
     }
 
     /**
@@ -86,7 +163,7 @@ class RolesService {
      * @returns {*}
      */
     findUsersRoles(userId) {
-        return SysUsers.findAll({
+        return SysUsers.findList({
             where: {id: userId},
             include: {
                 model: SysRoles.sequlize
@@ -98,7 +175,7 @@ class RolesService {
     }
 
     findUsersResource(userId) {
-        return SysUsers.findAll({
+        return SysUsers.findList({
             where: {id: userId},
             include: [{
                 model: SysRoles.sequlize,
@@ -136,7 +213,7 @@ class RolesService {
      * @returns {Promise.<T>}
      */
     findAllRoles() {
-        return SysRoles.findAll({
+        return SysRoles.findList({
             attributes: ['id', 'name']
         }).then(result=> {
             return result;
@@ -149,10 +226,12 @@ class RolesService {
      * 查询所有权限
      * @returns {Promise.<T>}
      */
-    findAllResource(){
-        return SysResources.findAll().then(result=>{
+    findAllResource() {
+        console.log("resource");
+        return SysResources.findList().then(result=> {
+            console.log(result);
             return result;
-        }).catch(e=>{
+        }).catch(e=> {
             console.log(e);
             throw e;
         });

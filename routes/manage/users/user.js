@@ -21,6 +21,17 @@ router.post('/login', (req, res, next)=> {
         res.json({code: 1000, msg: "登陆失败"});
     });
 });
+//更新管理员状态
+router.post('/updateuser', (req, res, next)=> {
+    let id = req.body.id, status = req.body.status;
+    console.log(req.body);
+    SysUsersService.updateSysUsersStatus(id, status).then(result=> {
+        next(result);
+    }).catch(e=> {
+        res.json({code: 1000, message: "状态更新失败"});
+    });
+});
+
 //查询用户列表
 router.post('/finduserlist', (req, res, next)=> {
     let page = req.body.page;
@@ -30,7 +41,6 @@ router.post('/finduserlist', (req, res, next)=> {
         res.json({code: 1000, message: "查询失败"});
     });
 });
-
 //查询用户角色
 router.post("/finduserroles", (req, res, next)=> {
     let user_id = req.body.user_id;

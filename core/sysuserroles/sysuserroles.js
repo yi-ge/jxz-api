@@ -10,7 +10,6 @@ class SysUserRoles extends Base {
             tableName: 'sys_user_roles'
         });
     }
-
     createModel(userId,rolesId){
         let model = {
             id:this.generateId(),
