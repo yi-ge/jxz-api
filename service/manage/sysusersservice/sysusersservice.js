@@ -11,11 +11,7 @@ class SysUserService {
             return SysUsers.insert(SysUsers.createModel(accountname, password, username, email), {
                 transaction: t
             }).then(sysUser=> {
-                if(!rolesId) return SysUserRoles.insert(SysUserRoles.createModel(sysUser.id, rolesId), {transaction: t}).then(sysuserRoles=> {
-                    return sysUser;
-                }).catch(e=> {
-                    throw e;
-                });
+                if (!rolesId)  SysUserRoles.insert(SysUserRoles.createModel(sysUser.id, rolesId), {transaction: t});
                 return sysUser;
             }).then(sysUser=> {
                 return SysUsers.formaySysUser(sysUser.dataValues);
@@ -63,7 +59,7 @@ class SysUserService {
                 include: [{
                     model: SysRoles.sequlize,
                     attributes: ['id', 'name'],
-                    through:{attributes:[]}
+                    through: {attributes: []}
                 }],
             }, page, count, 1, pagesize);
         }).then(result=> {

@@ -74,14 +74,5 @@ router.post('/findallroles',(req,res,next)=>{
        res.json({code:1000,message:"查询失败"});
    })
 });
-//查询用户角色
-router.post("/finduserroles", (req, res, next)=> {
-    let userId = req.body.userId;
-    RolesService.findUsersRoles(userId).then(result=> {
-        next(result);
-    }).catch(e=> {
-        res.json({code: 1000, msg: "查询失败"});
-    });
-});
 
 export default router;

@@ -88,7 +88,27 @@ class RolesService {
     findUsersRoles(userId) {
         return SysUsers.findAll({
             where: {id: userId},
-            include: [SysRoles.sequlize]
+            include: {
+                model: SysRoles.sequlize
+            }
+        }).then(result=> {
+            console.log(result);
+            return result;
+        });
+    }
+
+    findUsersResource(userId) {
+        return SysUsers.findAll({
+            where: {id: userId},
+            include: [{
+                model: SysRoles.sequlize,
+                attributes: ['id', 'name'],
+                through: {attributes: []},
+                include: [{
+                    model: SysRoleResources.sequlize,
+                    through: {attributes: []},
+                }]
+            }]
         }).then(result=> {
             console.log(result);
             return result;
@@ -106,17 +126,17 @@ class RolesService {
             return count.count;
         }).then(count=> {
             return SysRoles.findPage({}, page, count, 1, pagesize);
-        }).then(result=>{
+        }).then(result=> {
             return result;
         });
     }
 
-    findAllRoles(){
+    findAllRoles() {
         return SysRoles.findAll({
-            attributes:['id','name']
-        }).then(result=>{
+            attributes: ['id', 'name']
+        }).then(result=> {
             return result;
-        }).catch(e=>{
+        }).catch(e=> {
             console.log(e);
         });
     }

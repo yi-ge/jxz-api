@@ -1,5 +1,5 @@
 import express from "express";
-import {SysUsersService} from './../../../service/manage';
+import {SysUsersService,RolesService} from './../../../service/manage';
 const router = express.Router();
 //注册
 router.post('/register', (req, res, next)=> {
@@ -28,6 +28,24 @@ router.post('/finduserlist',(req,res,next)=>{
         next(result);
     }).catch(e=>{
         res.json({code:1000,message:"查询失败"});
+    });
+});
+//查询用户角色
+router.post("/finduserroles", (req, res, next)=> {
+    let userId = req.body.userId;
+    RolesService.findUsersRoles(userId).then(result=> {
+        next(result);
+    }).catch(e=> {
+        res.json({code: 1000, msg: "查询失败"});
+    });
+});
+//查询用户权限
+router.post("/finduserresource", (req, res, next)=> {
+    let userId = req.body.userId;
+    RolesService.findUsersResource(userId).then(result=> {
+        next(result);
+    }).catch(e=> {
+        res.json({code: 1000, msg: "查询失败"});
     });
 });
 export default router;
