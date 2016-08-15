@@ -74,5 +74,12 @@ router.post('/findallroles',(req,res,next)=>{
        res.json({code:1000,message:"查询失败"});
    })
 });
-
+//查询权限列表（所有）
+router.post('/findallresource',(req,res,next)=>{
+    RolesService.findAllResource().then(result=>{
+        next(result);
+    }).catch(e=>{
+        res.json({code:1000,message:"查询失败"});
+    })
+});
 export default router;

@@ -30,6 +30,7 @@ router.post('/finduserlist', (req, res, next)=> {
         res.json({code: 1000, message: "查询失败"});
     });
 });
+
 //查询用户角色
 router.post("/finduserroles", (req, res, next)=> {
     let user_id = req.body.user_id;

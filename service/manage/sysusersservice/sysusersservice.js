@@ -8,10 +8,15 @@ class SysUserService {
      */
     retister(accountname, password, username, email, rolesId) {
         return SysUsers.transaction((t)=> {
+            console.log(accountname);
             return SysUsers.insert(SysUsers.createModel(accountname, password, username, email), {
                 transaction: t
             }).then(sysUser=> {
-                if (!rolesId)  SysUserRoles.insert(SysUserRoles.createModel(sysUser.id, rolesId), {transaction: t});
+                if (rolesId && rolesId != 0) return SysUserRoles.insert(SysUserRoles.createModel(sysUser.id, rolesId), {
+                    transaction: t
+                }).then(()=> {
+                    return sysUser;
+                });
                 return sysUser;
             }).then(sysUser=> {
                 return SysUsers.formaySysUser(sysUser.dataValues);

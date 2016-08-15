@@ -141,7 +141,7 @@ class Base {
      * @param pagesize
      * @returns {*|Promise.<T>}
      */
-    findPage(option, page, count, sortType = 1, pagesize = 20) {
+    findPage(option, page, count, sortType = 1, pagesize = 10) {
         pagesize = pagesize || 20;
         page = page || 1;
         let pageSum = count % pagesize == 0 ? count / pagesize : parseInt(count / pagesize) + 1,

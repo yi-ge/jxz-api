@@ -121,7 +121,7 @@ class RolesService {
      * @param pagesize
      * @returns {*}
      */
-    findRoles(page, pagesize = 20) {
+    findRoles(page, pagesize) {
         return SysRoles.findAndCount().then(count=> {
             return count.count;
         }).then(count=> {
@@ -131,6 +131,10 @@ class RolesService {
         });
     }
 
+    /**
+     * 查询所有角色
+     * @returns {Promise.<T>}
+     */
     findAllRoles() {
         return SysRoles.findAll({
             attributes: ['id', 'name']
@@ -138,6 +142,19 @@ class RolesService {
             return result;
         }).catch(e=> {
             console.log(e);
+        });
+    }
+
+    /**
+     * 查询所有权限
+     * @returns {Promise.<T>}
+     */
+    findAllResource(){
+        return SysResources.findAll().then(result=>{
+            return result;
+        }).catch(e=>{
+            console.log(e);
+            throw e;
         });
     }
 
