@@ -5,7 +5,7 @@ const router = express.Router();
 router.post('/register', (req, res, next)=> {
     let param = req.body;
     console.log(param);
-    SysUsersService.retister(param.accountname, param.password ,param.username,param.email,param.rolesId).then(result=> {
+    SysUsersService.retister(param.account_name, param.password, param.user_name, param.email, param.roles_id).then(result=> {
         next(result);
     }).catch(e=> {
         res.json({code: 1000, msg: "注册失败"});
@@ -14,7 +14,7 @@ router.post('/register', (req, res, next)=> {
 //登陆
 router.post('/login', (req, res, next)=> {
     let param = req.body;
-    SysUsersService.login(param.accountname, param.password).then(result=> {
+    SysUsersService.login(param.account_name, param.password).then(result=> {
         if (result.code == 1000) res.json(result);
         else next(result);
     }).catch(e=> {
@@ -22,18 +22,18 @@ router.post('/login', (req, res, next)=> {
     });
 });
 //查询用户列表
-router.post('/finduserlist',(req,res,next)=>{
+router.post('/finduserlist', (req, res, next)=> {
     let page = req.body.page;
-    SysUsersService.findSysUsers(page).then(result=>{
+    SysUsersService.findSysUsers(page).then(result=> {
         next(result);
-    }).catch(e=>{
-        res.json({code:1000,message:"查询失败"});
+    }).catch(e=> {
+        res.json({code: 1000, message: "查询失败"});
     });
 });
 //查询用户角色
 router.post("/finduserroles", (req, res, next)=> {
-    let userId = req.body.userId;
-    RolesService.findUsersRoles(userId).then(result=> {
+    let user_id = req.body.user_id;
+    RolesService.findUsersRoles(user_id).then(result=> {
         next(result);
     }).catch(e=> {
         res.json({code: 1000, msg: "查询失败"});
@@ -41,8 +41,8 @@ router.post("/finduserroles", (req, res, next)=> {
 });
 //查询用户权限
 router.post("/finduserresource", (req, res, next)=> {
-    let userId = req.body.userId;
-    RolesService.findUsersResource(userId).then(result=> {
+    let user_id = req.body.user_id;
+    RolesService.findUsersResource(user_id).then(result=> {
         next(result);
     }).catch(e=> {
         res.json({code: 1000, msg: "查询失败"});

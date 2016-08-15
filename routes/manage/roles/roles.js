@@ -26,8 +26,8 @@ router.post('/addresources', (req, res, next)=> {
 });
 //角色权限配置
 router.post("/configrolestoresources", (req, res, next)=> {
-    let rolesId = req.body.rolesId, resourceId = req.body.resourceId;
-    RolesService.configRolesToResource(rolesId, resourceId).then(result=> {
+    let roles_id = req.body.roles_id, resource_id = req.body.resource_id;
+    RolesService.configRolesToResource(roles_id, resource_id).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);
@@ -37,8 +37,8 @@ router.post("/configrolestoresources", (req, res, next)=> {
 
 //用户角色配置
 router.post("/configuserstoroles", (req, res, next)=> {
-    let userId = req.body.userId, rolesId = req.body.rolesId;
-    RolesService.configUserRoles(userId, rolesId).then(result=> {
+    let user_id = req.body.user_id, roles_id = req.body.roles_id;
+    RolesService.configUserRoles(user_id, roles_id).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);
@@ -48,8 +48,8 @@ router.post("/configuserstoroles", (req, res, next)=> {
 
 //角色状态修改
 router.post("/updateroles", (req, res, next)=> {
-    let rolesId = req.body.rolesId, status = req.body.status;
-    RolesService.updateRolesStatus(rolesId,status).then(result=> {
+    let roles_id = req.body.roles_id, status = req.body.status;
+    RolesService.updateRolesStatus(roles_id,status).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);
