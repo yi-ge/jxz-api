@@ -53,7 +53,7 @@ class UserService {
         return UsersOpenid.findOnlyOne({
             where: {openid: openid},
         }).then(result=> {
-            if (result) return this.registryJXZ(openid, username, sex, avatar);
+            if (!result) return this.registryJXZ(openid, username, sex, avatar);
             return this.updateJXZ(result.user_id, username, Users.getSexValue(sex), avatar).then(()=> {
                 return result;
             });

@@ -1,4 +1,5 @@
 import CryptoJS from 'crypto-js';
+import Sequelize from 'sequelize';
 import sequelize from './../../data/sequelize';
 class Base {
     constructor(name, option, config) {
@@ -104,6 +105,34 @@ class Base {
         return sequelize.query(sql, option);
     }
 
+
+    /**
+     * 调用mysql函数
+     * @param fnname
+     * @param param
+     */
+    mysqlFn(fnname, param) {
+        return Sequelize.fn(fnname, param);
+    }
+
+    /**
+     * 拼接where逻辑
+     * @param name
+     * @param logic
+     * @param value
+     */
+    where(name, logic, value) {
+        return Sequelize.where(name, logic, value);
+    }
+
+    /**
+     * 字符串转换为列表字段
+     * @param str
+     */
+    col(str) {
+        return Sequelize.col(str);
+    }
+
     /**
      * 插入一条数据
      * @param model
@@ -127,7 +156,6 @@ class Base {
         });
     }
 
-
     /**
      * 查询所有
      * @param option 查询条件
@@ -146,9 +174,9 @@ class Base {
      * @param option
      * @returns {*|Promise.<T>}
      */
-    findOnlyOne(option){
-        return this.sequlize.findAll(option).then(result=>{
-           return result[0];
+    findOnlyOne(option) {
+        return this.sequlize.findAll(option).then(result=> {
+            return result[0];
         });
     }
 

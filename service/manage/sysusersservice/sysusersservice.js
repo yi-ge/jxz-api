@@ -49,9 +49,7 @@ class SysUserService {
      * @param pagesize
      */
     findSysUsers(page, pagesize) {
-        return SysUsers.findAndCount().then(count=> {
-            return count.count;
-        }).then(count=> {
+        return SysUsers.count().then(count=> {
             return SysUsers.findPage({
                 include: [{
                     model: SysRoles.sequlize,
@@ -88,10 +86,10 @@ class SysUserService {
     }
 
     editSysUsers(id, user_name, email) {
-        return SysUsers.transaction(t=>{
-            return SysUsers.update({user_name:user_name,email:email},{
-                where:{id:id},
-                transaction:t,
+        return SysUsers.transaction(t=> {
+            return SysUsers.update({user_name: user_name, email: email}, {
+                where: {id: id},
+                transaction: t,
                 lock: t.LOCK.UPDATE,
             });
         }).then(()=> {

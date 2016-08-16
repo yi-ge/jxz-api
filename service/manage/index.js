@@ -3,7 +3,9 @@
  */
 import SysUsersService from './sysusersservice';
 import RolesService from './rolesservice';
+import UsersService from './usersservice';
 export {
     SysUsersService,
     RolesService,
+    UsersService,
 }
