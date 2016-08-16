@@ -12,7 +12,8 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
         max: 5,
         min: 0,
         idle: 10000
-    }
+    },
+    //logging:false,
 });
 
 sequelize.authenticate().then((err)=> {
