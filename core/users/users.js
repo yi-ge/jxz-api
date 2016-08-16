@@ -19,6 +19,8 @@ class Users extends Base {
             updated_at: new Date(),
             user_name:user_name,
             avatar:avatar,
+            article_num:0,
+            is_cover:0,
             sex:this.getSexValue(sex),
             last_login_ip:this.ipToInt(lastloginip || "0.0.0.0"),
             last_login_date:new Date(),
@@ -31,11 +33,19 @@ class Users extends Base {
         let value = 2;
         switch (str){
             case "男" : value = 0;break;
-            case "女" :value = 1;bareak;
+            case "女" :value = 1;break;
         }
         return value;
     }
 
+    getStrSex(num){
+        let value = "保密";
+        switch (num){
+            case 0 : value = "男";break;
+            case 1 :value = "女";break;
+        }
+        return value;
+    }
 
     formatUser(user) {
         user.last_login_ip = this.intToIp(user.last_login_ip);
@@ -43,6 +53,7 @@ class Users extends Base {
         user.updated_at = this.formatDate(user.updated_at, "yyyy-MM-dd hh:mm:ss");
         user.last_login_date = this.formatDate(user.last_login_date, "yyyy-MM-dd hh:mm:ss");
         user.join_date = this.formatDate(user.join_date, "yyyy-MM-dd hh:mm:ss");
+        user.sex = this.getStrSex(user.sex);
         return user;
     }
 

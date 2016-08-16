@@ -3,9 +3,11 @@
  */
 import SysUsersService from './sysusersservice';
 import RolesService from './rolesservice';
-import UsersService from './usersservice';
+import UsersService from './../public/usersservice';
+import VipService from './../public/vipservice';
 export {
     SysUsersService,
     RolesService,
     UsersService,
+    VipService,
 }

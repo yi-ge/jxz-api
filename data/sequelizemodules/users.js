@@ -80,6 +80,14 @@ module.exports = function(sequelize, DataTypes) {
     avatar: {
       type: DataTypes.STRING,
       allowNull: true
+    },
+    is_cover: {
+      type: DataTypes.INTEGER(4),
+      allowNull: true
+    },
+    article_num: {
+      type: DataTypes.INTEGER(9),
+      allowNull: true
     }
   }, {
     tableName: 'users'

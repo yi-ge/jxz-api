@@ -767,6 +767,8 @@ CREATE TABLE `users` (
   `user_name` varchar(18) COLLATE utf8_bin DEFAULT NULL COMMENT '用户名',
   `sex` tinyint(4) DEFAULT '2' COMMENT '性别,0男，1女，2保密',
   `avatar` varchar(200) COLLATE utf8_bin DEFAULT NULL COMMENT '头像',
+  `is_cover` tinyint(4) DEFAULT NULL COMMENT '是否封面0不是1是',
+  `article_num` mediumint(9) DEFAULT NULL COMMENT '文章数量',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户';
 
@@ -944,6 +946,8 @@ CREATE TABLE `users_vip` (
   `status` tinyint(4) DEFAULT '1' COMMENT '状态1正常0删除2锁住',
   `last_login_ip` int(10) unsigned DEFAULT NULL COMMENT '最后一次登陆IP',
   `last_login_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '最后一次登陆日期',
+  `user_status` tinyint(4) DEFAULT NULL COMMENT '会员状态0未充值1已充值',
+  `is_cover` tinyint(4) DEFAULT NULL COMMENT '是否封面0不是1是',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户-vip用户';
 

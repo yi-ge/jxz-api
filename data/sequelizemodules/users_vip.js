@@ -75,6 +75,14 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: '0000-00-00 00:00:00'
+    },
+    user_status: {
+      type: DataTypes.INTEGER(4),
+      allowNull: true
+    },
+    is_cover: {
+      type: DataTypes.INTEGER(4),
+      allowNull: true
     }
   }, {
     tableName: 'users_vip'

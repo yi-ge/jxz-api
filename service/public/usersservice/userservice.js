@@ -1,6 +1,5 @@
 import {Users,UsersOpenid} from './../../../core';
 class UserService {
-
     /**
      * 通过微信openid注册＃选者
      * @param openid
@@ -59,5 +58,49 @@ class UserService {
             });
         });
     }
+
+    /**
+     * 获取用户列表 分页(只是jxz)
+     * @param page
+     * @returns {*}
+     */
+    findJXZList(page, sortType, user_name, is_cover, pagesize) {
+        let where = {user_vip_id: {$eq: null}};
+        !!user_name && (where['user_name'] = user_name);
+        !!is_cover && (where['is_cover'] = is_cover);
+        return Users.count({where: where}).then(count=> {
+            return Users.findPage(Object.assign({
+                    where: where,
+                }, sortType ? {order: `article_num ${sortType == 1 ? `ASC` : `DESC`}`} : {}),
+                page, count, sortType, pagesize);
+        }).then(result=> {
+            result.list.map(user=> {
+                Users.formatUser(user);
+            });
+            return result;
+        });
+    }
+
+    /**
+     * 修改用户的封面写手状态
+     * @param id
+     * @param is_cover
+     * @returns {*}
+     */
+    updateJXZCover(id, is_cover) {
+        if (is_cover != 0 && is_cover != 1) return Users.errorPromise("is_cover值不正确");
+        return Users.transaction(t=> {
+            return Users.update({is_cover: is_cover}, {
+                where: {id: id},
+                transaction: t,
+                lock: t.LOCK.UPDATE,
+            });
+        }).then(()=> {
+            return Users.findById(id);
+        }).then(result=> {
+            return Users.formatUser(result.dataValues);
+        });
+    }
+
 }
 export default new UserService();

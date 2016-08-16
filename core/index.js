@@ -34,7 +34,10 @@ Articles.sequlize.belongsTo(Users.sequlize,{
     foreignKey: "author",
     targetKey: "id"
 });
-
+//一个vip关联一个精选者
+UsersVip.sequlize.hasOne(Users.sequlize,{foreignKey:'user_vip_id'});
+//用户管理vip 外键存在于Users中
+Users.sequlize.belongsTo(UsersVip.sequlize,{foreignKey:'user_vip_id',targetKey:'id'});
 // 权限关联设置
 SysRoles.sequlize.belongsToMany(SysResources.sequlize, {
     through: SysRoleResources.sequlize,
