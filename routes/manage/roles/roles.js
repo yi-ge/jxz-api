@@ -5,7 +5,6 @@ const router = express.Router();
 //添加角色
 router.post('/addrole', (req, res, next)=> {
     let param = req.body;
-    console.log(param);
     RolesService.addRole(param.name, param.role_desc, param.resources, param.set_type).then(result=> {
         next(result);
     }).catch(e=> {
@@ -84,7 +83,6 @@ router.post("/configuserstoroles", (req, res, next)=> {
 //查询角色列表(分页)
 router.post('/findroles', (req, res, next)=> {
     let page = req.body.page;
-    console.log(page);
     RolesService.findRoles(page).then(result=> {
         next(result);
     }).catch(e=> {
@@ -101,7 +99,6 @@ router.post('/findallroles', (req, res, next)=> {
 });
 //查询权限列表（所有）
 router.post('/findallresource', (req, res, next)=> {
-    console.log("/findallresource")
     RolesService.findAllResource().then(result=> {
         next(result);
     }).catch(e=> {

@@ -8,7 +8,6 @@ class SysUserService {
      */
     retister(accountname, password, username, email, rolesId) {
         return SysUsers.transaction((t)=> {
-            console.log(accountname);
             return SysUsers.insert(SysUsers.createModel(accountname, password, username, email), {
                 transaction: t
             }).then(sysUser=> {

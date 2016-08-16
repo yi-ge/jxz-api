@@ -194,7 +194,7 @@ class RolesService {
     }
 
     /**
-     * 查询用户角色
+     * 用户角色查询
      * @param userId
      * @returns {*}
      */
@@ -210,7 +210,7 @@ class RolesService {
     }
 
     /**
-     * 通过用户查询权限
+     * 用户权限查询
      * @param userId
      * @returns {*|Promise.<T>}
      */

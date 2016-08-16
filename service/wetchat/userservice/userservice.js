@@ -15,8 +15,6 @@ class UserService {
             }).then(wetchatuser=> {
                 //微信openid关联用户
                 return UsersOpenid.formatUsersOpenid(wetchatuser.dataValues);
-            }).catch(e=> {
-                console.log(e);
             });
         });
     }
