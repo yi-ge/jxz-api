@@ -50,13 +50,12 @@ class UserService {
      */
     findJXZToOpenid(openid, username, sex, avatar) {
         if (!openid) return UsersOpenid.errorPromise("openid不能为空");
-        return UsersOpenid.findList({
+        return UsersOpenid.findOnlyOne({
             where: {openid: openid},
         }).then(result=> {
-            let user_openid = result[0];
-            if (result.length == 0) return this.registryJXZ(openid, username, sex, avatar);
-            return this.updateJXZ(user_openid.user_id, username, Users.getSexValue(sex), avatar).then(()=> {
-                return user_openid;
+            if (result) return this.registryJXZ(openid, username, sex, avatar);
+            return this.updateJXZ(result.user_id, username, Users.getSexValue(sex), avatar).then(()=> {
+                return result;
             });
         });
     }

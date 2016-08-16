@@ -10,6 +10,7 @@ router.post('/registerjxz', (req, res, next)=> {
     UserService.registryJXZ(param.openid, param.nickname, sex, param.headimgurl).then(result=> {
         next(result);
     }).catch(e=> {
+        console.log(e);
         res.json({code: 1000, msg: message});
     });
 });
@@ -19,13 +20,12 @@ router.post('/registerjxz', (req, res, next)=> {
  */
 router.post('/getjxzinfo', (req, res, next)=> {
     let param = req.body, sex = param.sex == 1 ? "男" : param.sex == 2 ? "女" : "其他";
-    UserService.findJXZToOpenid(param.openid, param.nickname, sex, param.headimgurl)
-        .then(result=> {
-            next(result);
-        })
-        .catch(message=> {
-            res.json({code: 1000, message: message});
-        });
+    UserService.findJXZToOpenid(param.openid, param.nickname, sex, param.headimgurl).then(result=> {
+        next(result);
+    }).catch(message=> {
+        console.log(message);
+        res.json({code: 1000, message: message});
+    });
 });
 
 
