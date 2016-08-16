@@ -18,6 +18,7 @@ import {
 } from "./routes";
 
 app.use((req, res, next)=> {
+    console.log("urlpath======>",req.path);
     next();
 });
 app.use('/', wetchat);

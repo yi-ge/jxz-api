@@ -157,8 +157,8 @@ class Base {
      * @param option
      * @returns {*}
      */
-    findAndCount(option) {
-        return this.sequlize.findAndCountAll(option).catch(e=> {
+    count(option) {
+        return this.sequlize.count(option).catch(e=> {
             throw e;
         });
     }

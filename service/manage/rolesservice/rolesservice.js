@@ -238,8 +238,8 @@ class RolesService {
      * @returns {*}
      */
     findRoles(page, pagesize) {
-        return SysRoles.findAndCount().then(count=> {
-            return count.count;
+        return SysRoles.count().then(count=> {
+            return count;
         }).then(count=> {
             return SysRoles.findPage({}, page, count, 1, pagesize);
         }).then(result=> {
