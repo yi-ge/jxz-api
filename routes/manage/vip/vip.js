@@ -7,8 +7,9 @@ router.post('/createvip', (req, res, next)=> {
     let account_name = param.account_name,
         user_name = param.user_name,
         email = param.email,
-        sex = param.sex;
-    VipService.createVip(account_name, user_name, email, sex).then(result=> {
+        sex = param.sex,
+        password = param.password;
+    VipService.createVip(account_name, user_name, email, sex,password).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);

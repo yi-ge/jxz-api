@@ -37,22 +37,28 @@ class UsersVip extends Base {
         return value;
     }
 
-    createModel(account_name, user_name, email,sex, user_status = 0, is_cover = 0) {
+    createModel(account_name, user_name, email, sex, password = 666666, user_status = 0, is_cover = 0) {
         let model = {
             id: this.generateId(),
             account_name: account_name,
             user_name: user_name,
             email: email,
             sex: typeof sex == "number" ? sex : this.getSexValue(sex),
+            passwd: this.encrypMD5(password),
             created_at: new Date(),
             updated_at: new Date(),
+            last_login_date: new Date(),
             user_status: user_status,
             is_cover: 0,
         };
         return model;
     }
 
-    formatUserVip(vip){
+    formatUserVip(vip) {
+        vip.last_login_date = this.formatDate(vip.last_login_date, "yyyy-MM-dd hh:mm:ss");
+        vip.created_at = this.formatDate(vip.created_at, "yyyy-MM-dd hh:mm:ss");
+        vip.updated_at = this.formatDate(vip.updated_at, "yyyy-MM-dd hh:mm:ss");
+        delete vip.passwd;
         return vip;
     }
 

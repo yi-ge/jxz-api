@@ -8,9 +8,9 @@ class VipService {
      * @param sex
      * @returns {*}
      */
-    createVip(account_name, user_name, email, sex) {
+    createVip(account_name, user_name, email, sex , password) {
         return UsersVip.transaction(t=> {
-            return UsersVip.insert(UsersVip.createModel(account_name, user_name, email, sex), {transaction: t}).then(result=> {
+            return UsersVip.insert(UsersVip.createModel(account_name, user_name, email, sex,password), {transaction: t}).then(result=> {
                 return UsersVip.formatUserVip(result.dataValues);
             });
         });
@@ -38,6 +38,7 @@ class VipService {
         }).then(result=> {
             result.list.map(users=> {
                 Users.formatUser(users);
+                UsersVip.formatUserVip(users.users_vip.dataValues);
             });
             return result;
         });
