@@ -20,8 +20,6 @@ class SysUserService {
                 return sysUser;
             }).then(sysUser=> {
                 return SysUsers.formaySysUser(sysUser.dataValues);
-            }).catch(e=> {
-                console.log(e);
             });
         });
     }
@@ -33,21 +31,16 @@ class SysUserService {
      * @returns {*|Promise.<T>}
      */
     login(accountname, password) {
-        return SysUsers.findList(
+        return SysUsers.findOnlyOne(
             {
                 where: {
                     account_name: accountname,
                     passwd: SysUsers.encrypMD5(password),
                 },
-            }, {
-                transaction: t
             }
         ).then(sysUser=> {
-            if (sysUser.length == 0) return {code: 1000, msg: "用户名或者密码错误！"};
-            else {
-                sysUser = sysUser[0];
-                return SysUsers.formaySysUser(sysUser.dataValues);
-            }
+            if (!sysUser) return {code: 1000, msg: "用户名或者密码错误！"};
+            else return SysUsers.formaySysUser(sysUser.dataValues);
         });
     }
 
@@ -72,8 +65,6 @@ class SysUserService {
                 SysUsers.formaySysUser(item.dataValues);
             });
             return result;
-        }).catch(e=> {
-            console.log(e);
         });
     }
 
@@ -94,9 +85,6 @@ class SysUserService {
             return SysUsers.findById(id);
         }).then(result=> {
             return SysUsers.formaySysUser(result.dataValues);
-        }).catch(e=> {
-            console.log(e);
-            throw e;
         });
     }
 
@@ -107,13 +95,10 @@ class SysUserService {
                 transaction:t,
                 lock: t.LOCK.UPDATE,
             });
-        }).then(result=> {
+        }).then(()=> {
             return SysUsers.findById(id);
         }).then(result=> {
             return SysUsers.formaySysUser(result.dataValues);
-        }).catch(e=> {
-            console.log(e);
-            throw e;
         });
     }
 }

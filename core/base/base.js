@@ -110,7 +110,9 @@ class Base {
      * @returns {Promise.<Instance>}
      */
     insert(model, option) {
-        return this.sequlize.create(model, option);
+        return this.sequlize.create(model, option).catch(e=> {
+            throw e;
+        });
     }
 
     /**
@@ -119,9 +121,13 @@ class Base {
      * @param option
      * @returns {Promise.<Array.<Instance>>}
      */
-    bulkCreate(insertList,option){
-        return this.sequlize.bulkCreate(insertList,option);
+    bulkCreate(insertList, option) {
+        return this.sequlize.bulkCreate(insertList, option).catch(e=> {
+            throw e;
+        });
     }
+
+
     /**
      * 查询所有
      * @param option 查询条件
@@ -130,15 +136,31 @@ class Base {
     findList(option) {
         return this.sequlize.findAll(option).then(result=> {
             return {list: result};
+        }).catch(e=> {
+            throw e;
         });
     }
+
+    /**
+     * 根据条件查询一条数据
+     * @param option
+     * @returns {*|Promise.<T>}
+     */
+    findOnlyOne(option){
+        return this.sequlize.findAll(option).then(result=>{
+           return result[0];
+        });
+    }
+
     /**
      * 统计条数
      * @param option
      * @returns {*}
      */
     findAndCount(option) {
-        return this.sequlize.findAndCountAll(option);
+        return this.sequlize.findAndCountAll(option).catch(e=> {
+            throw e;
+        });
     }
 
     /**
@@ -169,6 +191,8 @@ class Base {
             order: `id ${sortType == 1 ? `ASC` : `DESC`}`
         }, option)).then(result=> {
             return Object.assign(data, {list: result});
+        }).catch(e=> {
+            throw e;
         });
     }
 
@@ -179,7 +203,9 @@ class Base {
      * @returns {*}
      */
     findById(id, options) {
-        return this.sequlize.findById(id, options);
+        return this.sequlize.findById(id, options).catch(e=> {
+            throw e;
+        });
     }
 
     /**
@@ -188,7 +214,15 @@ class Base {
      * @param options 条件
      */
     update(data, options) {
-        return this.sequlize.update(data, options);
+        return this.sequlize.update(data, options).catch(e=> {
+            throw e;
+        });
+    }
+
+    destroy(option) {
+        return this.sequlize.destroy(option).catch(e=> {
+            throw e;
+        });
     }
 
     /**

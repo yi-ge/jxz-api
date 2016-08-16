@@ -7,10 +7,17 @@ class RolesService {
      * @param set_type
      * @returns {*}
      */
-    addRole(name, role_desc, set_type) {
+    addRole(name, role_desc, resources, set_type) {
         return SysRoles.transaction(t=> {
             return SysRoles.insert(SysRoles.createModel(name, role_desc, set_type), {transaction: t}).then(roles=> {
                 return SysRoles.formatSysRoles(roles.dataValues);
+            }).then(result=> {
+                if (Array.isArray(resources) && resources.length > 0) {
+                    return this.addRolesResources(result.id, resources).then(()=> {
+                        return result;
+                    });
+                }
+                return result;
             });
         });
     }
@@ -42,37 +49,37 @@ class RolesService {
                 where: {id: id},
                 transaction: t,
                 lock: t.LOCK.UPDATE
-            }).catch(e=> {
-                console.log(e);
-                throw e;
             });
-        }).then(result=> {
+        }).then(()=> {
             return SysRoles.findById(id);
         });
     }
 
     /**
-     * 编辑权限
+     * 编辑角色
      * @param id
      * @param name
      * @param role_desc
      * @param set_type
      * @returns {Promise.<T>}
      */
-    editRoles(id, name, role_desc, set_type) {
+    editRoles(id, name, role_desc, resources = [2222, 1111], set_type) {
         return SysRoles.transaction(t=> {
             return SysRoles.update({name: name, role_desc: role_desc, set_type: set_type, updated_at: new Date()}, {
                 where: {id: id},
                 transaction: t,
                 lock: t.LOCK.UPDATE,
+            }).then(result=> {
+                if (Array.isArray(resources) && resources.length > 0)
+                    return this.destroyRolesResources(id, resources).then(()=> {
+                        return result;
+                    });
+                return result;
             });
         }).then(()=> {
             return SysRoles.findById(id);
         }).then(result=> {
             return SysRoles.formatSysRoles(result.dataValues);
-        }).catch(e=> {
-            console.log(e);
-            throw e;
         });
     }
 
@@ -88,15 +95,9 @@ class RolesService {
                 where: {id: id},
                 transaction: t,
                 lock: t.LOCK.UPDATE
-            }).catch(e=> {
-                console.log(e);
-                throw e;
             });
-        }).then(result=> {
+        }).then(()=> {
             return SysResources.findById(id);
-        }).catch(e=> {
-            console.log(e);
-            throw e;
         });
     }
 
@@ -119,10 +120,45 @@ class RolesService {
             return SysResources.findById(id);
         }).then(result=> {
             return SysResources.formatSysResources(result.dataValues);
-        }).catch(e=> {
-            console.log(e);
-            throw e;
-        })
+        });
+    }
+
+    /**
+     * 批量添加角色权限关联
+     * @param role_id
+     * @param resources
+     */
+    addRolesResources(role_id, resources) {
+        return SysRoleResources.transaction(t=> {
+            let resourceList = [];
+            resources.map((resource_id)=> {
+                resourceList.push(SysRoleResources.createModel(role_id, resource_id));
+            });
+            return SysRoleResources.bulkCreate(resourceList, {transaction: t}).then(result=> {
+                return result;
+            });
+        });
+    }
+
+    /**
+     * 批量取消角色权限关联
+     * @param roles_id
+     * @param resources
+     */
+    destroyRolesResources(role_id, resources) {
+        return SysRoleResources.transaction(t=> {
+            return SysRoleResources.destroy({
+                where: {
+                    role_id: role_id,
+                    resource_id: {
+                        $or: resources
+                    }
+                },
+                transaction: t,
+            }).then(result=> {
+                return result;
+            });
+        });
     }
 
     /**
@@ -131,7 +167,7 @@ class RolesService {
      * @param resourceId
      * @returns {*}
      */
-    configRolesToResource(rolesId, resourceId) {
+    addRolesToResource(rolesId, resourceId) {
         return SysRoleResources.transaction(t=> {
             return SysRoleResources.insert(SysRoleResources.createModel(rolesId, resourceId), {
                 transaction: t
@@ -147,7 +183,7 @@ class RolesService {
      * @param rolesId
      * @returns {*}
      */
-    configUserRoles(userId, rolesId) {
+    addUserRoles(userId, rolesId) {
         return SysUserRoles.transaction(t=> {
             return SysUserRoles.insert(SysUserRoles.createModel(userId, rolesId), {
                 transaction: t
@@ -169,11 +205,15 @@ class RolesService {
                 model: SysRoles.sequlize
             }
         }).then(result=> {
-            console.log(result);
             return result;
         });
     }
 
+    /**
+     * 通过用户查询权限
+     * @param userId
+     * @returns {*|Promise.<T>}
+     */
     findUsersResource(userId) {
         return SysUsers.findList({
             where: {id: userId},
@@ -187,7 +227,6 @@ class RolesService {
                 }]
             }]
         }).then(result=> {
-            console.log(result);
             return result;
         });
     }
@@ -217,8 +256,6 @@ class RolesService {
             attributes: ['id', 'name']
         }).then(result=> {
             return result;
-        }).catch(e=> {
-            console.log(e);
         });
     }
 
@@ -227,15 +264,9 @@ class RolesService {
      * @returns {Promise.<T>}
      */
     findAllResource() {
-        console.log("resource");
         return SysResources.findList().then(result=> {
-            console.log(result);
             return result;
-        }).catch(e=> {
-            console.log(e);
-            throw e;
         });
     }
-
 }
 export default new RolesService();

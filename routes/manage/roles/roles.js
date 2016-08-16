@@ -6,10 +6,11 @@ const router = express.Router();
 router.post('/addrole', (req, res, next)=> {
     let param = req.body;
     console.log(param);
-    RolesService.addRole(param.name, param.role_desc, param.set_type).then(result=> {
+    RolesService.addRole(param.name, param.role_desc, param.resources, param.set_type).then(result=> {
         next(result);
     }).catch(e=> {
-        res.json({code: 1000, msg: "角色添加失败"});
+        console.log(e);
+        res.json({code: 1000, message: "角色添加失败"});
     });
 });
 //角色状态修改
@@ -19,16 +20,17 @@ router.post("/updateroles", (req, res, next)=> {
         next(result);
     }).catch(e=> {
         console.log(e);
-        res.json({code: 1000, msg: "状态修改失败"});
+        res.json({code: 1000, message: "状态修改失败"});
     })
 });
 //角色编辑
 router.post('/editroles',(req,res,next)=>{
     let param = req.body;
-    RolesService.editRoles(param.id,param.name,param.role_desc,param.set_type).then(result=>{
+    RolesService.editRoles(param.id,param.name,param.role_desc,param.resources,param.set_type).then(result=>{
         next(result);
     }).catch(e=>{
-        res.json({code: 1000, msg: "角色编辑失败"});
+        console.log(e);
+        res.json({code: 1000, message: "角色编辑失败"});
     });
 });
 //添加权限
@@ -38,7 +40,7 @@ router.post('/addresources', (req, res, next)=> {
         next(result);
     }).catch(e=> {
         console.log(e);
-        res.json({code: 1000, msg: "权限添加失败"});
+        res.json({code: 1000, message: "权限添加失败"});
     });
 });
 //权限状态修改
@@ -47,7 +49,7 @@ router.post('/updateresource', (req, res, next)=> {
     RolesService.updateResourceStatus(id, status).then(result=> {
         next(result);
     }).catch(e=> {
-        res.json({code: 1000, msg: "状态修改失败"});
+        res.json({code: 1000, message: "状态修改失败"});
     });
 });
 //权限编辑
@@ -56,27 +58,27 @@ router.post('/editresource', (req, res, next)=> {
     RolesService.editResource(param.id, param.name, param.res_desc, param.url).then(result=> {
         next(result);
     }).catch(e=> {
-        res.json({code: 1000, msg: "编辑修改失败"});
+        res.json({code: 1000, message: "编辑修改失败"});
     });
 });
 //角色权限配置
 router.post("/configrolestoresources", (req, res, next)=> {
     let roles_id = req.body.roles_id, resource_id = req.body.resource_id;
-    RolesService.configRolesToResource(roles_id, resource_id).then(result=> {
+    RolesService.addRolesToResource(roles_id, resource_id).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);
-        res.json({code: 1000, msg: "配置失败"});
+        res.json({code: 1000, message: "配置失败"});
     });
 });
 //用户角色配置
 router.post("/configuserstoroles", (req, res, next)=> {
     let user_id = req.body.user_id, roles_id = req.body.roles_id;
-    RolesService.configUserRoles(user_id, roles_id).then(result=> {
+    RolesService.addUserRoles(user_id, roles_id).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);
-        res.json({code: 1000, msg: "配置失败"});
+        res.json({code: 1000, message: "配置失败"});
     });
 });
 //查询角色列表(分页)

@@ -8,7 +8,7 @@ router.post('/register', (req, res, next)=> {
     SysUsersService.retister(param.account_name, param.password, param.user_name, param.email, param.roles_id).then(result=> {
         next(result);
     }).catch(e=> {
-        res.json({code: 1000, msg: "注册失败"});
+        res.json({code: 1000, message: "注册失败"});
     });
 });
 //登陆
@@ -18,13 +18,12 @@ router.post('/login', (req, res, next)=> {
         if (result.code == 1000) res.json(result);
         else next(result);
     }).catch(e=> {
-        res.json({code: 1000, msg: "登陆失败"});
+        res.json({code: 1000, message: "登陆失败"});
     });
 });
 //更新管理员状态
 router.post('/updateuser', (req, res, next)=> {
     let id = req.body.id, status = req.body.status;
-    console.log(req.body);
     SysUsersService.updateSysUsersStatus(id, status).then(result=> {
         next(result);
     }).catch(e=> {
@@ -55,7 +54,7 @@ router.post("/finduserroles", (req, res, next)=> {
     RolesService.findUsersRoles(user_id).then(result=> {
         next(result);
     }).catch(e=> {
-        res.json({code: 1000, msg: "查询失败"});
+        res.json({code: 1000, message: "查询失败"});
     });
 });
 //查询用户权限
@@ -64,7 +63,7 @@ router.post("/finduserresource", (req, res, next)=> {
     RolesService.findUsersResource(user_id).then(result=> {
         next(result);
     }).catch(e=> {
-        res.json({code: 1000, msg: "查询失败"});
+        res.json({code: 1000, message: "查询失败"});
     });
 });
 export default router;

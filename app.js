@@ -24,7 +24,6 @@ app.use('/', wetchat);
 app.use('/manage', manage);
 
 app.use((data, req, res, next)=> {
-    console.log(data);
     if (typeof data == 'object')
         res.json({
             code: 200,
