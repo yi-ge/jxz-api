@@ -63,7 +63,7 @@ class RolesService {
      * @param set_type
      * @returns {Promise.<T>}
      */
-    editRoles(id, name, role_desc, resources = [2222, 1111], set_type) {
+    editRoles(id, name, role_desc, resources, set_type) {
         return SysRoles.transaction(t=> {
             return SysRoles.update({name: name, role_desc: role_desc, set_type: set_type, updated_at: new Date()}, {
                 where: {id: id},
