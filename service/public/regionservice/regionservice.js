@@ -27,9 +27,9 @@ class RegionService {
      * @param creater
      * @returns {*}
      */
-    addCountry(name, parent_id, creater) {
+    addCountry(name, state_id, creater) {
         return SysDict.transaction(t=> {
-            return SysDict.insert(SysDict.createModel(null, name, 1, null, parent_id, 2, creater, creater), {transaction: t}).then(state=> {
+            return SysDict.insert(SysDict.createModel(null, name, 1, null, state_id, 2, creater, creater), {transaction: t}).then(state=> {
                 return SysDict.formatSysDict(state);
             });
         });
@@ -42,9 +42,9 @@ class RegionService {
      * @param create
      * @returns {*}
      */
-    addRegion(name, parent_id, creater) {
+    addRegion(name, country_id, creater) {
         return SysDict.transaction(t=> {
-            return SysDict.insert(SysDict.createModel(null, name, 1, null, parent_id, 3, creater, creater), {transaction: t}).then(state=> {
+            return SysDict.insert(SysDict.createModel(null, name, 1, null, country_id, 3, creater, creater), {transaction: t}).then(state=> {
                 return SysDict.formatSysDict(state);
             });
         });
@@ -82,7 +82,8 @@ class RegionService {
                     attributes: ['account_name', 'user_name', 'id'],
                 }, {
                     model: SysDict.sequlize,
-                    as:'sys_dict_parent'
+                    as:'sys_dict_parent',
+                    attributes:['id','name'],
                 }]
             }, page, count, null, pagesize).then(result=> {
                 result.list.map(country=> {
@@ -93,6 +94,11 @@ class RegionService {
         });
     }
 
+    /**
+     * 通过洲 查询国家
+     * @param state_id
+     * @returns {Promise.<T>}
+     */
     findCountryToState(state_id){
         let where = {type: 1, level: 1,id:state_id};
         return SysDict.findList({
@@ -102,12 +108,12 @@ class RegionService {
                 attributes: ['account_name', 'user_name', 'id'],
             },{
                 model: SysDict.sequlize,
-                as:'sys_dict_child'
+                as:'sys_dict_child',
+                attributes:['id','name']
             }],
         }).then(result=>{
             return result;
         });
     }
-
 }
 export default new RegionService();

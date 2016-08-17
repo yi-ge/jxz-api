@@ -13,13 +13,13 @@ router.post('/addstate',(req,res,next)=>{
         res.json({code:1000,message:"洲添加失败"});
     })
 });
-//添加城市
+//添加国家
 router.post('/addcountry',(req,res,next)=>{
     let param = req.body;
     let name = param.name,
-        parent_id = param.parent_id,
+        state_id = param.state_id,
         creater = param.creater;
-    RegionService.addCountry(name,parent_id,creater).then(result=>{
+    RegionService.addCountry(name,state_id,creater).then(result=>{
         next(result);
     }).catch(e=>{
         console.log(e);
@@ -30,9 +30,9 @@ router.post('/addcountry',(req,res,next)=>{
 router.post('/addregion',(req,res,next)=>{
     let param = req.body;
     let name = param.name,
-        parent_id = param.parent_id,
+        country_id = param.country_id,
         creater = param.creater;
-    RegionService.addRegion(name,parent_id,creater).then(result=>{
+    RegionService.addRegion(name,country_id,creater).then(result=>{
         next(result);
     }).catch(e=>{
         console.log(e);

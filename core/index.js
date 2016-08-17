@@ -61,12 +61,12 @@ SysDict.sequlize.belongsTo(SysUsers.sequlize, {
 //字典表自关联自己
 SysDict.sequlize.hasMany(SysDict.sequlize, {
     foreignKey: 'parent_id',
-    as: 'sys_dict_parent'
+    as: 'sys_dict_child'
 });
 SysDict.sequlize.belongsTo(SysDict.sequlize, {
     foreignKey: 'parent_id',
     targetKey: 'id',
-    as: 'sys_dict_child'
+    as: 'sys_dict_parent'
 });
 
 //一个酒店对应多篇文章
