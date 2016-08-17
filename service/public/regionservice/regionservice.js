@@ -82,8 +82,8 @@ class RegionService {
                     attributes: ['account_name', 'user_name', 'id'],
                 }, {
                     model: SysDict.sequlize,
-                    as:'sys_dict_parent',
-                    attributes:['id','name'],
+                    as: 'sys_dict_parent',
+                    attributes: ['id', 'name'],
                 }]
             }, page, count, null, pagesize).then(result=> {
                 result.list.map(country=> {
@@ -99,20 +99,138 @@ class RegionService {
      * @param state_id
      * @returns {Promise.<T>}
      */
-    findCountryToState(state_id){
-        let where = {type: 1, level: 1,id:state_id};
+    findCountryToState(state_id) {
+        let where = {type: 1, level: 2, parent_id: state_id};
         return SysDict.findList({
-            where:where,
-            include:[{
-                model: SysUsers.sequlize,
-                attributes: ['account_name', 'user_name', 'id'],
-            },{
-                model: SysDict.sequlize,
-                as:'sys_dict_child',
-                attributes:['id','name']
-            }],
-        }).then(result=>{
+            where: where,
+            attributes: ['id', 'name'],
+        }).then(result=> {
             return result;
+        });
+    }
+
+    /**
+     * 查询区域列表
+     * @param page
+     * @param pagesize
+     * @returns {Promise.<T>}
+     */
+    findRegionList(page, pagesize) {
+        let where = {type: 1, level: 3};
+        return SysDict.count({where: where}).then(count=> {
+            return SysDict.findPage({
+                where: where,
+                include: [{
+                    model: SysUsers.sequlize,
+                    attributes: ['account_name', 'user_name', 'id'],
+                }, {
+                    model: SysDict.sequlize,
+                    as: 'sys_dict_parent',
+                    attributes: ['id', 'name'],
+                    include: [{
+                        model: SysDict.sequlize,
+                        as: 'sys_dict_parent',
+                        attributes: ['id', 'name'],
+                    }]
+                }]
+            }, page, count, null, pagesize).then(result=> {
+                //result.list(region=> {
+                //    SysDict.formatSysDict(region);
+                //});
+                return result;
+            });
+        });
+    }
+
+    /**
+     * 更新大洲
+     * @param state_id
+     * @param name
+     * @param modifier
+     * @returns {Promise.<T>}
+     */
+    editState(state_id, name, modifier) {
+        console.log(state_id, name, modifier);
+        return SysDict.transaction(t=> {
+            return SysDict.update({name: name, modifier: modifier, updated_at: new Date()}, {
+                where: {id: state_id, type: 1, level: 1},
+                transaction: t,
+                lock: t.LOCK.UPDATE
+            }).then(()=> {
+                return SysDict.findById(state_id);
+            });
+        }).then(result=> {
+            return SysDict.formatSysDict(result);
+        }).catch(e=> {
+            console.log(e);
+            throw e;
+        });
+    }
+
+    /**
+     * 编辑国家
+     * @param country_id
+     * @param name
+     * @param state_id
+     * @param modifier
+     * @returns {Promise.<T>}
+     */
+    editCountry(country_id, name, state_id, modifier) {
+        return SysDict.transaction(t=> {
+            return SysDict.update({name: name, parent_id: state_id, modifier: modifier, updated_at: new Date()}, {
+                where: {id: country_id, type: 1, level: 2},
+                transaction: t,
+                lock: t.LOCK.UPDATE
+            });
+        }).then(()=> {
+            return SysDict.findById(country_id, {
+                include: [{
+                    model: SysUsers.sequlize,
+                    attributes: ['account_name', 'user_name', 'id'],
+                }, {
+                    model: SysDict.sequlize,
+                    as: 'sys_dict_parent',
+                    attributes: ['id', 'name'],
+                }]
+            });
+        }).then(result=> {
+            return SysDict.formatSysDict(result);
+        });
+    }
+
+    /**
+     * 更新区域
+     * @param region_id
+     * @param name
+     * @param country_id
+     * @param modifier
+     * @returns {Promise.<T>}
+     */
+    editRegion(region_id, name, country_id, modifier) {
+        return SysDict.transaction(t=> {
+            return SysDict.update({name: name, parent_id: country_id, modifier: modifier, updated_at: new Date()}, {
+                where: {id: region_id, type: 1, level: 3},
+                transaction: t,
+                lock: t.LOCK.UPDATE
+            });
+        }).then(()=> {
+            return SysDict.findById(region_id,{
+                include: [{
+                    model: SysUsers.sequlize,
+                    attributes: ['account_name', 'user_name', 'id'],
+                }, {
+                    model: SysDict.sequlize,
+                    as: 'sys_dict_parent',
+                    attributes: ['id', 'name'],
+                    include: [{
+                        model: SysDict.sequlize,
+                        as: 'sys_dict_parent',
+                        attributes: ['id', 'name'],
+                    }]
+                }]
+            });
+        }).then(result=> {
+            return SysDict.formatSysDict(result);
         });
     }
 }

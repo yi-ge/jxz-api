@@ -259,7 +259,9 @@ class Base {
      * @returns {*}
      */
     transaction(fn) {
-        return sequelize.transaction(fn);
+        return sequelize.transaction(fn).catch(e=>{
+            throw e;
+        });
     }
 }
 export default Base;
