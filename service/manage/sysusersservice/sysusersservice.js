@@ -1,4 +1,4 @@
-import {SysUsers,SysRoles,SysUserRoles} from './../../../core';
+import {SysUsers,SysRoles,SysUserRoles,Users} from './../../../core';
 class SysUserService {
     /**
      * 管理员注册
@@ -8,14 +8,18 @@ class SysUserService {
      */
     retister(accountname, password, username, email, rolesId) {
         return SysUsers.transaction((t)=> {
-            return SysUsers.insert(SysUsers.createModel(accountname, password, username, email), {
-                transaction: t
+            return Users.insert(Users.createModel(username, 2), {transaction: t}).then(user=> {
+                return SysUsers.insert(SysUsers.createModel(accountname, password, username, email, user.id), {
+                    transaction: t
+                });
             }).then(sysUser=> {
                 if (rolesId && rolesId != 0) return SysUserRoles.insert(SysUserRoles.createModel(sysUser.id, rolesId), {
                     transaction: t
                 }).then(()=> {
                     return sysUser;
                 });
+                return sysUser;
+            }).then(sysUser=> {
                 return sysUser;
             }).then(sysUser=> {
                 return SysUsers.formaySysUser(sysUser.dataValues);
@@ -73,7 +77,7 @@ class SysUserService {
      */
     updateSysUsersStatus(id, status) {
         return SysUsers.transaction(t=> {
-            return SysUsers.update({status: status}, {
+            return SysUsers.update({status: status,updated_at:new Date()}, {
                 where: {id: id},
                 transaction: t,
                 lock: t.LOCK.UPDATE,
@@ -85,17 +89,32 @@ class SysUserService {
         });
     }
 
-    editSysUsers(id, user_name, email) {
+    editSysUsers(id, user_name, email, role_id) {
         return SysUsers.transaction(t=> {
-            return SysUsers.update({user_name: user_name, email: email}, {
+            return SysUsers.update({user_name: user_name, email: email,updated_at:new Date()}, {
                 where: {id: id},
                 transaction: t,
                 lock: t.LOCK.UPDATE,
+            }).then(()=> {
+                return SysUserRoles.destroy({where: {user_id: id},transaction:t});
+            }).then(()=> {
+                if(!!role_id) return SysUserRoles.insert(SysUserRoles.createModel(id, role_id), {transaction: t});
+                return null;
             });
         }).then(()=> {
-            return SysUsers.findById(id);
+            return SysUsers.findById(id, {
+                include: [{
+                    model:SysRoles.sequlize,
+                    through:{
+                        model:SysUserRoles.sequlize,
+                        attributes:[]
+                    }
+                }]
+            });
         }).then(result=> {
             return SysUsers.formaySysUser(result.dataValues);
+        }).catch(e=> {
+            console.log(e);
         });
     }
 }

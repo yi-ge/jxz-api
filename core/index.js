@@ -6,6 +6,7 @@ import UsersVip from './UsersVip';
 import SysUsers from './sysusers';
 import SysRoles from './sysroles';
 import SysResources from './sysresources';
+import SysDict from './sysdict';
 import SysHotKeyword from './syshotkeyword';
 import SysRoleResources from './sysroleresources';
 import SysUserRoles from './sysuserroles';
@@ -15,6 +16,7 @@ import ActivitysLocation from './activityslocation';
 import UsersOpenid from './usersopenid';
 import UserOauthOpenid from './useroauthopenid';
 import Articles from './articles';
+import Houses from './houses';
 
 // 设置关联关系
 
@@ -27,18 +29,45 @@ UsersOpenid.sequlize.belongsTo(Users.sequlize, {
     foreignKey: "user_id",
     targetKey: "id"
 });
+
+
 //一个用户对应多篇文章
-Users.sequlize.hasMany(Articles.sequlize,{foreignKey:'author'});
+Users.sequlize.hasMany(Articles.sequlize, {foreignKey: 'author'});
 //一篇文章对应一个作者
-Articles.sequlize.belongsTo(Users.sequlize,{
+Articles.sequlize.belongsTo(Users.sequlize, {
     foreignKey: "author",
     targetKey: "id"
 });
+
+//一个用户在sys_users表中存在一个外键
+Users.sequlize.hasOne(SysUsers.sequlize, {
+    foreignKey: 'users_id',
+});
+SysUsers.sequlize.belongsTo(Users.sequlize, {
+    foreignKey: 'users_id',
+    targetKey: 'id',
+});
+
+
+//一个酒店对应多篇文章
+Houses.sequlize.hasMany(Articles.sequlize, {
+    foreignKey: 'houses_id',
+    targetKey: 'id'
+});
+//一篇文章对应一个酒店
+Articles.sequlize.belongsTo(Houses.sequlize, {
+    as: 'houses',
+    foreignKey: 'houses_id',
+    targetKey: 'id'
+});
+
 //一个vip关联一个精选者
-UsersVip.sequlize.hasOne(Users.sequlize,{foreignKey:'user_vip_id'});
+UsersVip.sequlize.hasOne(Users.sequlize, {foreignKey: 'user_vip_id'});
 //用户管理vip 外键存在于Users中
-Users.sequlize.belongsTo(UsersVip.sequlize,{foreignKey:'user_vip_id',targetKey:'id'});
-// 权限关联设置
+Users.sequlize.belongsTo(UsersVip.sequlize, {foreignKey: 'user_vip_id', targetKey: 'id'});
+
+
+// 角色对应多个权限
 SysRoles.sequlize.belongsToMany(SysResources.sequlize, {
     through: SysRoleResources.sequlize,
     foreignKey: "role_id",
@@ -50,25 +79,19 @@ SysResources.sequlize.belongsToMany(SysRoles.sequlize, {
     foreignKey: "resource_id",
     otherKey: "role_id"
 });
-//角色对应多个权限
-SysRoles.sequlize.belongsToMany(SysResources.sequlize,{
-    through: SysRoleResources.sequlize,
-    foreignKey: "role_id",
-    otherKey: "resource_id"
-});
 //用户对应多个角色
 SysUsers.sequlize.belongsToMany(SysRoles.sequlize, {
     through: SysUserRoles.sequlize,
     foreignKey: "user_id",
     otherKey: "role_id"
 });
-
 //角色对应多个用户
 SysRoles.sequlize.belongsToMany(SysUsers.sequlize, {
     through: SysUserRoles.sequlize,
     foreignKey: "role_id",
     otherKey: 'user_id'
 });
+
 
 export {
     Users, //会员
@@ -78,10 +101,12 @@ export {
     SysResources,//权限
     SysRoleResources,//角色权限关联
     SysUserRoles, //关联角色与用户中间表
+    SysDict, //字典
     UsersOpenid, // 微信用户 精选者
     UserOauthOpenid, // 第三方用户
     SysHotKeyword, // 系统热词
     Articles, // 文章
+    Houses, // 酒店
     Activitys,
     ActivitysApply,
     ActivitysLocation,

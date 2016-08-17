@@ -32,8 +32,11 @@ router.post('/updateuser', (req, res, next)=> {
 });
 //编辑管理员信息
 router.post('/edituser', (req, res, next)=> {
-    let id = req.body.id, user_name = req.body.user_name, email = req.body.email;
-    SysUsersService.editSysUsers(id, user_name, email).then(result=> {
+    let id = req.body.id,
+        user_name = req.body.user_name,
+        email = req.body.email,
+        roles_id = req.body.roles_id;
+    SysUsersService.editSysUsers(id, user_name, email,roles_id).then(result=> {
         next(result);
     }).catch(e=> {
         res.json({code: 1000, message: "编辑失败"});

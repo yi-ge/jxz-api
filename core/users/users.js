@@ -21,7 +21,7 @@ class Users extends Base {
             avatar:avatar,
             article_num:0,
             is_cover:0,
-            sex:this.getSexValue(sex),
+            sex:typeof sex == 'number'? sex : this.getSexValue(sex),
             last_login_ip:this.ipToInt(lastloginip || "0.0.0.0"),
             last_login_date:new Date(),
             join_date:new Date(),

@@ -20,9 +20,10 @@ router.post('/createvip', (req, res, next)=> {
 router.post('/userviplist', (req, res, next)=> {
     let param = req.body;
     let page = param.page, sortType = req.body.sortType,
-        user_name = req.body.user_name,
+        startDate = req.body.startDate,
+        endDate = req.body.endDate,
         is_cover = req.body.is_cover;
-    VipService.findUserToVipList(page, sortType, user_name, is_cover).then(result=> {
+    VipService.findUserToVipList(page, sortType, startDate, endDate, is_cover).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);

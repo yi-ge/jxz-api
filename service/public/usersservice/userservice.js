@@ -90,7 +90,7 @@ class UserService {
     updateJXZCover(id, is_cover) {
         if (is_cover != 0 && is_cover != 1) return Users.errorPromise("is_cover值不正确");
         return Users.transaction(t=> {
-            return Users.update({is_cover: is_cover}, {
+            return Users.update({is_cover: is_cover,updated_at:new Date()}, {
                 where: {id: id},
                 transaction: t,
                 lock: t.LOCK.UPDATE,

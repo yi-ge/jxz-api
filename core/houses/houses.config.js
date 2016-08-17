@@ -5,24 +5,15 @@ export default {
         allowNull: false,
         primaryKey: true
     },
-    account_name: {
-        type: DataTypes.STRING,
-        allowNull: true
-    },
-    user_name: {
-        type: DataTypes.STRING,
-        allowNull: true
-    },
-    phone: {
-        type: DataTypes.BIGINT,
-        allowNull: true
-    },
-    sex: {
+    type: {
         type: DataTypes.INTEGER(4),
-        allowNull: true,
-        defaultValue: '2'
+        allowNull: true
     },
-    city: {
+    name: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    nation: {
         type: DataTypes.BIGINT,
         allowNull: true
     },
@@ -30,22 +21,33 @@ export default {
         type: DataTypes.BIGINT,
         allowNull: true
     },
+    city: {
+        type: DataTypes.BIGINT,
+        allowNull: true
+    },
+    orientation: {
+        type: DataTypes.BIGINT,
+        allowNull: true
+    },
+    picture: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
     address: {
         type: DataTypes.STRING,
         allowNull: true
     },
-    head_portrait: {
-        type: DataTypes.STRING,
+    longitude: {
+        type: DataTypes.DECIMAL,
         allowNull: true
     },
-    email: {
-        type: DataTypes.STRING,
+    latitude: {
+        type: DataTypes.DECIMAL,
         allowNull: true
     },
-    info_integrity: {
-        type: DataTypes.INTEGER(4),
-        allowNull: true,
-        defaultValue: '0'
+    favorite_nums: {
+        type: DataTypes.INTEGER(11),
+        allowNull: true
     },
     creater: {
         type: DataTypes.BIGINT,
@@ -65,30 +67,33 @@ export default {
         allowNull: false,
         defaultValue: '0000-00-00 00:00:00'
     },
+    is_putaway: {
+        type: DataTypes.INTEGER(4),
+        allowNull: true
+    },
+    spots_around: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    traffic_around: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    houses_desc: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
     status: {
         type: DataTypes.INTEGER(4),
         allowNull: true,
         defaultValue: '1'
     },
-    post_roles: {
-        type: DataTypes.BIGINT,
+    comment_num: {
+        type: DataTypes.INTEGER(9),
         allowNull: true
     },
-    last_login_ip: {
-        type: DataTypes.INTEGER(10),
-        allowNull: true
-    },
-    last_login_date: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: '0000-00-00 00:00:00'
-    },
-    passwd: {
-        type: DataTypes.STRING,
-        allowNull: true
-    },
-    users_id: {
-        type: DataTypes.BIGINT,
+    is_orders: {
+        type: DataTypes.INTEGER(4),
         allowNull: true
     }
 };

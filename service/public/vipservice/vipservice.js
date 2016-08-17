@@ -8,9 +8,9 @@ class VipService {
      * @param sex
      * @returns {*}
      */
-    createVip(account_name, user_name, email, sex , password) {
+    createVip(account_name, user_name, email, sex, password) {
         return UsersVip.transaction(t=> {
-            return UsersVip.insert(UsersVip.createModel(account_name, user_name, email, sex,password), {transaction: t}).then(result=> {
+            return UsersVip.insert(UsersVip.createModel(account_name, user_name, email, sex, password), {transaction: t}).then(result=> {
                 return UsersVip.formatUserVip(result.dataValues);
             });
         });
@@ -29,6 +29,9 @@ class VipService {
     findUserToVipList(page, sortType, startDate, endDate, is_cover, pagesize) {
         let where = {user_vip_id: {$ne: null}};
         !!is_cover && (where['is_cover'] = is_cover);
+        if (!!startDate && !!endDate) where['created_at'] = {$between: [startDate, endDate]};
+        else if (!!startDate) where['created_at'] = {$gte: startDate};
+        else if (!!endDate) where['created_at'] = {$lte: endDate};
         return Users.count({where: where}).then(count=> {
             return Users.findPage(Object.assign({
                     where: where,

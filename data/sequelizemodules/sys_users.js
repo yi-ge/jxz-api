@@ -88,6 +88,10 @@ module.exports = function(sequelize, DataTypes) {
     passwd: {
       type: DataTypes.STRING,
       allowNull: true
+    },
+    users_id: {
+      type: DataTypes.BIGINT,
+      allowNull: true
     }
   }, {
     tableName: 'sys_users'

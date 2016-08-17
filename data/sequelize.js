@@ -13,7 +13,7 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
         min: 0,
         idle: 10000
     },
-    logging:false,
+    //logging:false,
 });
 
 sequelize.authenticate().then((err)=> {
@@ -23,3 +23,5 @@ sequelize.authenticate().then((err)=> {
 });
 
 export default sequelize;
+
+//sequelize-auto -h 192.168.10.239 -p 3306 -d jxz -u mylive -x devsgo -e mysql -o modules

@@ -45,7 +45,7 @@ class RolesService {
      */
     updateRolesStatus(id, status) {
         return SysRoles.transaction(t=> {
-            return SysRoles.update({status: status}, {
+            return SysRoles.update({status: status,updated_at:new Date()}, {
                 where: {id: id},
                 transaction: t,
                 lock: t.LOCK.UPDATE
@@ -91,7 +91,7 @@ class RolesService {
      */
     updateResourceStatus(id, status) {
         return SysResources.transaction(t=> {
-            return SysResources.update({status: status}, {
+            return SysResources.update({status: status,updated_at:new Date()}, {
                 where: {id: id},
                 transaction: t,
                 lock: t.LOCK.UPDATE
