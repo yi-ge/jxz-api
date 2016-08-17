@@ -48,6 +48,26 @@ SysUsers.sequlize.belongsTo(Users.sequlize, {
     targetKey: 'id',
 });
 
+//用户创建多个字典
+SysUsers.sequlize.hasMany(SysDict.sequlize, {
+    foreignKey: 'creater',
+});
+//字典关联一个用户
+SysDict.sequlize.belongsTo(SysUsers.sequlize, {
+    foreignKey: 'creater',
+    targetKey: 'id',
+});
+
+//字典表自关联自己
+SysDict.sequlize.hasMany(SysDict.sequlize, {
+    foreignKey: 'parent_id',
+    as: 'sys_dict_parent'
+});
+SysDict.sequlize.belongsTo(SysDict.sequlize, {
+    foreignKey: 'parent_id',
+    targetKey: 'id',
+    as: 'sys_dict_child'
+});
 
 //一个酒店对应多篇文章
 Houses.sequlize.hasMany(Articles.sequlize, {

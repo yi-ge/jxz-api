@@ -33,6 +33,7 @@ class SysDict extends Base {
     }
 
     formatSysDict(dict){
+
         return dict;
     }
 }

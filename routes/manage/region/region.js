@@ -39,4 +39,35 @@ router.post('/addregion',(req,res,next)=>{
         res.json({code:1000,message:"洲添加失败"});
     })
 });
+//查询洲
+router.post('/findstatelist',(req,res,next)=>{
+   RegionService.findStateList().then(result=>{
+       next(result);
+   }).catch(e=>{
+       console.log(e);
+       res.json({code:1000,message:"洲查询失败"});
+   });
+});
+//查询国家
+router.post('/findcountrylist',(req,res,next)=>{
+    let param = req.body;
+    let page = param.page;
+    RegionService.findCountryList(page).then(result=>{
+        next(result);
+    }).catch(e=>{
+        console.log(e);
+        res.json({code:1000,message:"国家查询失败"});
+    });
+});
+//通过洲查询国家
+router.post('/findcountrytostate',(req,res,next)=>{
+    let state_id = req.body.state_id;
+    RegionService.findCountryToState(state_id).then(result=>{
+        next(result);
+    }).catch(e=>{
+        console.log(e);
+        res.json({code:1000,message:"国家查询失败"});
+    })
+});
+
 export default router;
