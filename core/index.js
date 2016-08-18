@@ -20,7 +20,7 @@ import Houses from './houses';
 import HousesKeyword from './houseskeyword';
 import SysHousesKeyword from './syshouseskeyword';
 
-/****************************************/
+/*****************************************************************/
 //一个用户对应一个openid
 Users.sequlize.hasOne(UsersOpenid.sequlize, {
     foreignKey: "user_id"
@@ -30,7 +30,7 @@ UsersOpenid.sequlize.belongsTo(Users.sequlize, {
     foreignKey: "user_id",
     targetKey: "id"
 });
-/****************************************/
+/*****************************************************************/
 //一个用户对应多篇文章
 Users.sequlize.hasMany(Articles.sequlize, {foreignKey: 'author'});
 //一篇文章对应一个作者
@@ -38,7 +38,7 @@ Articles.sequlize.belongsTo(Users.sequlize, {
     foreignKey: "author",
     targetKey: "id"
 });
-/****************************************/
+/*****************************************************************/
 //管理员创建多个管理员
 SysUsers.sequlize.hasMany(SysUsers.sequlize,{
     foreignKey:'creater'
@@ -49,7 +49,7 @@ SysUsers.sequlize.belongsTo(SysUsers.sequlize,{
     targetKey:'id',
     as:'creater_user'
 });
-/****************************************/
+/*****************************************************************/
 //管理员修改多个管理员
 SysUsers.sequlize.hasMany(SysUsers.sequlize,{
     foreignKey:'modifier'
@@ -60,7 +60,7 @@ SysUsers.sequlize.belongsTo(SysUsers.sequlize,{
     targetKey:'id',
     as:'modifier_user'
 });
-/****************************************/
+/*****************************************************************/
 //一个用户在sys_users表中存在一个外键
 Users.sequlize.hasOne(SysUsers.sequlize, {
     foreignKey: 'users_id',
@@ -69,7 +69,7 @@ SysUsers.sequlize.belongsTo(Users.sequlize, {
     foreignKey: 'users_id',
     targetKey: 'id',
 });
-/****************************************/
+/*****************************************************************/
 //用户创建多个字典
 SysUsers.sequlize.hasMany(SysDict.sequlize, {
     foreignKey: 'creater',
@@ -80,7 +80,7 @@ SysDict.sequlize.belongsTo(SysUsers.sequlize, {
     targetKey: 'id',
     as:'creater_user'
 });
-/****************************************/
+/*****************************************************************/
 //用户修改多个字典
 SysUsers.sequlize.hasMany(SysDict.sequlize, {
     foreignKey: 'modifier',
@@ -91,7 +91,7 @@ SysDict.sequlize.belongsTo(SysUsers.sequlize, {
     targetKey: 'id',
     as:'modifier_user'
 });
-/****************************************/
+/*****************************************************************/
 //字典表自关联自己
 SysDict.sequlize.hasMany(SysDict.sequlize, {
     foreignKey: 'parent_id',
@@ -102,7 +102,7 @@ SysDict.sequlize.belongsTo(SysDict.sequlize, {
     targetKey: 'id',
     as: 'sys_dict_parent'
 });
-/****************************************/
+/*****************************************************************/
 //一个酒店对应多篇文章
 Houses.sequlize.hasMany(Articles.sequlize, {
     foreignKey: 'houses_id',
@@ -114,7 +114,7 @@ Articles.sequlize.belongsTo(Houses.sequlize, {
     foreignKey: 'houses_id',
     targetKey: 'id'
 });
-/****************************************/
+/*****************************************************************/
 //一个酒店对应多个亮点
 Houses.sequlize.hasMany(HousesKeyword.sequlize,{
     foreignKey:'houses_id',
@@ -124,7 +124,7 @@ HousesKeyword.sequlize.belongsTo(Houses.sequlize,{
     foreignKey:'houses_id',
     targetKey:'id'
 });
-/****************************************/
+/*****************************************************************/
 //一个管理员创建多个关键词
 SysUsers.sequlize.hasMany(SysHousesKeyword.sequlize,{
     foreignKey:'creater'
@@ -135,7 +135,7 @@ SysHousesKeyword.sequlize.belongsTo(SysUsers.sequlize,{
     targetKey:'id',
     as:'creater_user'
 });
-/****************************************/
+/*****************************************************************/
 //一个管理员更新多个关键词
 SysUsers.sequlize.hasMany(SysHousesKeyword.sequlize,{
     foreignKey:'modifier'
@@ -146,7 +146,7 @@ SysHousesKeyword.sequlize.belongsTo(SysUsers.sequlize,{
     targetKey:'id',
     as:'modifier_user'
 });
-/****************************************/
+/*****************************************************************/
 //一个系统酒店亮点对应多个酒店亮点
 SysHousesKeyword.sequlize.hasMany(HousesKeyword.sequlize,{
     foreignKey:'keyword_id'
@@ -156,12 +156,12 @@ HousesKeyword.sequlize.belongsTo(SysHousesKeyword.sequlize,{
    foreignKey:'keyword_id',
     targetKey:'id'
 });
-/****************************************/
+/*****************************************************************/
 //一个vip关联一个精选者
 UsersVip.sequlize.hasOne(Users.sequlize, {foreignKey: 'user_vip_id'});
 //用户管理vip 外键存在于Users中
 Users.sequlize.belongsTo(UsersVip.sequlize, {foreignKey: 'user_vip_id', targetKey: 'id'});
-/****************************************/
+/*****************************************************************/
 // 角色对应多个权限
 SysRoles.sequlize.belongsToMany(SysResources.sequlize, {
     through: SysRoleResources.sequlize,
@@ -174,7 +174,7 @@ SysResources.sequlize.belongsToMany(SysRoles.sequlize, {
     foreignKey: "resource_id",
     otherKey: "role_id"
 });
-/****************************************/
+/*****************************************************************/
 //用户对应多个角色
 SysUsers.sequlize.belongsToMany(SysRoles.sequlize, {
     through: SysUserRoles.sequlize,
