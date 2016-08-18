@@ -19,6 +19,14 @@ class HousesService {
         });
     }
 
+    /**
+     * 查询系统关键字列表
+     * @param page
+     * @param startDate
+     * @param endDate
+     * @param pagesize
+     * @returns {*|Promise.<T>}
+     */
     findSysHousesList(page, startDate, endDate, pagesize) {
         let where = {};
         if (!!startDate && !!endDate) where['updated_at'] = {$between: [startDate, endDate]};
@@ -37,7 +45,7 @@ class HousesService {
                     attributes: ['id', 'user_name'],
                     as: 'modifier_user'
                 }]
-            }, page, count, 2).then(result=> {
+            }, page, count, 2,pagesize).then(result=> {
                 result.list.map(keyword=> {
                     SysHousesKeyword.formatSysHousesKeyword(keyword.dataValues);
                 });
