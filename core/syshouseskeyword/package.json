@@ -2,5 +2,5 @@
 	"name": "syshouseskeyword",
 	"version": "2.0.0",
 	"private": true,
-	"main": "./syshouseskeyword.js"
+	"main": "./associated.config.js"
 }

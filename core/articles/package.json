@@ -2,5 +2,5 @@
 	"name": "articles",
 	"version": "2.0.0",
 	"private": true,
-	"main": "./articles.js"
+	"main": "./associated.config.js"
 }

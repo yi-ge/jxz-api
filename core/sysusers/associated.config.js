@@ -2,11 +2,11 @@
  * Created by NX on 2016/8/18.
  */
 import SysUsers from './sysusers';
-import SysDict from './../sysdict';
-import Users from './../users';
-import SysRoles from './../sysroles';
-import SysUserRoles from './../sysuserroles';
-import SysHousesKeyword from './../syshouseskeyword';
+import SysDict from './../sysdict/sysdict';
+import Users from './../users/users';
+import SysRoles from './../sysroles/sysroles';
+import SysUserRoles from './../sysuserroles/sysuserroles';
+import SysHousesKeyword from './../syshouseskeyword/syshouseskeyword';
 //用户对应一个精选者
 SysUsers.sequlize.belongsTo(Users.sequlize, {
     foreignKey: 'users_id',

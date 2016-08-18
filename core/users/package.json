@@ -2,5 +2,5 @@
 	"name": "users",
 	"version": "2.0.0",
 	"private": true,
-	"main": "./users.js"
+	"main": "./associated.config.js"
 }

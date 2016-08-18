@@ -2,5 +2,5 @@
 	"name": "houseskeyword",
 	"version": "2.0.0",
 	"private": true,
-	"main": "./houseskeyword.js"
+	"main": "./associated.config.js"
 }

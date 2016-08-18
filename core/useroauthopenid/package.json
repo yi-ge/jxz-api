@@ -2,5 +2,5 @@
 	"name": "useroauthopenid",
 	"version": "2.0.0",
 	"private": true,
-	"main": "./useroauthopenid.js"
+	"main": "./associated.config.js"
 }

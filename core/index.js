@@ -21,131 +21,42 @@ import HousesKeyword from './houseskeyword';
 import SysHousesKeyword from './syshouseskeyword';
 
 /*****************************************************************/
-//一个用户对应一个openid
-Users.sequlize.hasOne(UsersOpenid.sequlize, {
-    foreignKey: "user_id"
-});
-//一个openid对应一个用户 外键存在于user_oauth_openid中 为user_id
-UsersOpenid.sequlize.belongsTo(Users.sequlize, {
-    foreignKey: "user_id",
-    targetKey: "id"
-});
-/*****************************************************************/
-//一个用户对应多篇文章
-Users.sequlize.hasMany(Articles.sequlize, {foreignKey: 'author'});
-//一篇文章对应一个作者
-Articles.sequlize.belongsTo(Users.sequlize, {
-    foreignKey: "author",
-    targetKey: "id"
-});
-
-/*****************************************************************/
-//一个用户在sys_users表中存在一个外键
-Users.sequlize.hasOne(SysUsers.sequlize, {
-    foreignKey: 'users_id',
-});
 
 /*****************************************************************/
 
-//字典关联一个用户
-SysDict.sequlize.belongsTo(SysUsers.sequlize, {
-    foreignKey: 'creater',
-    targetKey: 'id',
-    as:'creater_user'
-});
+
 /*****************************************************************/
 
-//字典修改一个用户
-SysDict.sequlize.belongsTo(SysUsers.sequlize, {
-    foreignKey: 'modifier',
-    targetKey: 'id',
-    as:'modifier_user'
-});
-/*****************************************************************/
-//字典表自关联自己
-SysDict.sequlize.hasMany(SysDict.sequlize, {
-    foreignKey: 'parent_id',
-    as: 'sys_dict_child'
-});
-SysDict.sequlize.belongsTo(SysDict.sequlize, {
-    foreignKey: 'parent_id',
-    targetKey: 'id',
-    as: 'sys_dict_parent'
-});
-/*****************************************************************/
-//一个酒店对应多篇文章
-Houses.sequlize.hasMany(Articles.sequlize, {
-    foreignKey: 'houses_id',
-    targetKey: 'id'
-});
-//一篇文章对应一个酒店
-Articles.sequlize.belongsTo(Houses.sequlize, {
-    as: 'houses',
-    foreignKey: 'houses_id',
-    targetKey: 'id'
-});
-/*****************************************************************/
-//一个酒店对应多个亮点
-Houses.sequlize.hasMany(HousesKeyword.sequlize,{
-    foreignKey:'houses_id',
-});
-//酒店亮点对应一个酒店
-HousesKeyword.sequlize.belongsTo(Houses.sequlize,{
-    foreignKey:'houses_id',
-    targetKey:'id'
-});
 /*****************************************************************/
 
-//一个关键词对应一个创建人
-SysHousesKeyword.sequlize.belongsTo(SysUsers.sequlize,{
-    foreignKey:'creater',
-    targetKey:'id',
-    as:'creater_user'
-});
+
 /*****************************************************************/
 
-//一个关键词对应一个创建人
-SysHousesKeyword.sequlize.belongsTo(SysUsers.sequlize,{
-    foreignKey:'modifier',
-    targetKey:'id',
-    as:'modifier_user'
-});
-/*****************************************************************/
-//一个系统酒店亮点对应多个酒店亮点
-SysHousesKeyword.sequlize.hasMany(HousesKeyword.sequlize,{
-    foreignKey:'keyword_id'
-});
-//酒店亮点对应一个系统亮点
-HousesKeyword.sequlize.belongsTo(SysHousesKeyword.sequlize,{
-   foreignKey:'keyword_id',
-    targetKey:'id'
-});
-/*****************************************************************/
-//一个vip关联一个精选者
-UsersVip.sequlize.hasOne(Users.sequlize, {foreignKey: 'user_vip_id'});
-//用户管理vip 外键存在于Users中
-Users.sequlize.belongsTo(UsersVip.sequlize, {foreignKey: 'user_vip_id', targetKey: 'id'});
-/*****************************************************************/
-// 角色对应多个权限
-SysRoles.sequlize.belongsToMany(SysResources.sequlize, {
-    through: SysRoleResources.sequlize,
-    foreignKey: "role_id",
-    otherKey: 'resource_id'
-});
-//权限对应多个角色
-SysResources.sequlize.belongsToMany(SysRoles.sequlize, {
-    through: SysRoleResources.sequlize,
-    foreignKey: "resource_id",
-    otherKey: "role_id"
-});
+
 /*****************************************************************/
 
-//角色对应多个用户
-SysRoles.sequlize.belongsToMany(SysUsers.sequlize, {
-    through: SysUserRoles.sequlize,
-    foreignKey: "role_id",
-    otherKey: 'user_id'
-});
+/*****************************************************************/
+
+
+/*****************************************************************/
+
+
+/*****************************************************************/
+
+
+/*****************************************************************/
+
+/*****************************************************************/
+
+
+/*****************************************************************/
+
+
+/*****************************************************************/
+
+
+/*****************************************************************/
+
 
 
 export {

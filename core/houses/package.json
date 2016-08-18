@@ -2,5 +2,5 @@
 	"name": "houses",
 	"version": "2.0.0",
 	"private": true,
-	"main": "./houses.js"
+	"main": "./associated.config.js"
 }

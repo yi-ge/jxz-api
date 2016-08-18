@@ -2,5 +2,5 @@
 	"name": "sysroles",
 	"version": "2.0.0",
 	"private": true,
-	"main": "./sysroles.js"
+	"main": "./associated.config.js"
 }

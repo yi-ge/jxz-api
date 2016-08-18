@@ -2,5 +2,5 @@
 	"name": "usersvip",
 	"version": "2.0.0",
 	"private": true,
-	"main": "./usersvip.js"
+	"main": "./associated.config.js"
 }
