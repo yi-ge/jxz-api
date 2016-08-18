@@ -591,6 +591,8 @@ CREATE TABLE `sys_info_template` (
 
 /*Data for the table `sys_info_template` */
 
+insert  into `sys_info_template`(`id`,`type`,`name`,`title`,`content`,`template_desc`,`creater`,`modifier`,`created_at`,`updated_at`,`status`) values (1,1000,'发送验证码','发送验证码','【买房吗】您的验证码是：{#verify_code}，如非本人操作请忽略。','发送短信模板1',NULL,NULL,'2016-06-20 11:16:41','2016-06-20 11:16:46',1);
+
 /*Table structure for table `sys_integral` */
 
 DROP TABLE IF EXISTS `sys_integral`;
@@ -722,6 +724,7 @@ CREATE TABLE `sys_users` (
   `last_login_ip` int(10) unsigned DEFAULT NULL COMMENT '最后一次登陆IP',
   `last_login_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '最后一次登陆日期',
   `passwd` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '密码',
+  `users_id` bigint(20) DEFAULT NULL COMMENT '用户id，引用users',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户';
 
