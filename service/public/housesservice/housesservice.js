@@ -290,9 +290,9 @@ class HousesService {
                 transaction: t,
                 lock: t.LOCK.UPDATE
             });
-        }).then(()=>{
+        }).then(()=> {
             return Houses.findById(id);
-        }).then(result=>{
+        }).then(result=> {
             return Houses.formatHouse(result.dataValues);
         });
     }
