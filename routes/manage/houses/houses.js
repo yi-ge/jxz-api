@@ -130,4 +130,18 @@ router.post('/findhouses',(req,res,next)=>{
        res.json({code: 1000, message: "酒店查询失败"});
    })
 });
+
+router.post('/changehousesputaway',(req,res,next)=>{
+    let param = req.body;
+    let id = param.id,
+        is_putaway = param.is_putaway,
+        modifier = param.modifier;
+    HousesService.changeHousesPutaway(id, is_putaway, modifier).then(result=>{
+        next(result);
+    }).catch(e=>{
+        console.log(e);
+        res.json({code: 1000, message: "酒店查询失败"});
+    })
+})
+
 export default router;

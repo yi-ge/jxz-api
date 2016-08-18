@@ -71,6 +71,20 @@ class Houses extends Base {
             }]
         },option), page, count, sortType, pagesize);
     }
+
+    findById(id,option){
+        return super.findById(id,Object.assign({
+            include: [{
+                model: SysUsers.sequlize,
+                as: 'creater_user',
+                attributes: ['id', 'user_name', 'account_name']
+            }, {
+                model: SysUsers.sequlize,
+                as: 'modifier_user',
+                attributes: ['id', 'user_name', 'account_name']
+            }]
+        },option));
+    }
 }
 
 export default new Houses();

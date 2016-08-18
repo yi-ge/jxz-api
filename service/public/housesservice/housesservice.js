@@ -272,5 +272,29 @@ class HousesService {
             return result;
         });
     }
+
+    /**
+     *
+     * @param id
+     * @param is_putaway
+     */
+    changeHousesPutaway(id, is_putaway, modifier) {
+        if (is_putaway != 0 && is_putaway != 1) return Houses.errorPromise('状态传递不正却');
+        return Houses.transaction(t=> {
+            return Houses.update({
+                is_putaway: is_putaway,
+                modifier: modifier,
+                updated_at: new Date(),
+            }, {
+                where: {id: id},
+                transaction: t,
+                lock: t.LOCK.UPDATE
+            });
+        }).then(()=>{
+            return Houses.findById(id);
+        }).then(result=>{
+            return Houses.formatHouse(result.dataValues);
+        });
+    }
 }
 export default new HousesService();

@@ -77,6 +77,10 @@ class SysUserService {
         return SysUsers.findList({
             attributes:['id','user_name']
         }).then(result=>{
+            result.list.map(user=>{
+                user.dataValues.name = user.dataValues.user_name;
+                delete user.dataValues.account_name;
+            });
             return result;
         });
     }

@@ -56,6 +56,7 @@ router.post('/finduserall', (req, res, next)=> {
     SysUsersService.findSysUsersAll().then(result=> {
         next(result);
     }).catch(e=> {
+        console.log(e);
         res.json({code: 1000, message: "查询失败"});
     });
 });
