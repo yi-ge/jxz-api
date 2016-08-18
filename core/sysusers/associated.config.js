@@ -7,6 +7,7 @@ import Users from './../users/users';
 import SysRoles from './../sysroles/sysroles';
 import SysUserRoles from './../sysuserroles/sysuserroles';
 import SysHousesKeyword from './../syshouseskeyword/syshouseskeyword';
+import HousesKeyword from './../houseskeyword/houseskeyword';
 
 //管理员创建多个管理员
 SysUsers.sequlize.hasMany(SysUsers.sequlize,{
@@ -30,6 +31,14 @@ SysUsers.sequlize.hasMany(SysHousesKeyword.sequlize,{
 });
 //一个管理员更新多个关键词
 SysUsers.sequlize.hasMany(SysHousesKeyword.sequlize,{
+    foreignKey:'modifier'
+});
+//管理员创建多个酒店亮点
+SysUsers.sequlize.hasMany(HousesKeyword.sequlize,{
+    foreignKey:'creater'
+});
+//管理员修改多个酒店亮点
+SysUsers.sequlize.hasMany(HousesKeyword.sequlize,{
     foreignKey:'modifier'
 });
 //用户对应一个精选者

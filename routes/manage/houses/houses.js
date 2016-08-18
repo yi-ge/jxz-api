@@ -69,6 +69,17 @@ router.post('/addhousekeyword',(req,res,next)=>{
         res.json({code: 1000, message: "系统酒店亮点查询"});
     });
 });
-
-
+//更新于酒店关联的亮点状态
+router.post('/addhousekeyword',(req,res,next)=>{
+    let param = req.body;
+    let id = param.id,
+        status = param.status,
+        modifier = param.modifier;
+    HousesService.changeHousesKeywordStatus(id,status,modifier).then(result=>{
+        next(result);
+    }).catch(e=> {
+        console.log(e);
+        res.json({code: 1000, message: "系统酒店亮点查询"});
+    });
+});
 export default router;

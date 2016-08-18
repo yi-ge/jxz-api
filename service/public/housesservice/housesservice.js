@@ -111,5 +111,30 @@ class HousesService {
         });
     }
 
+    /**
+     * 改变酒店亮点状态
+     * @param id
+     * @param status
+     * @param modifier
+     * @returns {*}
+     */
+    changeHousesKeywordStatus(id,status,modifier){
+        if(status != 1 && status != 0) return HousesKeyword.errorPromise('状态改变失败');
+        return HousesKeyword.transaction(t=>{
+           return HousesKeyword.update({
+               status:status,
+               modifier:modifier,
+               updated_at:new Date()
+           },{
+               where:{id:id},
+               transaction:t,
+               lock: t.LOCK.UPDATE
+           });
+        }).then(()=>{
+            return HousesKeyword.findById(id);
+        }).then(result=>{
+            return HousesKeyword.formatHouse(result.dataValues);
+        });
+    }
 }
 export default new HousesService();

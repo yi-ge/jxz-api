@@ -3,6 +3,8 @@
  */
 import houseskeyword from './houseskeyword.config';
 import Base from './../base';
+import SysHousesKeyword from './../syshouseskeyword/syshouseskeyword';
+import SysUsers from './../sysusers/sysusers';
 
 class HousesKeyword extends Base {
     constructor() {
@@ -36,6 +38,22 @@ class HousesKeyword extends Base {
 
     formatHousesKeyword(keyword){
         return keyword;
+    }
+
+    findById(id,option){
+        return super.findById(id,Object.assign({
+            include:[{
+                model:SysHousesKeyword.sequlize,
+            },{
+                model:SysUsers.sequlize,
+                attribute:['id','user_name'],
+                as:'creater_user'
+            },{
+                model:SysUsers.sequlize,
+                attribute:['id','user_name'],
+                as:'modifier_user'
+            }]
+        },option));
     }
 }
 
