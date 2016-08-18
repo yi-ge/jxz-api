@@ -17,6 +17,8 @@ import UsersOpenid from './usersopenid';
 import UserOauthOpenid from './useroauthopenid';
 import Articles from './articles';
 import Houses from './houses';
+import HousesKeyword from './houseskeyword';
+import SysHousesKeyword from './syshouseskeyword';
 
 // 设置关联关系
 
@@ -29,7 +31,6 @@ UsersOpenid.sequlize.belongsTo(Users.sequlize, {
     foreignKey: "user_id",
     targetKey: "id"
 });
-
 
 //一个用户对应多篇文章
 Users.sequlize.hasMany(Articles.sequlize, {foreignKey: 'author'});
@@ -56,6 +57,17 @@ SysUsers.sequlize.hasMany(SysDict.sequlize, {
 SysDict.sequlize.belongsTo(SysUsers.sequlize, {
     foreignKey: 'creater',
     targetKey: 'id',
+    as:'creater_user'
+});
+//用户修改多个字典
+SysUsers.sequlize.hasMany(SysDict.sequlize, {
+    foreignKey: 'modifier',
+});
+//字典修改一个用户
+SysDict.sequlize.belongsTo(SysUsers.sequlize, {
+    foreignKey: 'modifier',
+    targetKey: 'id',
+    as:'modifier_user'
 });
 
 //字典表自关联自己
@@ -79,6 +91,48 @@ Articles.sequlize.belongsTo(Houses.sequlize, {
     as: 'houses',
     foreignKey: 'houses_id',
     targetKey: 'id'
+});
+
+//一个酒店对应多个亮点
+Houses.sequlize.hasMany(HousesKeyword.sequlize,{
+    foreignKey:'houses_id',
+});
+//酒店亮点对应一个酒店
+HousesKeyword.sequlize.belongsTo(Houses.sequlize,{
+    foreignKey:'houses_id',
+    targetKey:'id'
+});
+
+//一个管理员创建多个关键词
+SysUsers.sequlize.hasMany(SysHousesKeyword.sequlize,{
+    foreignKey:'creater'
+});
+//一个关键词对应一个创建人
+SysHousesKeyword.sequlize.belongsTo(SysUsers.sequlize,{
+    foreignKey:'creater',
+    targetKey:'id',
+    as:'creater_user'
+});
+
+//一个管理员更新多个关键词
+SysUsers.sequlize.hasMany(SysHousesKeyword.sequlize,{
+    foreignKey:'modifier'
+});
+//一个关键词对应一个创建人
+SysHousesKeyword.sequlize.belongsTo(SysUsers.sequlize,{
+    foreignKey:'modifier',
+    targetKey:'id',
+    as:'modifier_user'
+});
+
+//一个系统酒店亮点对应多个酒店亮点
+SysHousesKeyword.sequlize.hasMany(HousesKeyword.sequlize,{
+    foreignKey:'keyword_id'
+});
+//酒店亮点对应一个系统亮点
+HousesKeyword.sequlize.belongsTo(SysHousesKeyword.sequlize,{
+   foreignKey:'keyword_id',
+    targetKey:'id'
 });
 
 //一个vip关联一个精选者
@@ -127,6 +181,8 @@ export {
     SysHotKeyword, // 系统热词
     Articles, // 文章
     Houses, // 酒店
+    HousesKeyword, // 酒店亮点
+    SysHousesKeyword, //系统酒店亮点
     Activitys,
     ActivitysApply,
     ActivitysLocation,

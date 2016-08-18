@@ -7,6 +7,7 @@ import UsersService from './../public/usersservice';
 import VipService from './../public/vipservice';
 import ArticlesService from './../public/articlesservice';
 import RegionService from './../public/regionservice';
+import HousesService from './../public/housesservice';
 export {
     SysUsersService,
     RolesService,
@@ -14,4 +15,5 @@ export {
     VipService,
     ArticlesService,
     RegionService,
+    HousesService,
 }

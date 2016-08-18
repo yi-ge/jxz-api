@@ -57,10 +57,15 @@ class RegionService {
     findStateList() {
         return SysDict.findList({
             where: {type: 1, level: 1},
-            include: {
+            include: [{
                 model: SysUsers.sequlize,
                 attributes: ['account_name', 'user_name', 'id'],
-            }
+                as: 'creater_user'
+            }, {
+                model: SysUsers.sequlize,
+                attributes: ['account_name', 'user_name', 'id'],
+                as: 'modifier_user'
+            }]
         }).then(result=> {
             return SysDict.formatSysDict(result);
         });
@@ -80,6 +85,11 @@ class RegionService {
                 include: [{
                     model: SysUsers.sequlize,
                     attributes: ['account_name', 'user_name', 'id'],
+                    as: 'creater_user'
+                }, {
+                    model: SysUsers.sequlize,
+                    attributes: ['account_name', 'user_name', 'id'],
+                    as: 'modifier_user'
                 }, {
                     model: SysDict.sequlize,
                     as: 'sys_dict_parent',
@@ -123,6 +133,11 @@ class RegionService {
                 include: [{
                     model: SysUsers.sequlize,
                     attributes: ['account_name', 'user_name', 'id'],
+                    as: 'creater_user',
+                }, {
+                    model: SysUsers.sequlize,
+                    attributes: ['account_name', 'user_name', 'id'],
+                    as: 'modifier_user',
                 }, {
                     model: SysDict.sequlize,
                     as: 'sys_dict_parent',
@@ -156,8 +171,16 @@ class RegionService {
                 where: {id: state_id, type: 1, level: 1},
                 transaction: t,
                 lock: t.LOCK.UPDATE
-            }).then(()=> {
-                return SysDict.findById(state_id);
+            })
+        }).then(()=> {
+            return SysDict.findById(state_id, {
+                model: SysUsers.sequlize,
+                attributes: ['account_name', 'user_name', 'id'],
+                as: 'creater_user',
+            }, {
+                model: SysUsers.sequlize,
+                attributes: ['account_name', 'user_name', 'id'],
+                as: 'modifier_user',
             });
         }).then(result=> {
             return SysDict.formatSysDict(result);
@@ -187,6 +210,11 @@ class RegionService {
                 include: [{
                     model: SysUsers.sequlize,
                     attributes: ['account_name', 'user_name', 'id'],
+                    as: 'creater_user',
+                }, {
+                    model: SysUsers.sequlize,
+                    attributes: ['account_name', 'user_name', 'id'],
+                    as: 'modifier_user',
                 }, {
                     model: SysDict.sequlize,
                     as: 'sys_dict_parent',
@@ -214,10 +242,15 @@ class RegionService {
                 lock: t.LOCK.UPDATE
             });
         }).then(()=> {
-            return SysDict.findById(region_id,{
+            return SysDict.findById(region_id, {
                 include: [{
                     model: SysUsers.sequlize,
                     attributes: ['account_name', 'user_name', 'id'],
+                    as: 'creater_user',
+                }, {
+                    model: SysUsers.sequlize,
+                    attributes: ['account_name', 'user_name', 'id'],
+                    as: 'modifier_user',
                 }, {
                     model: SysDict.sequlize,
                     as: 'sys_dict_parent',
