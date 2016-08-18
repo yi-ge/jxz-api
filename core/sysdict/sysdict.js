@@ -3,7 +3,6 @@
  */
 import sysdict from './sysdict.config';
 import Base from './../base';
-
 const config = {
     type:1, // 区域
 };
@@ -33,7 +32,8 @@ class SysDict extends Base {
     }
 
     formatSysDict(dict){
-
+        !!dict.created_at && (dict.created_at = this.formatDate(dict.created_at,'yyyy-MM-dd hh:mm:ss'));
+        !!dict.updated_at && (dict.updated_at = this.formatDate(dict.updated_at,'yyyy-MM-dd hh:mm:ss'));
         return dict;
     }
 }

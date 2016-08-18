@@ -15,7 +15,7 @@ class RegionService {
     addState(name, creater) {
         return SysDict.transaction(t=> {
             return SysDict.insert(SysDict.createModel(null, name, 1, null, null, 1, creater, creater), {transaction: t}).then(state=> {
-                return SysDict.formatSysDict(state);
+                return SysDict.formatSysDict(state.dataValues);
             });
         });
     }
@@ -30,7 +30,7 @@ class RegionService {
     addCountry(name, state_id, creater) {
         return SysDict.transaction(t=> {
             return SysDict.insert(SysDict.createModel(null, name, 1, null, state_id, 2, creater, creater), {transaction: t}).then(state=> {
-                return SysDict.formatSysDict(state);
+                return SysDict.formatSysDict(state.dataValues);
             });
         });
     }
@@ -45,7 +45,7 @@ class RegionService {
     addRegion(name, country_id, creater) {
         return SysDict.transaction(t=> {
             return SysDict.insert(SysDict.createModel(null, name, 1, null, country_id, 3, creater, creater), {transaction: t}).then(state=> {
-                return SysDict.formatSysDict(state);
+                return SysDict.formatSysDict(state.dataValues);
             });
         });
     }
@@ -67,7 +67,10 @@ class RegionService {
                 as: 'modifier_user'
             }]
         }).then(result=> {
-            return SysDict.formatSysDict(result);
+            result.list.map(state=>{
+                SysDict.formatSysDict(state.dataValues);
+            });
+            return result;
         });
     }
 
@@ -97,7 +100,7 @@ class RegionService {
                 }]
             }, page, count, null, pagesize).then(result=> {
                 result.list.map(country=> {
-                    SysDict.formatSysDict(country);
+                    SysDict.formatSysDict(country.dataValues);
                 });
                 return result;
             });
@@ -115,7 +118,10 @@ class RegionService {
             where: where,
             attributes: ['id', 'name'],
         }).then(result=> {
-            return result;
+            result.list.map(country=> {
+                SysDict.formatSysDict(country.dataValues);
+            });
+            return SysDict.formatSysDict(result);
         });
     }
 
@@ -149,9 +155,9 @@ class RegionService {
                     }]
                 }]
             }, page, count, null, pagesize).then(result=> {
-                //result.list(region=> {
-                //    SysDict.formatSysDict(region);
-                //});
+                result.list.map(region=> {
+                    SysDict.formatSysDict(region.dataValues);
+                });
                 return result;
             });
         });
@@ -174,16 +180,18 @@ class RegionService {
             })
         }).then(()=> {
             return SysDict.findById(state_id, {
-                model: SysUsers.sequlize,
-                attributes: ['account_name', 'user_name', 'id'],
-                as: 'creater_user',
-            }, {
-                model: SysUsers.sequlize,
-                attributes: ['account_name', 'user_name', 'id'],
-                as: 'modifier_user',
+                include: [{
+                    model: SysUsers.sequlize,
+                    attributes: ['account_name', 'user_name', 'id'],
+                    as: 'creater_user',
+                }, {
+                    model: SysUsers.sequlize,
+                    attributes: ['account_name', 'user_name', 'id'],
+                    as: 'modifier_user',
+                }]
             });
         }).then(result=> {
-            return SysDict.formatSysDict(result);
+            return SysDict.formatSysDict(result.dataValues);
         }).catch(e=> {
             console.log(e);
             throw e;
@@ -222,7 +230,7 @@ class RegionService {
                 }]
             });
         }).then(result=> {
-            return SysDict.formatSysDict(result);
+            return SysDict.formatSysDict(result.dataValues);
         });
     }
 
@@ -263,7 +271,7 @@ class RegionService {
                 }]
             });
         }).then(result=> {
-            return SysDict.formatSysDict(result);
+            return SysDict.formatSysDict(result.dataValues);
         });
     }
 }
