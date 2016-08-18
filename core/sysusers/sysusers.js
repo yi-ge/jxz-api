@@ -1,10 +1,8 @@
 /**
  * Created by NX on 2016/8/8.
  */
-import crypto from 'crypto';
 import sysusers from './sysusers.config';
 import Base from './../base';
-
 class SysUsers extends Base {
     constructor() {
         super("sys_users", sysusers, {
@@ -36,4 +34,4 @@ class SysUsers extends Base {
     }
 }
 
-export default new SysUsers();
+export default  new SysUsers();

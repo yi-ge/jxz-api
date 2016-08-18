@@ -38,42 +38,15 @@ Articles.sequlize.belongsTo(Users.sequlize, {
     foreignKey: "author",
     targetKey: "id"
 });
-/*****************************************************************/
-//管理员创建多个管理员
-SysUsers.sequlize.hasMany(SysUsers.sequlize,{
-    foreignKey:'creater'
-});
-//管理员存在创建人
-SysUsers.sequlize.belongsTo(SysUsers.sequlize,{
-    foreignKey:'creater',
-    targetKey:'id',
-    as:'creater_user'
-});
-/*****************************************************************/
-//管理员修改多个管理员
-SysUsers.sequlize.hasMany(SysUsers.sequlize,{
-    foreignKey:'modifier'
-});
-//管理员存在修改人
-SysUsers.sequlize.belongsTo(SysUsers.sequlize,{
-    foreignKey:'modifier',
-    targetKey:'id',
-    as:'modifier_user'
-});
+
 /*****************************************************************/
 //一个用户在sys_users表中存在一个外键
 Users.sequlize.hasOne(SysUsers.sequlize, {
     foreignKey: 'users_id',
 });
-SysUsers.sequlize.belongsTo(Users.sequlize, {
-    foreignKey: 'users_id',
-    targetKey: 'id',
-});
+
 /*****************************************************************/
-//用户创建多个字典
-SysUsers.sequlize.hasMany(SysDict.sequlize, {
-    foreignKey: 'creater',
-});
+
 //字典关联一个用户
 SysDict.sequlize.belongsTo(SysUsers.sequlize, {
     foreignKey: 'creater',
@@ -81,10 +54,7 @@ SysDict.sequlize.belongsTo(SysUsers.sequlize, {
     as:'creater_user'
 });
 /*****************************************************************/
-//用户修改多个字典
-SysUsers.sequlize.hasMany(SysDict.sequlize, {
-    foreignKey: 'modifier',
-});
+
 //字典修改一个用户
 SysDict.sequlize.belongsTo(SysUsers.sequlize, {
     foreignKey: 'modifier',
@@ -125,10 +95,7 @@ HousesKeyword.sequlize.belongsTo(Houses.sequlize,{
     targetKey:'id'
 });
 /*****************************************************************/
-//一个管理员创建多个关键词
-SysUsers.sequlize.hasMany(SysHousesKeyword.sequlize,{
-    foreignKey:'creater'
-});
+
 //一个关键词对应一个创建人
 SysHousesKeyword.sequlize.belongsTo(SysUsers.sequlize,{
     foreignKey:'creater',
@@ -136,10 +103,7 @@ SysHousesKeyword.sequlize.belongsTo(SysUsers.sequlize,{
     as:'creater_user'
 });
 /*****************************************************************/
-//一个管理员更新多个关键词
-SysUsers.sequlize.hasMany(SysHousesKeyword.sequlize,{
-    foreignKey:'modifier'
-});
+
 //一个关键词对应一个创建人
 SysHousesKeyword.sequlize.belongsTo(SysUsers.sequlize,{
     foreignKey:'modifier',
@@ -175,12 +139,7 @@ SysResources.sequlize.belongsToMany(SysRoles.sequlize, {
     otherKey: "role_id"
 });
 /*****************************************************************/
-//用户对应多个角色
-SysUsers.sequlize.belongsToMany(SysRoles.sequlize, {
-    through: SysUserRoles.sequlize,
-    foreignKey: "user_id",
-    otherKey: "role_id"
-});
+
 //角色对应多个用户
 SysRoles.sequlize.belongsToMany(SysUsers.sequlize, {
     through: SysUserRoles.sequlize,
