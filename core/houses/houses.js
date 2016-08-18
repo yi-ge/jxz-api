@@ -3,6 +3,8 @@
  */
 import houses from './houses.config';
 import Base from './../base';
+import SysUsers from './../sysusers/sysusers';
+
 class Houses extends Base {
     constructor() {
         super("houses", houses, {
@@ -22,6 +24,7 @@ class Houses extends Base {
      * @param spots_around 景色
      * @param houses_desc 介绍
      *        is_putaway 是否上架0未上架1上架
+     *        is_orders 是否可预约0不能1能
      *        comment_num 评论数
      *
      *
@@ -42,13 +45,31 @@ class Houses extends Base {
             created_at:new Date(),
             updated_at:new Date(),
             is_putaway:0,
+            is_orders:0,
             comment_num:0,
         };
         return model;
     }
 
     formatHouse(house){
+        !!house.created_at && (house.created_at = this.formatDate(house.created_at,'yyyy-MM-dd hh:mm:ss'));
+        !!house.updated_at && (house.updated_at = this.formatDate(house.updated_at,'yyyy-MM-dd hh:mm:ss'));
         return house;
+    }
+
+    findPage(option, page, count, sortType = 2, pagesize = 20){
+        return super.findPage(Object.assign({
+            order: `updated_at ${sortType == 1 ? `ASC` : `DESC`}`,
+            include: [{
+                model: SysUsers.sequlize,
+                as: 'creater_user',
+                attributes: ['id', 'user_name', 'account_name']
+            }, {
+                model: SysUsers.sequlize,
+                as: 'modifier_user',
+                attributes: ['id', 'user_name', 'account_name']
+            }]
+        },option), page, count, sortType, pagesize);
     }
 }
 

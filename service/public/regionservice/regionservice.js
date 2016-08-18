@@ -126,6 +126,24 @@ class RegionService {
     }
 
     /**
+     * 通过国家查询区域
+     * @param country_id
+     * @returns {*|Promise.<T>}
+     */
+    findRegionToCountry(country_id){
+        let where = {type:1,level:3,parent_id:country_id};
+        return SysDict.findList({
+            where:where,
+            attributes:['id','name'],
+        }).then(result=>{
+            result.list.map(region=> {
+                SysDict.formatSysDict(region.dataValues);
+            });
+            return SysDict.formatSysDict(result);
+        });
+    }
+
+    /**
      * 查询区域列表
      * @param page
      * @param pagesize
@@ -171,7 +189,6 @@ class RegionService {
      * @returns {Promise.<T>}
      */
     editState(state_id, name, modifier) {
-        console.log(state_id, name, modifier);
         return SysDict.transaction(t=> {
             return SysDict.update({name: name, modifier: modifier, updated_at: new Date()}, {
                 where: {id: state_id, type: 1, level: 1},

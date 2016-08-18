@@ -79,6 +79,16 @@ router.post('/findcountrytostate', (req, res, next)=> {
         res.json({code: 1000, message: "国家查询失败"});
     })
 });
+//通过国家查询区域
+router.post('/findregiontocountry',(req, res, next)=> {
+    let country_id = req.body.country_id;
+    RegionService.findRegionToCountry(country_id).then(result=> {
+        next(result);
+    }).catch(e=> {
+        console.log(e);
+        res.json({code: 1000, message: "区域查询失败"});
+    })
+});
 //编辑大洲
 router.post('/editstate', (req, res, next)=> {
     let param = req.body;

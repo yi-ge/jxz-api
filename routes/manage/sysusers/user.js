@@ -51,6 +51,14 @@ router.post('/finduserlist', (req, res, next)=> {
         res.json({code: 1000, message: "查询失败"});
     });
 });
+//查询用户列表所有
+router.post('/finduserall', (req, res, next)=> {
+    SysUsersService.findSysUsersAll().then(result=> {
+        next(result);
+    }).catch(e=> {
+        res.json({code: 1000, message: "查询失败"});
+    });
+});
 //查询用户角色
 router.post("/finduserroles", (req, res, next)=> {
     let user_id = req.body.user_id;

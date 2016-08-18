@@ -111,8 +111,8 @@ class Base {
      * @param fnname
      * @param param
      */
-    mysqlFn(fnname, param) {
-        return Sequelize.fn(fnname, param);
+    mysqlFn(fnname, param,name) {
+        return Sequelize.fn(fnname,param,name);
     }
 
     /**

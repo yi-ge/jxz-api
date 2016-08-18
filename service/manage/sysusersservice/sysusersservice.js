@@ -70,6 +70,18 @@ class SysUserService {
     }
 
     /**
+     * 查询所有管理员 不分页
+     * @returns {*|Promise.<T>}
+     */
+    findSysUsersAll(){
+        return SysUsers.findList({
+            attributes:['id','user_name']
+        }).then(result=>{
+            return result;
+        });
+    }
+
+    /**
      * 修改管理员状态
      * @param id
      * @param status
@@ -113,8 +125,6 @@ class SysUserService {
             });
         }).then(result=> {
             return SysUsers.formaySysUser(result.dataValues);
-        }).catch(e=> {
-            console.log(e);
         });
     }
 }

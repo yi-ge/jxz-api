@@ -19,6 +19,7 @@ import Articles from './articles';
 import Houses from './houses';
 import HousesKeyword from './houseskeyword';
 import SysHousesKeyword from './syshouseskeyword';
+import HousesAttach from './housesattach';
 
 export {
     Users, //会员
@@ -36,6 +37,7 @@ export {
     Houses, // 酒店
     HousesKeyword, // 酒店亮点
     SysHousesKeyword, //系统酒店亮点
+    HousesAttach, //酒店附件
     Activitys,
     ActivitysApply,
     ActivitysLocation,
