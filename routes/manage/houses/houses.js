@@ -113,7 +113,7 @@ router.post('/addhousecomment', (req, res, next)=> {
     let houses_id = param.houses_id,
         comment_source = param.comment_source,
         content = param.content;
-    HousesCommentService.addComment(houses_id,comment_source,content).then(result=> {
+    HousesCommentService.addComment(houses_id, comment_source, content).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);
@@ -126,7 +126,7 @@ router.post('/edithousecomment', (req, res, next)=> {
     let id = param.houses_id,
         comment_source = param.comment_source,
         modifier = param.content;
-    HousesCommentService.editComment(id,comment_source,modifier).then(result=> {
+    HousesCommentService.editComment(id, comment_source, modifier).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);
