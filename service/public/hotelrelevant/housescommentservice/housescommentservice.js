@@ -1,4 +1,4 @@
-import {HousesComment} from './../../../../core';
+import {HousesComment,Houses} from './../../../../core';
 class HousesCommentService {
     /**
      * 添加评论
@@ -9,9 +9,19 @@ class HousesCommentService {
      * @returns {*}
      */
     addComment(houses_id,comment_source,content){
-        return HousesComment.transaction(t=>{
-            return HousesComment.insert(HousesComment.createModel(houses_id,comment_source,content,content),{transaction:t}).then(result=>{
-                return result;
+        return HousesComment.count({where:{houses_id:houses_id}}).then(count=>{
+            return HousesComment.transaction(t=>{
+                return HousesComment.insert(HousesComment.createModel(houses_id,comment_source,content,content),{transaction:t}).then(result=>{
+                    return result;
+                }).then(result=>{
+                    return Houses.update({article_num:++count},{
+                        where:{id:houses_id},
+                        transaction:t,
+                        lock: t.LOCK.UPDATE,
+                    }).then(()=>{
+                        return result;
+                    });
+                });
             });
         });
     }
@@ -46,10 +56,22 @@ class HousesCommentService {
      * @param id
      * @returns {*}
      */
-    destroyComment(id){
-        return HousesComment.transaction(t=>{
-           return HousesComment.destroy({where:{id:id}});
+    destroyComment(id,houses_id){
+        if(!!houses_id) return HousesComment.errorPromise("houses_id不能为空");
+        return HousesComment.count({where:{houses_id:houses_id}}).then(count=>{
+            return HousesComment.transaction(t=>{
+                return HousesComment.destroy({where:{id:id}},{transaction:t}).then(result=>{
+                    return Houses.update({article_num:--count},{
+                        where:{id:houses_id},
+                        transaction:t,
+                        lock: t.LOCK.UPDATE,
+                    }).then(()=>{
+                        return result;
+                    });
+                });
+            });
         });
+
     }
 }
 export default new HousesCommentService();

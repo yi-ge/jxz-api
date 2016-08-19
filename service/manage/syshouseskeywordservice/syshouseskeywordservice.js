@@ -99,7 +99,9 @@ class SysHousesKeywordService {
      * @returns {*}
      */
     findSysHousesKeyWordAll(){
-        return SysHousesKeyword.findList().then(result=>{
+        return SysHousesKeyword.findList({
+            where:{status:1}
+        }).then(result=>{
             result.list.map(keyword=> {
                 SysHousesKeyword.formatSysHousesKeyword(keyword.dataValues);
             });
