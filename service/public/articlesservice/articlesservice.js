@@ -50,18 +50,10 @@ class ArticlesService {
         else if (!!startDate) where['created_at'] = {$gte: startDate};
         else if (!!endDate) where['created_at'] = {$lte: endDate};
         switch (parseInt(status)) {
-            case 0:
-                where['check_status'] = 0;
-                break;
-            case 1:
-                where['check_status'] = 1;
-                break;
-            case 2:
-                where['check_status'] = 2;
-                break;
-            case 3:
-                where['is_off'] = 0;
-                break;
+            case 0: where['check_status'] = 0; break;
+            case 1: where['check_status'] = 1; break;
+            case 2: where['check_status'] = 2; break;
+            case 3: where['is_off'] = 0; break;
         }
         !!title && (where['title'] = {$like: `%${title}%`});
         !!house_name && (where['$and'] = [Articles.where(Articles.col(`${Houses.sequlize.name}.name`), 'like', `%${house_name}%`)]);
