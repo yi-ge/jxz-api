@@ -37,6 +37,8 @@ class HousesKeyword extends Base {
     }
 
     formatHousesKeyword(keyword){
+        !!keyword.created_at && (keyword.created_at = this.formatDate(keyword.created_at, 'yyyy-MM-dd hh:mm:ss'));
+        !!keyword.updated_at && (keyword.updated_at = this.formatDate(keyword.updated_at, 'yyyy-MM-dd hh:mm:ss'));
         return keyword;
     }
 

@@ -99,7 +99,12 @@ class SysHousesKeywordService {
      * @returns {*}
      */
     findSysHousesKeyWordAll(){
-        return SysHousesKeyword.findList();
+        return SysHousesKeyword.findList().then(result=>{
+            result.list.map(keyword=> {
+                SysHousesKeyword.formatSysHousesKeyword(keyword.dataValues);
+            });
+            return result;
+        });
     }
 
 }
