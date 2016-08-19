@@ -1,5 +1,5 @@
 import express from "express";
-import {HousesService} from './../../../service/manage';
+import {HousesService,HousesKeywordService,HousesAttachService,SysHousesKeywordService} from './../../../service/manage';
 const router = express.Router();
 //添加系统酒店亮点
 router.post('/addsyshousekeyword', (req, res, next)=> {
@@ -7,7 +7,7 @@ router.post('/addsyshousekeyword', (req, res, next)=> {
     let name = param.name,
         picture = param.picture,
         creater = param.creater;
-    HousesService.addSysHousesKeyword(name, picture, creater).then(result=> {
+    SysHousesKeywordService.addSysHousesKeyword(name, picture, creater).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);
@@ -20,21 +20,30 @@ router.post('/findsyshousekeyword',(req,res,next)=>{
     let page = param.page,
         startDate = param.startDate,
         endDate = param.endDate;
-   HousesService.findSysHousesKeywordList(page,startDate,endDate).then(result=>{
+    SysHousesKeywordService.findSysHousesKeywordList(page,startDate,endDate).then(result=>{
        next(result);
    }).catch(e=> {
        console.log(e);
        res.json({code: 1000, message: "系统酒店亮点查询失败"});
    });
 });
-//更新酒店亮点库
+//查询所有酒店库亮点
+router.post('/findsyshousekeywordall',(req,res,next)=>{
+    SysHousesKeywordService.findSysHousesKeyWordAll().then(result=>{
+        next(result);
+    }).catch(e=> {
+        console.log(e);
+        res.json({code: 1000, message: "系统酒店亮点查询失败"});
+    });
+});
+//编辑酒店亮点库
 router.post('/editsyshousekeyword',(req,res,next)=>{
     let param = req.body;
     let id = param.id,
         name = param.name,
         modifier = param.modifier,
         picture = param.picture;
-    HousesService.editSysHousesKeyword(id, name, picture, modifier).then(result=>{
+    SysHousesKeywordService.editSysHousesKeyword(id, name, picture, modifier).then(result=>{
         next(result);
     }).catch(e=> {
         console.log(e);
@@ -47,47 +56,47 @@ router.post('/changesyshousekeywordstatus',(req,res,next)=>{
     let id = param.id,
         modifier = param.modifier,
         status = param.status;
-    HousesService.changeSysHousesKeywordStatus(id, status,modifier).then(result=>{
+    SysHousesKeywordService.changeSysHousesKeywordStatus(id, status,modifier).then(result=>{
         next(result);
     }).catch(e=> {
         console.log(e);
         res.json({code: 1000, message: "系统酒店亮点状态改变失败"});
     });
 });
-//给酒店添加亮点
+//给酒店添加亮点数据
 router.post('/addhousekeyword',(req,res,next)=>{
     let param = req.body;
     let houses_id = param.houses_id,
         keyword_id = param.keyword_id,
         keyword_desc = param.keyword_desc,
         creater = param.creater;
-    HousesService.addHousesKeyword(houses_id, keyword_id, keyword_desc, creater).then(result=>{
+    HousesKeywordService.addHousesKeyword(houses_id, keyword_id, keyword_desc, creater).then(result=>{
         next(result);
     }).catch(e=> {
         console.log(e);
         res.json({code: 1000, message: "系统酒店亮点查询失败"});
     });
 });
-//编辑于酒店关联的亮点
+//编辑关联酒店关联的亮点
 router.post('/edithousekeyword',(req,res,next)=>{
     let param = req.body;
     let id = param.id,
         keyword_desc = param.keyword_desc,
         modifier = param.modifier;
-    HousesService.editHousesKeyword(id,keyword_desc,modifier).then(result=>{
+    HousesKeywordService.editHousesKeyword(id,keyword_desc,modifier).then(result=>{
         next(result);
     }).catch(e=> {
         console.log(e);
         res.json({code: 1000, message: "编辑酒店亮点失败"});
     });
 });
-//更新于酒店关联的亮点状态
+//更新关联于酒店关联的亮点状态
 router.post('/changehouseskeywordstatus',(req,res,next)=>{
     let param = req.body;
     let id = param.id,
         status = param.status,
         modifier = param.modifier;
-    HousesService.changeHousesKeywordStatus(id,status,modifier).then(result=>{
+    HousesKeywordService.changeHousesKeywordStatus(id,status,modifier).then(result=>{
         next(result);
     }).catch(e=> {
         console.log(e);
@@ -113,7 +122,6 @@ router.post('/addhouse',(req,res,next)=>{
        res.json({code: 1000, message: "酒店添加失败"});
     });
 });
-
 //查询酒店列表
 router.post('/findhouses',(req,res,next)=>{
     let param = req.body;
@@ -130,7 +138,7 @@ router.post('/findhouses',(req,res,next)=>{
        res.json({code: 1000, message: "酒店查询失败"});
    })
 });
-
+//修改酒店上下架状态
 router.post('/changehousesputaway',(req,res,next)=>{
     let param = req.body;
     let id = param.id,
@@ -141,7 +149,30 @@ router.post('/changehousesputaway',(req,res,next)=>{
     }).catch(e=>{
         console.log(e);
         res.json({code: 1000, message: "酒店查询失败"});
-    })
-})
-
+    });
+});
+//查询酒店详情
+router.post('/findhousedetails',(req,res,next)=>{
+    let param = req.body;
+    let id = param.id;
+    HousesService.findHouseDetails(id).then(result=>{
+        next(result);
+    }).catch(e=>{
+        console.log(e);
+        res.json({code: 1000, message: "酒店详情查询失败"});
+    });
+});
+//上传酒店附件
+router.post('/addhouseattachlist',(req,res,next)=>{
+    let param = req.body;
+    let houses_id = param.houses_id,
+        creater = param.creater,
+        attachs = param.attachs;
+    HousesAttachService.addHousesAttachList(houses_id, attachs, creater).then(result=>{
+        next(result);
+    }).catch(e=>{
+        console.log(e);
+        res.json({code: 1000, message: "附近添加失败"});
+    });
+});
 export default router;

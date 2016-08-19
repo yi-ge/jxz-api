@@ -3,17 +3,29 @@
  */
 import SysUsersService from './sysusersservice';
 import RolesService from './rolesservice';
-import UsersService from './../public/usersservice';
-import VipService from './../public/vipservice';
-import ArticlesService from './../public/articlesservice';
-import RegionService from './../public/regionservice';
-import HousesService from './../public/housesservice';
+import SysHousesKeywordService from './syshouseskeywordservice';
+import {
+    HousesService,
+    HousesKeywordService,
+    HousesAttachService,
+    HousesCommentService,
+    UsersService,
+    VipService,
+    ArticlesService,
+    RegionService
+} from './../public';
+
+
 export {
     SysUsersService,
     RolesService,
+    SysHousesKeywordService,
     UsersService,
     VipService,
     ArticlesService,
     RegionService,
     HousesService,
+    HousesKeywordService,
+    HousesAttachService,
+    HousesCommentService,
 }

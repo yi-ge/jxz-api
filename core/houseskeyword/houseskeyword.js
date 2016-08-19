@@ -55,6 +55,26 @@ class HousesKeyword extends Base {
             }]
         },option));
     }
+    /**
+     * 批量添加酒店关键词
+     * @param houses_id
+     * @param keywords
+     * @param creater
+     * @returns {*}
+     */
+    addHousesKeywordList(houses_id, keywords, creater){
+        let insertList = [];
+        if (Object.prototype.toString.call(keywords) == '[object Array]') {
+            keywords.map(keyword=> {
+                insertList.push(this.createModel(houses_id, keyword.keyword_id, keyword.keyword_desc, creater, creater));
+            });
+        }
+        return HousesKeyword.transaction(t=> {
+            return this.bulkCreate(insertList, {
+                transaction: t,
+            });
+        });
+    }
 }
 
 export default new HousesKeyword();

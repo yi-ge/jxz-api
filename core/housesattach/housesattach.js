@@ -32,6 +32,20 @@ class HousesAttach extends Base {
         !!attach.updated_at && (attach.updated_at = this.formatDate(attach.updated_at,'yyyy-MM-dd hh:mm:ss'));
         return attach;
     }
+
+    addHousesAttachList(houses_id, attachs, creater){
+        let insertList = [];
+        if (Array.isArray(attachs)) {
+            attachs.map(keyword=> {
+                insertList.push(this.createModel(houses_id, 1, keyword.title, keyword.links_url, creater, creater, keyword.file_path));
+            });
+        }
+        return HousesAttach.transaction(t=> {
+            return this.bulkCreate(insertList, {
+                transaction: t
+            })
+        });
+    }
 }
 
 export default new HousesAttach();

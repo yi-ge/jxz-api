@@ -3,6 +3,7 @@ import Articles from './../articles/articles';
 import HousesKeyword from './../houseskeyword/houseskeyword';
 import HousesAttach from './../housesattach/housesattach';
 import SysUsers from './../sysusers/sysusers';
+import HousesComment from './../housescomment/housescomment';
 //一个酒店对应多篇文章
 Houses.sequlize.hasMany(Articles.sequlize, {
     foreignKey: 'houses_id',
@@ -16,6 +17,10 @@ Houses.sequlize.hasMany(HousesKeyword.sequlize, {
 //一个酒店关联多个附件
 Houses.sequlize.hasMany(HousesAttach.sequlize, {
     foreignKey: 'houses_id',
+});
+//酒店评论
+Houses.sequlize.hasMany(HousesComment.sequlize,{
+   foreignKey:'houses_id',
 });
 //对应一个创建人
 Houses.sequlize.belongsTo(SysUsers.sequlize,{

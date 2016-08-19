@@ -20,6 +20,7 @@ import Houses from './houses';
 import HousesKeyword from './houseskeyword';
 import SysHousesKeyword from './syshouseskeyword';
 import HousesAttach from './housesattach';
+import HousesComment from './housescomment';
 
 export {
     Users, //会员
@@ -38,6 +39,7 @@ export {
     HousesKeyword, // 酒店亮点
     SysHousesKeyword, //系统酒店亮点
     HousesAttach, //酒店附件
+    HousesComment, //酒店评论
     Activitys,
     ActivitysApply,
     ActivitysLocation,

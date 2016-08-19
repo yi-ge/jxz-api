@@ -30,60 +30,74 @@ class Houses extends Base {
      *
      * @returns {{id: number, type: *, name: *, region: *, creater: *, modifier: *, address: *, traffic_around: *, spots_around: *, houses_desc: *, created_at: Date, updated_at: Date, is_putaway: number, comment_num: number}}
      */
-    createModel(type,name,creater,modifier,region,address,traffic_around,spots_around,houses_desc){
+    createModel(type, name, creater, modifier, region, address, traffic_around, spots_around, houses_desc) {
         let model = {
-            id:this.generateId(),
-            type:type,
-            name:name,
-            region:region,
-            creater:creater,
-            modifier:modifier,
-            address:address,
-            traffic_around:traffic_around,
-            spots_around:spots_around,
-            houses_desc:houses_desc,
-            created_at:new Date(),
-            updated_at:new Date(),
-            is_putaway:0,
-            is_orders:0,
-            comment_num:0,
+            id: this.generateId(),
+            type: type,
+            name: name,
+            region: region,
+            creater: creater,
+            modifier: modifier,
+            address: address,
+            traffic_around: traffic_around,
+            spots_around: spots_around,
+            houses_desc: houses_desc,
+            created_at: new Date(),
+            updated_at: new Date(),
+            is_putaway: 0,
+            is_orders: 0,
+            comment_num: 0,
         };
         return model;
     }
 
-    formatHouse(house){
-        !!house.created_at && (house.created_at = this.formatDate(house.created_at,'yyyy-MM-dd hh:mm:ss'));
-        !!house.updated_at && (house.updated_at = this.formatDate(house.updated_at,'yyyy-MM-dd hh:mm:ss'));
+    formatHouse(house) {
+        !!house.created_at && (house.created_at = this.formatDate(house.created_at, 'yyyy-MM-dd hh:mm:ss'));
+        !!house.updated_at && (house.updated_at = this.formatDate(house.updated_at, 'yyyy-MM-dd hh:mm:ss'));
         return house;
     }
 
-    findPage(option, page, count, sortType = 2, pagesize = 20){
-        return super.findPage(Object.assign({
-            order: `updated_at ${sortType == 1 ? `ASC` : `DESC`}`,
-            include: [{
-                model: SysUsers.sequlize,
-                as: 'creater_user',
-                attributes: ['id', 'user_name', 'account_name']
-            }, {
-                model: SysUsers.sequlize,
-                as: 'modifier_user',
-                attributes: ['id', 'user_name', 'account_name']
-            }]
-        },option), page, count, sortType, pagesize);
+    getFindInclude(option){
+        let include = [{
+            model: SysUsers.sequlize,
+            as: 'creater_user',
+            attributes: ['id', 'user_name', 'account_name']
+        }, {
+            model: SysUsers.sequlize,
+            as: 'modifier_user',
+            attributes: ['id', 'user_name', 'account_name']
+        }];
+        if (option && option.include) {
+            if (Array.isArray(option.include)) option.include.concat(include);
+            else option.include = [].concat(include, [option.include]);
+        } else if (option) option.include = include;
+        else option = {include: include};
+        return option;
     }
 
-    findById(id,option){
-        return super.findById(id,Object.assign({
-            include: [{
-                model: SysUsers.sequlize,
-                as: 'creater_user',
-                attributes: ['id', 'user_name', 'account_name']
-            }, {
-                model: SysUsers.sequlize,
-                as: 'modifier_user',
-                attributes: ['id', 'user_name', 'account_name']
-            }]
-        },option));
+    /**
+     * 分页查询重写
+     * @param option
+     * @param page
+     * @param count
+     * @param sortType
+     * @param pagesize
+     * @returns {*|Promise.<T>}
+     */
+    findPage(option, page, count, sortType = 2, pagesize = 20) {
+        this.getFindInclude(option);
+        option.order = `updated_at ${sortType == 1 ? `ASC` : `DESC`}`;
+        return super.findPage(option, page, count, sortType, pagesize);
+    }
+
+    /**
+     * id查询重写
+     * @param id
+     * @param option
+     * @returns {*}
+     */
+    findById(id, option) {
+        return super.findById(id, this.getFindInclude(option));
     }
 }
 
