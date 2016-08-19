@@ -10,13 +10,15 @@ class Articles extends Base {
             tableName: 'articles'
         });
     }
-    createModel(title,content,author,author_type){
+    createModel(title,content,author,author_type,creater,modifier){
         let model = {
             id:this.generateId(),
             title:title,
             content:content,
             author:author,
             check_status:0,
+            creater:creater,
+            modifier:modifier,
             author_type:author_type,
             created_at:new Date(),
             updated_at:new Date(),
@@ -28,7 +30,7 @@ class Articles extends Base {
         return model;
     }
     formatArticle(article){
-
+        return article;
     }
 }
 
