@@ -97,16 +97,14 @@ router.post('/edithousekeyword', (req, res, next)=> {
     });
 });
 //更新关联于酒店关联的亮点状态
-router.post('/changehouseskeywordstatus', (req, res, next)=> {
+router.post('/destroyhouseskeywordstatus', (req, res, next)=> {
     let param = req.body;
-    let id = param.id,
-        status = param.status,
-        modifier = param.modifier;
-    HousesKeywordService.changeHousesKeywordStatus(id, status, modifier).then(result=> {
+    let id = param.id;
+    HousesKeywordService.destroyHousesKeyword(id).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);
-        res.json({code: 1000, message: "酒店亮点状态更新失败"});
+        res.json({code: 1000, message: "酒店亮点删除失败"});
     });
 });
 //添加酒店评论

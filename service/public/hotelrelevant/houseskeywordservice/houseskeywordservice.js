@@ -43,6 +43,17 @@ class HousesKeywordService {
     }
 
     /**
+     * 删除亮点
+     * @param id
+     * @returns {*}
+     */
+    destroyHousesKeyword(id){
+        return HousesKeyword.transaction(t=>{
+            return HousesKeyword.destroy({where:{id:id}});
+        })
+    }
+
+    /**
      * 改变酒店亮点状态
      * @param id
      * @param status
