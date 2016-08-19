@@ -58,7 +58,7 @@ class HousesKeyword extends Base {
     /**
      * 批量添加酒店关键词
      * @param houses_id
-     * @param keywords
+     * @param keywords [keyword_id,keyword_desc]
      * @param creater
      * @returns {*}
      */
