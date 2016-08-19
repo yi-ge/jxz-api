@@ -15,7 +15,7 @@ class ArticlesService {
             user = result.user;
             return Articles.count({where: {author: user.id}}).then(count=> {
                 return Articles.transaction(t=> {
-                    return Articles.insert(Articles.createModel(title, content, user.id, 2, sys_id, sys_id), {
+                    return Articles.insert(Articles.createModel(title, content, user.id, 2, user.id, user.id), {
                         transaction: t
                     }).then(articles=> {
                         return Users.update({article_num: ++count}, {
@@ -29,7 +29,7 @@ class ArticlesService {
                 });
             });
         }).then(articles=> {
-            return Articles.formatArticle(articles);
+            return Articles.formatArticle(articles.dataValues);
         });
     }
 
@@ -70,6 +70,11 @@ class ArticlesService {
                     }],
                 }, sortType ? {order: `read_num ${sortType == 1 ? `ASC` : `DESC`}`} : {})
                 , page, count, sortType, pagesize);
+        }).then(result=>{
+            result.list.map(article=>{
+                Articles.formatArticle(article.dataValues);
+            });
+            return result;
         });
     }
 }

@@ -30,6 +30,9 @@ class Articles extends Base {
         return model;
     }
     formatArticle(article){
+        !!article.created_at && (article.created_at = this.formatDate(article.created_at, 'yyyy-MM-dd hh:mm:ss'));
+        !!article.updated_at && (article.updated_at = this.formatDate(article.updated_at, 'yyyy-MM-dd hh:mm:ss'));
+        !!article.check_date && (article.check_date = this.formatDate(article.check_date, 'yyyy-MM-dd hh:mm:ss'));
         return article;
     }
 }

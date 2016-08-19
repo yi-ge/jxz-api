@@ -14,6 +14,14 @@ Users.sequlize.hasMany(Articles.sequlize, {foreignKey: 'author'});
 Users.sequlize.hasMany(HousesComment.sequlize,{
     foreignKey:'creater'
 });
+//文章创建者
+Users.sequlize.hasMany(Articles.sequlize,{
+   foreignKey:'creater'
+});
+//文章修改者
+Users.sequlize.hasMany(Articles.sequlize,{
+    foreignKey:'modifier'
+});
 //房屋评论修改人
 Users.sequlize.hasMany(HousesComment.sequlize,{
     foreignKey:'modifier'
