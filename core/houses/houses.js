@@ -26,6 +26,7 @@ class Houses extends Base {
      *        is_putaway 是否上架0未上架1上架
      *        is_orders 是否可预约0不能1能
      *        comment_num 评论数
+     *        article_num 文章数
      *
      *
      * @returns {{id: number, type: *, name: *, region: *, creater: *, modifier: *, address: *, traffic_around: *, spots_around: *, houses_desc: *, created_at: Date, updated_at: Date, is_putaway: number, comment_num: number}}
@@ -47,6 +48,7 @@ class Houses extends Base {
             is_putaway: 0,
             is_orders: 0,
             comment_num: 0,
+            article_num:0,
         };
         return model;
     }

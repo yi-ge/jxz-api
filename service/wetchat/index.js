@@ -1,6 +1,14 @@
-import UserService from './../public/usersservice';
-import VipService from './../public/vipservice';
+import {
+    HousesService,
+    HousesKeywordService,
+    HousesAttachService,
+    HousesCommentService,
+    UsersService,
+    VipService,
+    ArticlesService,
+    RegionService
+} from './../public';
 export {
-    UserService,
+    UsersService,
     VipService,
 }

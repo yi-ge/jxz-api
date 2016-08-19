@@ -1,6 +1,6 @@
 /*
 SQLyog Ultimate v11.13 (64 bit)
-MySQL - 5.6.30-log : Database - jxz
+MySQL - 5.5.19 : Database - jxz
 *********************************************************************
 */
 
@@ -12,7 +12,7 @@ MySQL - 5.6.30-log : Database - jxz
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`jxz` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_bin */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`jxz` /*!40100 DEFAULT CHARACTER SET latin1 */;
 
 USE `jxz`;
 
@@ -118,6 +118,8 @@ CREATE TABLE `articles` (
 
 /*Data for the table `articles` */
 
+insert  into `articles`(`id`,`category_id`,`title`,`content`,`houses_id`,`author_type`,`author`,`check_status`,`check_cause`,`check_user_id`,`check_date`,`creater`,`modifier`,`created_at`,`updated_at`,`status`,`is_off`,`read_num`,`cover_picture`,`at_num`) values (1471417945118,NULL,'123456','12345678',NULL,2,1471406460390,NULL,NULL,NULL,'2016-08-17 15:12:23',NULL,NULL,'2016-08-17 15:12:23','2016-08-17 15:12:23',1,1,0,NULL,0),(1471418294337,NULL,'test`','chuangs dafsad f',NULL,2,1471406460390,0,NULL,NULL,'2016-08-17 15:18:08',NULL,NULL,'2016-08-17 15:18:08','2016-08-17 15:18:08',1,1,0,NULL,0);
+
 /*Table structure for table `articles_comment` */
 
 DROP TABLE IF EXISTS `articles_comment`;
@@ -212,6 +214,7 @@ CREATE TABLE `houses` (
   `status` tinyint(4) DEFAULT '1' COMMENT '状态1正常0删除',
   `comment_num` mediumint(9) DEFAULT NULL COMMENT '评论数',
   `is_orders` tinyint(4) DEFAULT NULL COMMENT '是否可预约0不能1能',
+  `article_num` mediumint(9) DEFAULT NULL COMMENT '文章数量',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='房屋';
 
@@ -532,6 +535,8 @@ CREATE TABLE `sys_dict` (
 
 /*Data for the table `sys_dict` */
 
+insert  into `sys_dict`(`id`,`code`,`name`,`type`,`parent_code`,`parent_id`,`level`,`sort_order`,`status`,`creater`,`modifier`,`created_at`,`updated_at`) values (1471425026768,NULL,'亚洲',1,NULL,NULL,1,NULL,1,1471406458817,1471406458817,'2016-08-17 17:10:17','2016-08-18 15:34:36'),(1471425175402,NULL,'美洲',1,NULL,NULL,1,NULL,1,1471406458817,1471406458817,'2016-08-17 17:12:52','2016-08-17 18:42:29'),(1471425253145,NULL,'欧洲',1,NULL,NULL,1,NULL,1,1471406458817,1471406458817,'2016-08-17 17:14:11','2016-08-17 17:14:11'),(1471427210599,NULL,'中国',1,NULL,1471425026768,2,NULL,1,1471406458817,1471406458817,'2016-08-17 17:46:46','2016-08-17 18:50:37'),(1471427411228,NULL,'韩国',1,NULL,1471425026768,2,NULL,1,1471406458817,1471406458817,'2016-08-17 17:50:04','2016-08-18 19:36:47'),(1471427491355,NULL,'日本',1,NULL,1471425026768,2,NULL,1,1471406458817,1471406458817,'2016-08-17 17:51:28','2016-08-18 19:36:41'),(1471429355220,NULL,'泰国',1,NULL,1471425026768,2,NULL,1,1471406458817,1471406458817,'2016-08-17 18:22:28','2016-08-18 19:38:50'),(1471429541034,NULL,'广岛',1,NULL,1471427491355,3,NULL,1,1471406458817,1471406458817,'2016-08-17 18:25:37','2016-08-18 19:37:31'),(1471429786666,NULL,'成都',1,NULL,1471427210599,3,NULL,1,1471406458817,1471406458817,'2016-08-17 18:29:44','2016-08-18 19:36:21'),(1471520235650,NULL,'美国',1,NULL,1471425175402,2,NULL,1,1471406458817,1471406458817,'2016-08-18 19:37:08','2016-08-18 19:37:08'),(1471520243553,NULL,'巴西',1,NULL,1471425175402,2,NULL,1,1471406458817,1471406458817,'2016-08-18 19:37:17','2016-08-18 19:37:17'),(1471520262223,NULL,'北京',1,NULL,1471427210599,3,NULL,1,1471406458817,1471406458817,'2016-08-18 19:37:39','2016-08-18 19:37:39'),(1471520280065,NULL,'里约',1,NULL,1471520243553,3,NULL,1,1471406458817,1471406458817,'2016-08-18 19:37:51','2016-08-18 19:37:51');
+
 /*Table structure for table `sys_hot_keyword` */
 
 DROP TABLE IF EXISTS `sys_hot_keyword`;
@@ -570,6 +575,8 @@ CREATE TABLE `sys_houses_keyword` (
 
 /*Data for the table `sys_houses_keyword` */
 
+insert  into `sys_houses_keyword`(`id`,`name`,`keyword_desc`,`picture`,`sort_order`,`creater`,`modifier`,`created_at`,`updated_at`,`status`) values (1471490505518,'啊啦啦啦',NULL,'/ui/img/avatar.png',NULL,1471406458817,1471406458817,'2016-08-18 11:21:43','2016-08-18 14:58:34',1),(1471490518623,'我要测试',NULL,'/ui/img/avatar.png',NULL,1471406458817,1471406458817,'2016-08-18 11:21:57','2016-08-18 14:58:36',0),(1471504114789,'可大幅',NULL,'/ui/img/avatar.png',NULL,1471406458817,1471406458817,'2016-08-18 15:08:33','2016-08-19 10:26:06',1);
+
 /*Table structure for table `sys_info_template` */
 
 DROP TABLE IF EXISTS `sys_info_template`;
@@ -590,8 +597,6 @@ CREATE TABLE `sys_info_template` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='系统消息模板';
 
 /*Data for the table `sys_info_template` */
-
-insert  into `sys_info_template`(`id`,`type`,`name`,`title`,`content`,`template_desc`,`creater`,`modifier`,`created_at`,`updated_at`,`status`) values (1,1000,'发送验证码','发送验证码','【买房吗】您的验证码是：{#verify_code}，如非本人操作请忽略。','发送短信模板1',NULL,NULL,'2016-06-20 11:16:41','2016-06-20 11:16:46',1);
 
 /*Table structure for table `sys_integral` */
 
@@ -667,6 +672,8 @@ CREATE TABLE `sys_role_resources` (
 
 /*Data for the table `sys_role_resources` */
 
+insert  into `sys_role_resources`(`id`,`role_id`,`resource_id`,`permissions`) values (1471328259183,1471328258586,2222,NULL),(1471328259589,1471328258586,1111,NULL),(1471416139246,1471416141255,2222,NULL),(1471416144209,1471416141255,1111,NULL);
+
 /*Table structure for table `sys_roles` */
 
 DROP TABLE IF EXISTS `sys_roles`;
@@ -686,6 +693,8 @@ CREATE TABLE `sys_roles` (
 
 /*Data for the table `sys_roles` */
 
+insert  into `sys_roles`(`id`,`name`,`role_desc`,`set_type`,`creater`,`modifier`,`created_at`,`updated_at`,`status`) values (1471328258586,'管理员','管理员',NULL,NULL,NULL,'2016-08-16 14:17:38','2016-08-18 13:40:50',1),(1471416141255,'角色2','角色2',NULL,NULL,NULL,'2016-08-17 14:42:17','2016-08-17 14:42:17',1);
+
 /*Table structure for table `sys_user_roles` */
 
 DROP TABLE IF EXISTS `sys_user_roles`;
@@ -698,6 +707,8 @@ CREATE TABLE `sys_user_roles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户角色';
 
 /*Data for the table `sys_user_roles` */
+
+insert  into `sys_user_roles`(`id`,`user_id`,`role_id`) values (1471328277940,1471328276077,1471328258586),(1471328359152,1471328358121,1471328258586),(1471415834635,1471415842054,1471328258586),(1471417290706,1471406458817,1471416141255);
 
 /*Table structure for table `sys_users` */
 
@@ -729,6 +740,8 @@ CREATE TABLE `sys_users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户';
 
 /*Data for the table `sys_users` */
+
+insert  into `sys_users`(`id`,`account_name`,`user_name`,`phone`,`sex`,`city`,`region`,`address`,`head_portrait`,`email`,`info_integrity`,`creater`,`modifier`,`created_at`,`updated_at`,`status`,`post_roles`,`last_login_ip`,`last_login_date`,`passwd`,`users_id`) values (1471406458817,'15928681754','文浩君',NULL,2,NULL,NULL,NULL,NULL,'nx@qq.com',0,NULL,NULL,'2016-08-17 12:00:56','2016-08-17 12:00:56',1,NULL,NULL,'2016-08-17 12:00:56','5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8',1471406460390),(1471415842054,'15928681754','倪祥',NULL,2,NULL,NULL,NULL,NULL,'nx@qq.com',0,NULL,NULL,'2016-08-17 14:37:14','2016-08-17 14:37:14',1,NULL,NULL,'2016-08-17 14:37:14','5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8',1471415839601);
 
 /*Table structure for table `user_oauth` */
 
@@ -776,6 +789,8 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户';
 
 /*Data for the table `users` */
+
+insert  into `users`(`id`,`account_name`,`phone`,`creater`,`modifier`,`created_at`,`updated_at`,`status`,`device_id`,`last_login_ip`,`last_login_date`,`is_activate`,`personalized`,`join_date`,`user_vip_id`,`user_name`,`sex`,`avatar`,`is_cover`,`article_num`) values (1471336449140,NULL,NULL,NULL,NULL,'2016-08-16 16:34:07','2016-08-18 14:01:20',1,NULL,0,'2016-08-16 16:34:07',NULL,NULL,'2016-08-16 16:34:07',1471344328850,'倪祥',0,'http://wx.qlogo.cn/mmopen/h9QKpLcZqWFTQMyyuTvgZ9pic127787M37B5QCQhLAoOjaYaibtCUGS51tQxHD2UnCZx7cUK3G9eWSdqcr48iasDd35Ud3C4dfT/0',0,0),(1471344034714,NULL,NULL,NULL,NULL,'2016-08-16 18:40:30','2016-08-16 18:40:30',1,NULL,0,'2016-08-16 18:40:30',NULL,NULL,'2016-08-16 18:40:30',NULL,'落生',0,'http://wx.qlogo.cn/mmopen/hmQqiaZBAv9PKsdvQ2JBPv361w5H6lm4kOmYsVJcn0ibaEUyicrN0LgI39MWFXRf2Sag4Kzgn62UK2haTDt5IeVw9UAEqo0jTK3/0',0,0),(1471406460390,NULL,NULL,NULL,NULL,'2016-08-17 12:00:56','2016-08-17 12:00:56',1,NULL,0,'2016-08-17 12:00:56',NULL,NULL,'2016-08-17 12:00:56',NULL,'倪祥',2,NULL,1,2),(1471415839601,NULL,NULL,NULL,NULL,'2016-08-17 14:37:14','2016-08-17 14:37:14',1,NULL,0,'2016-08-17 14:37:14',NULL,NULL,'2016-08-17 14:37:14',NULL,'哈哈',2,NULL,0,0);
 
 /*Table structure for table `users_at` */
 
@@ -906,6 +921,8 @@ CREATE TABLE `users_openid` (
 
 /*Data for the table `users_openid` */
 
+insert  into `users_openid`(`id`,`user_id`,`type`,`openid`,`created_at`,`updated_at`,`status`) values (1471336450309,1471336449140,1,'ofl4PwSE8yoNroi58NNiFC47PHGk','2016-08-16 16:34:07','2016-08-16 16:34:07',1),(1471344038892,1471344034714,1,'ofl4PwTTnTsfOxmC9vSJ_TO6I3_Y','2016-08-16 18:40:30','2016-08-16 18:40:30',1);
+
 /*Table structure for table `users_pay_type` */
 
 DROP TABLE IF EXISTS `users_pay_type`;
@@ -955,6 +972,8 @@ CREATE TABLE `users_vip` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户-vip用户';
 
 /*Data for the table `users_vip` */
+
+insert  into `users_vip`(`id`,`account_name`,`user_name`,`passwd`,`phone`,`sex`,`city`,`region`,`address`,`email`,`creater`,`modifier`,`created_at`,`updated_at`,`status`,`last_login_ip`,`last_login_date`,`user_status`,`is_cover`) values (1471344328850,'fdgsadf','sdrdgfdg','666666',NULL,2,NULL,NULL,NULL,'fgsdfg',NULL,NULL,'2016-08-16 18:45:28','2016-08-16 18:45:28',1,NULL,'2016-08-16 18:45:28',0,0);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

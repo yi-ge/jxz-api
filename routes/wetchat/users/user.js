@@ -1,5 +1,5 @@
 import express from "express";
-import {UserService} from './../../../service/wetchat';
+import {UsersService} from './../../../service/wetchat';
 const router = express.Router();
 
 /**
@@ -7,7 +7,7 @@ const router = express.Router();
  */
 router.post('/registerjxz', (req, res, next)=> {
     let param = req.body, sex = param.sex == 1 ? "男" : param.sex == 2 ? "女" : "其他";
-    UserService.registryJXZ(param.openid, param.nickname, sex, param.headimgurl).then(result=> {
+    UsersService.registryJXZ(param.openid, param.nickname, sex, param.headimgurl).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);
@@ -20,7 +20,7 @@ router.post('/registerjxz', (req, res, next)=> {
  */
 router.post('/getjxzinfo', (req, res, next)=> {
     let param = req.body, sex = param.sex == 1 ? "男" : param.sex == 2 ? "女" : "其他";
-    UserService.findJXZToOpenid(param.openid, param.nickname, sex, param.headimgurl).then(result=> {
+    UsersService.findJXZToOpenid(param.openid, param.nickname, sex, param.headimgurl).then(result=> {
         next(result);
     }).catch(message=> {
         console.log(message);

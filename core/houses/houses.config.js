@@ -95,5 +95,9 @@ export default {
     is_orders: {
         type: DataTypes.INTEGER(4),
         allowNull: true
+    },
+    article_num: {
+        type: DataTypes.INTEGER(9),
+        allowNull: true
     }
 };
