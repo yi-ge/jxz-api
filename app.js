@@ -25,12 +25,12 @@ app.use('/', wetchat);
 app.use('/manage', manage);
 
 app.use((data, req, res, next)=> {
-    //console.log({
-    //    code: 200,
-    //    message: "成功",
-    //    data: data,
-    //});
-    if (typeof data == 'object')
+    console.log({
+        code: 200,
+        message: "成功",
+        data: data,
+    });
+    if (typeof data == 'object' || typeof data == 'number')
         res.json({
             code: 200,
             message: "成功",

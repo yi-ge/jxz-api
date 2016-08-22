@@ -48,7 +48,7 @@ class HousesAttachService {
      */
     destroyHouseAttach(id) {
         return HousesAttach.transaction(t=> {
-            return HousesAttach.destroy({where: {id: id}});
+            return HousesAttach.destroy({where: {id: id},transaction:t});
         });
     }
 }

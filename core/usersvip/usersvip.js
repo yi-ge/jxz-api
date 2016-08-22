@@ -37,7 +37,7 @@ class UsersVip extends Base {
         return value;
     }
 
-    createModel(account_name, user_name, email, sex, password=666666, user_status = 0, is_cover = 0) {
+    createModel(account_name, user_name, email, sex, password = 666666, user_status = 0, is_cover = 0) {
         let model = {
             id: this.generateId(),
             account_name: account_name,
@@ -55,7 +55,7 @@ class UsersVip extends Base {
     }
 
     formatUserVip(vip) {
-        if(!vip) return vip;
+        if (!vip) return vip;
         vip.last_login_date && (vip.last_login_date = this.formatDate(vip.last_login_date, "yyyy-MM-dd hh:mm:ss"));
         vip.created_at && (vip.created_at = this.formatDate(vip.created_at, "yyyy-MM-dd hh:mm:ss"));
         vip.updated_at && (vip.updated_at = this.formatDate(vip.updated_at, "yyyy-MM-dd hh:mm:ss"));
@@ -67,8 +67,8 @@ class UsersVip extends Base {
      * 查询用户是否存在
      * @param account_name
      */
-    findAccountName(account_name,option){
-        return this.findOnlyOne(Object.assign({where:{account_name:account_name}},option));
+    findAccountName(account_name, option) {
+        return this.findOnlyOne(Object.assign({where: {account_name: account_name}}, option));
     }
 }
 

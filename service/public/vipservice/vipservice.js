@@ -30,8 +30,8 @@ class VipService {
      */
     registerVip(account_name, users_id, password) {
         return UsersVip.findAccountName(account_name).then(vip=> {
+            if (!!vip) return UsersVip.errorPromise('用户已存在');
             return UsersVip.transaction(t=> {
-                if (!!vip) return UsersVip.errorPromise('用户已存在');
                 return UsersVip.insert(UsersVip.createModel(account_name, null, null, 2, password), {
                     transaction: t,
                 }).then(vip=> {
@@ -41,7 +41,7 @@ class VipService {
                         lock: t.LOCK.UPDATE
                     }).then(()=> {
                         return vip;
-                    })
+                    });
                 });
             });
         });
