@@ -33,17 +33,27 @@ class HousesAttach extends Base {
         return attach;
     }
 
+    /**
+     * 批量添加附件
+     * @param houses_id
+     * @param attachs
+     * @param creater
+     * @returns {*}
+     */
     addHousesAttachList(houses_id, attachs, creater){
         let insertList = [];
         if (Array.isArray(attachs)) {
-            attachs.map(keyword=> {
-                insertList.push(this.createModel(houses_id, 1, keyword.title, keyword.links_url, creater, creater, keyword.file_path));
+            attachs.map(attach=> {
+                console.log(attach);
+                insertList.push(this.createModel(houses_id, 1, attach.title, attach.links_url, creater, creater, attach.file_path));
             });
+        }else{
+            insertList.push(this.createModel(houses_id, 1, attachs.title, attachs.links_url, creater, creater, attachs.file_path));
         }
-        return HousesAttach.transaction(t=> {
+        return this.transaction(t=> {
             return this.bulkCreate(insertList, {
                 transaction: t
-            })
+            });
         });
     }
 }

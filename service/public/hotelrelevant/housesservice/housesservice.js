@@ -1,4 +1,4 @@
-import {Houses,HousesKeyword,SysHousesKeyword,HousesAttach,Articles} from './../../../../core';
+import {Houses,HousesKeyword,SysHousesKeyword,HousesAttach,Articles,SysDict} from './../../../../core';
 class HousesService {
     /**
      * 添加酒店
@@ -23,6 +23,7 @@ class HousesService {
             });
         });
     }
+
     /**
      * 查询酒店 分页
      * @param page
@@ -51,6 +52,7 @@ class HousesService {
             return result;
         });
     }
+
     /**
      * 酒店上下架状态
      * @param id
@@ -74,20 +76,37 @@ class HousesService {
             return Houses.formatHouse(result.dataValues);
         });
     }
+
     /**
      * 查询酒店详情 (加上亮点)
      * @param id
      * @returns {*|Promise.<T>}
      */
-    findHouseDetails(id){
-        return Houses.findById(id,{
-            include:[{
-                model:HousesKeyword.sequlize,
-                include:[{
-                    model:SysHousesKeyword.sequlize
+    findHouseDetails(id) {
+        return Houses.findById(id, {
+            include: [{
+                model: HousesKeyword.sequlize,
+                attributes: ['id', 'keyword_desc'],
+                include: [{
+                    attributes: ['id', 'name', 'picture'],
+                    model: SysHousesKeyword.sequlize
+                }]
+            }, {
+                model: SysDict.sequlize,
+                attributes: ['id', 'name'],
+                as:'regions',
+                include: [{
+                    model: SysDict.sequlize,
+                    attributes: ['id', 'name'],
+                    as: 'country',
+                    include: [{
+                        model: SysDict.sequlize,
+                        attributes: ['id', 'name'],
+                        as: 'state',
+                    }]
                 }]
             }]
-        }).then(result=>{
+        }).then(result=> {
             return Houses.formatHouse(result.dataValues);
         });
     }

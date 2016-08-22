@@ -66,14 +66,11 @@ class HousesKeyword extends Base {
      */
     addHousesKeywordList(houses_id, keywords, creater){
         let insertList = [];
-        console.log(keywords);
         if (Array.isArray(keywords)) {
             keywords.map(keyword => {
-                keyword = JSON.parse(keyword);
                 insertList.push(this.createModel(houses_id, keyword.keyword_id, keyword.keyword_desc, creater, creater));
             });
         }else{
-            keywords = JSON.parse(keywords);
             insertList.push(this.createModel(houses_id, keywords.keyword_id, keywords.keyword_desc, creater, creater));
         }
         return this.transaction(t=> {

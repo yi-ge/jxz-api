@@ -3,6 +3,7 @@
  */
 import sysusers from './sysusers.config';
 import Base from './../base';
+import Users from './../users/users';
 class SysUsers extends Base {
     constructor() {
         super("sys_users", sysusers, {
@@ -23,6 +24,21 @@ class SysUsers extends Base {
             passwd:this.encrypMD5("password"),
         };
         return model;
+    }
+
+    /**
+     * 获取管理员对应的精选者
+     * @param id
+     * @returns {*|Promise.<T>}
+     */
+    getJXZUser(id){
+        return this.findById(id,{
+            include:[{
+                model:Users.sequlize
+            }]
+        }).then(result=>{
+            return result.user;
+        })
     }
 
     formaySysUser(sysUser){

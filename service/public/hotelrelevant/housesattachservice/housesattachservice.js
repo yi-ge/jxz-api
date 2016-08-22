@@ -26,5 +26,19 @@ class HousesAttachService {
             });
         });
     }
+
+    /**
+     * 查询酒店附件
+     * @param id
+     * @returns {*|Promise.<T>}
+     */
+    findHouseAttach(houses_id){
+        return HousesAttach.findList({where:{houses_id:houses_id}}).then(result=>{
+            result.list.map(attach=>{
+                HousesAttach.formatHousesAttach(attach);
+            });
+            return result;
+        });
+    }
 }
 export default new HousesAttachService();

@@ -4,7 +4,7 @@
 import houses from './houses.config';
 import Base from './../base';
 import SysUsers from './../sysusers/sysusers';
-
+import HousesComment from './../housescomment/housescomment';
 class Houses extends Base {
     constructor() {
         super("houses", houses, {
@@ -48,7 +48,7 @@ class Houses extends Base {
             is_putaway: 0,
             is_orders: 0,
             comment_num: 0,
-            article_num:0,
+            article_num: 0,
         };
         return model;
     }
@@ -59,7 +59,7 @@ class Houses extends Base {
         return house;
     }
 
-    getFindInclude(option){
+    getFindInclude(option) {
         let include = [{
             model: SysUsers.sequlize,
             as: 'creater_user',
@@ -101,6 +101,16 @@ class Houses extends Base {
     findById(id, option) {
         return super.findById(id, this.getFindInclude(option));
     }
+
+    /**
+     * 获取酒店评论条数
+     * @param id
+     * @returns {*}
+     */
+    getCommentCount(id) {
+        return HousesComment.count({where:{houses_id:id}});
+    }
+
 }
 
 export default new Houses();

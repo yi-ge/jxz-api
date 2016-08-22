@@ -3,6 +3,7 @@
  */
 import users from './users.config';
 import Base from './../base';
+import Articles from './../articles/articles';
 
 import UserOauthOpenid from './../useroauthopenid';
 class Users extends Base {
@@ -59,6 +60,15 @@ class Users extends Base {
 
     insert(user, option) {
         return super.insert(user, option);
+    }
+
+    /**
+     * 获取用户发表文章数
+     * @param id
+     * @returns {*}
+     */
+    getArticleCount(id){
+        return Articles.count({where:{author:id}});
     }
 
 }

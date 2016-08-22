@@ -112,8 +112,22 @@ router.post('/addhousecomment', (req, res, next)=> {
     let param = req.body;
     let houses_id = param.houses_id,
         comment_source = param.comment_source,
-        content = param.content;
-    HousesCommentService.addComment(houses_id, comment_source, content).then(result=> {
+        content = param.content,
+        creater = param.creater;
+    HousesCommentService.addComment(houses_id, comment_source, content,creater).then(result=> {
+        next(result);
+    }).catch(e=> {
+        console.log(e);
+        res.json({code: 1000, message: "评论添加失败"});
+    });
+});
+//批量添加酒店评论
+router.post('/addhousecommentlist', (req, res, next)=> {
+    let param = req.body;
+    let houses_id = param.houses_id,
+        comments = param.comments,
+        creater = param.creater;
+    HousesCommentService.addCommentList(houses_id, comments, creater).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);
@@ -123,10 +137,11 @@ router.post('/addhousecomment', (req, res, next)=> {
 //编辑酒店评论
 router.post('/edithousecomment', (req, res, next)=> {
     let param = req.body;
-    let id = param.houses_id,
+    let id = param.id,
         comment_source = param.comment_source,
-        modifier = param.content;
-    HousesCommentService.editComment(id, comment_source, modifier).then(result=> {
+        content = param.content,
+        modifier = param.modifier;
+    HousesCommentService.editComment(id, comment_source, content, modifier).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);
@@ -136,7 +151,7 @@ router.post('/edithousecomment', (req, res, next)=> {
 //删除酒店评论
 router.post('/destroyhousecomment', (req, res, next)=> {
     let param = req.body;
-    let id = param.houses_id;
+    let id = param.id;
     HousesCommentService.destroyComment(id).then(result=> {
         next(result);
     }).catch(e=> {
@@ -144,7 +159,30 @@ router.post('/destroyhousecomment', (req, res, next)=> {
         res.json({code: 1000, message: "评论删除失败"});
     });
 });
-
+//上传酒店附件
+router.post('/addhouseattachlist', (req, res, next)=> {
+    let param = req.body;
+    let houses_id = param.houses_id,
+        creater = param.creater,
+        attachs = param.attachs;
+    HousesAttachService.addHousesAttachList(houses_id, attachs, creater).then(result=> {
+        next(result);
+    }).catch(e=> {
+        console.log(e);
+        res.json({code: 1000, message: "附件添加失败"});
+    });
+});
+//查询酒店附件
+router.post('/findhouseattachlist', (req, res, next)=> {
+    let param = req.body;
+    let houses_id = param.houses_id;
+    HousesAttachService.findHouseAttach(houses_id).then(result=> {
+        next(result);
+    }).catch(e=> {
+        console.log(e);
+        res.json({code: 1000, message: "附件查询失败"});
+    });
+});
 //添加酒店
 router.post('/addhouse', (req, res, next)=> {
     let param = req.body;
@@ -204,17 +242,5 @@ router.post('/findhousedetails', (req, res, next)=> {
         res.json({code: 1000, message: "酒店详情查询失败"});
     });
 });
-//上传酒店附件
-router.post('/addhouseattachlist', (req, res, next)=> {
-    let param = req.body;
-    let houses_id = param.houses_id,
-        creater = param.creater,
-        attachs = param.attachs;
-    HousesAttachService.addHousesAttachList(houses_id, attachs, creater).then(result=> {
-        next(result);
-    }).catch(e=> {
-        console.log(e);
-        res.json({code: 1000, message: "附近添加失败"});
-    });
-});
+
 export default router;

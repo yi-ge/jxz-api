@@ -8,12 +8,8 @@ class ArticlesService {
      * @returns {*}
      */
     manageAddArticles(sys_id, title, content) {
-        let user;
-        return SysUsers.findById(sys_id, {
-            include: [{model: Users.sequlize}]
-        }).then(result=> {
-            user = result.user;
-            return Articles.count({where: {author: user.id}}).then(count=> {
+        return SysUsers.getJXZUser(sys_id).then(user=> {
+            return Users.getArticleCount(user.id).then(count=> {
                 return Articles.transaction(t=> {
                     return Articles.insert(Articles.createModel(title, content, user.id, 2, user.id, user.id), {
                         transaction: t

@@ -95,7 +95,7 @@ class RegionService {
                     as: 'modifier_user'
                 }, {
                     model: SysDict.sequlize,
-                    as: 'sys_dict_parent',
+                    as: 'state',
                     attributes: ['id', 'name'],
                 }]
             }, page, count, null, pagesize).then(result=> {
@@ -164,11 +164,11 @@ class RegionService {
                     as: 'modifier_user',
                 }, {
                     model: SysDict.sequlize,
-                    as: 'sys_dict_parent',
+                    as: 'country',
                     attributes: ['id', 'name'],
                     include: [{
                         model: SysDict.sequlize,
-                        as: 'sys_dict_parent',
+                        as: 'state',
                         attributes: ['id', 'name'],
                     }]
                 }]
@@ -242,7 +242,7 @@ class RegionService {
                     as: 'modifier_user',
                 }, {
                     model: SysDict.sequlize,
-                    as: 'sys_dict_parent',
+                    as: 'state',
                     attributes: ['id', 'name'],
                 }]
             });
@@ -278,11 +278,11 @@ class RegionService {
                     as: 'modifier_user',
                 }, {
                     model: SysDict.sequlize,
-                    as: 'sys_dict_parent',
+                    as: 'country',
                     attributes: ['id', 'name'],
                     include: [{
                         model: SysDict.sequlize,
-                        as: 'sys_dict_parent',
+                        as: 'state',
                         attributes: ['id', 'name'],
                     }]
                 }]
