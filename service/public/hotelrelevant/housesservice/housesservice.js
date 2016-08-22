@@ -12,9 +12,9 @@ class HousesService {
      * @param houses_desc
      * @returns {*}
      */
-    addHouses(name, creater, modifier, region, address, traffic_around, spots_around, houses_desc, keywords) {
+    addHouses(name, creater, region, address, traffic_around, spots_around, houses_desc, keywords) {
         return Houses.transaction(t=> {
-            return Houses.insert(Houses.createModel(1, name, creater, modifier, region, address, traffic_around, spots_around, houses_desc), {transaction: t}).then(result=> {
+            return Houses.insert(Houses.createModel(1, name, creater, creater, region, address, traffic_around, spots_around, houses_desc), {transaction: t}).then(result=> {
                 return result;
             }).then(house=> {
                 return HousesKeyword.addHousesKeywordList(house.id, keywords, creater).then(()=> {
@@ -74,6 +74,38 @@ class HousesService {
             return Houses.findById(id);
         }).then(result=> {
             return Houses.formatHouse(result.dataValues);
+        });
+    }
+
+    /**
+     * 编辑酒店
+     * @param id
+     * @param name
+     * @param modifier
+     * @param region
+     * @param address
+     * @param traffic_around
+     * @param spots_around
+     * @param houses_desc
+     * @returns {*|Promise.<T>}
+     */
+    editHouse(id, name, modifier, region, address, traffic_around, spots_around, houses_desc){
+        return Houses.transaction(t=>{
+           Houses.update({
+               name:name,
+               modifier:modifier,
+               region:region,
+               address:address,
+               traffic_around:traffic_around,
+               spots_around:spots_around,
+               houses_desc:houses_desc,
+           },{
+               where:{id:id},
+               transaction:t,
+               lock: t.LOCK.UPDATE,
+           });
+        }).then(()=>{
+            return this.findHouseDetails(id);
         });
     }
 

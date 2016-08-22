@@ -67,8 +67,8 @@ class UsersVip extends Base {
      * 查询用户是否存在
      * @param account_name
      */
-    findAccountName(account_name){
-        return this.findOnlyOne({where:{account_name:account_name}});
+    findAccountName(account_name,option){
+        return this.findOnlyOne(Object.assign({where:{account_name:account_name}},option));
     }
 }
 

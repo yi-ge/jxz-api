@@ -214,18 +214,35 @@ router.post('/addhouse', (req, res, next)=> {
     let param = req.body;
     let name = param.name,
         creater = param.creater,
-        modifier = param.modifier,
         region = param.region,
         address = param.address,
         traffic_around = param.traffic_around,
         spots_around = param.spots_around,
         keywords = param.keywords,
         houses_desc = param.houses_desc;
-    HousesService.addHouses(name, creater, modifier, region, address, traffic_around, spots_around, houses_desc, keywords).then(result=> {
+    HousesService.addHouses(name, creater, region, address, traffic_around, spots_around, houses_desc, keywords).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);
         res.json({code: 1000, message: "酒店添加失败"});
+    });
+});
+//编辑酒店
+router.post('/edithouse', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id,
+        name = param.name,
+        modifier = param.modifier,
+        region = param.region,
+        address = param.address,
+        traffic_around = param.traffic_around,
+        spots_around = param.spots_around,
+        houses_desc = param.houses_desc;
+    HousesService.editHouse(id, name, modifier, region, address, traffic_around, spots_around, houses_desc).then(result=> {
+        next(result);
+    }).catch(e=> {
+        console.log(e);
+        res.json({code: 1000, message: typeof e == "string" ? e : '酒店编辑失败'});
     });
 });
 //查询酒店列表

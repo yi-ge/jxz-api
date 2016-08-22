@@ -105,6 +105,14 @@ class Base {
         return sequelize.query(sql, option);
     }
 
+    /**
+     * 获取事务的隔离级别
+     * @param key
+     * @returns {*}
+     */
+    getTransactionClass(key){
+        return Sequelize.Transaction.ISOLATION_LEVELS[key];
+    }
 
     /**
      * 调用mysql函数
@@ -259,7 +267,7 @@ class Base {
      * @returns {*}
      */
     transaction(fn) {
-        return sequelize.transaction(fn).catch(e=>{
+        return sequelize.transaction({isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE},fn).catch(e=>{
             throw e;
         });
     }

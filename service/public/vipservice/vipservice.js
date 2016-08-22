@@ -9,9 +9,14 @@ class VipService {
      * @returns {*}
      */
     createVip(account_name, user_name, email, sex, password) {
-        return UsersVip.transaction(t=> {
-            return UsersVip.insert(UsersVip.createModel(account_name, user_name, email, sex, password), {transaction: t}).then(result=> {
-                return UsersVip.formatUserVip(result.dataValues);
+        return UsersVip.findAccountName(account_name).then(vip=> {
+            if (!!vip) return UsersVip.errorPromise('用户已存在');
+            return UsersVip.transaction(t=> {
+                return UsersVip.insert(UsersVip.createModel(account_name, user_name, email, sex, password), {
+                    transaction: t,
+                }).then(result=> {
+                    return UsersVip.formatUserVip(result.dataValues);
+                });
             });
         });
     }
@@ -25,10 +30,11 @@ class VipService {
      */
     registerVip(account_name, users_id, password) {
         return UsersVip.findAccountName(account_name).then(vip=> {
-            if (!!vip) return UsersVip.encrypMD5('用户已存在');
             return UsersVip.transaction(t=> {
-                return UsersVip.insert(UsersVip.createModel(account_name, null, null, 2, password), {transaction: t}).then(vip=> {
-                    console.log(vip);
+                if (!!vip) return UsersVip.errorPromise('用户已存在');
+                return UsersVip.insert(UsersVip.createModel(account_name, null, null, 2, password), {
+                    transaction: t,
+                }).then(vip=> {
                     return Users.update({user_vip_id: vip.id}, {
                         where: {id: users_id},
                         transaction: t,
@@ -49,6 +55,7 @@ class VipService {
      * @returns {Promise.<T>}
      */
     loginVip(account_name, users_id, password) {
+        console.log(account_name);
         return UsersVip.findAccountName(account_name).then(vip=> {
             if (!vip) return UsersVip.errorPromise("用户不存在");
             else return UsersVip.findOnlyOne({
