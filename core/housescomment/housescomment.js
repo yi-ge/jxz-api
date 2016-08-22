@@ -56,7 +56,7 @@ class HousesComment extends Base {
     /**
      * 批量添加评论
      * @param houses_id
-     * @param comments
+     * @param comments[comment_source,content]
      * @param creater
      * @returns {*}
      */

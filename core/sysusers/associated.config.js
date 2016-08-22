@@ -11,7 +11,7 @@ import HousesKeyword from './../houseskeyword/houseskeyword';
 import HousesAttach from './../housesattach/housesattach';
 import House from './../houses/houses';
 
-//管理员创建多个管理员
+/*//管理员创建多个管理员
 SysUsers.sequlize.hasMany(SysUsers.sequlize,{
     foreignKey:'creater'
 });
@@ -66,7 +66,9 @@ SysUsers.sequlize.hasMany(HousesAttach.sequlize,{
 //一个管理员更新多个酒店附件
 SysUsers.sequlize.hasMany(HousesAttach.sequlize,{
     foreignKey:'modifier'
-});
+});*/
+
+
 //用户对应一个精选者
 SysUsers.sequlize.belongsTo(Users.sequlize, {
     foreignKey: 'users_id',
