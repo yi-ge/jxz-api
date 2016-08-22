@@ -91,7 +91,7 @@ class HousesService {
      */
     editHouse(id, name, modifier, region, address, traffic_around, spots_around, houses_desc){
         return Houses.transaction(t=>{
-           Houses.update({
+           return Houses.update({
                name:name,
                modifier:modifier,
                region:region,

@@ -72,7 +72,40 @@ class HousesCommentService {
                 });
             });
         });
+    }
 
+    /**
+     * 获取酒店评论
+     * @param id
+     */
+    findHouseComments(houses_id) {
+        return HousesComment.findList({
+            where: {houses_id: houses_id}
+        }).then(result=> {
+            result.list.map(comment=> {
+                HousesComment.formatHousesComment(comment.dataValues);
+            });
+            return result;
+        });
+    }
+
+    /**
+     * 分页查询
+     * @param houses_id
+     * @param page
+     * @param pagesize
+     * @returns {Promise.<T>}
+     */
+    findHouseCommentsPage(houses_id, page) {
+        let where = {houses_id: houses_id};
+        return HousesComment.count({where: where}).then(count=> {
+            return HousesComment.findPage({where:where},page,count);
+        }).then(result=> {
+            result.list.map(comment=> {
+                HousesComment.formatHousesComment(comment.dataValues);
+            });
+            return result;
+        });
     }
 }
 export default new HousesCommentService();

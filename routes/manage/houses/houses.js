@@ -159,6 +159,28 @@ router.post('/destroyhousecomment', (req, res, next)=> {
         res.json({code: 1000, message: "评论删除失败"});
     });
 });
+//获取酒店评论 全部
+router.post('/findhousecomments',(req, res, next)=> {
+    let param = req.body;
+    let houses_id = param.houses_id;
+    HousesCommentService.findHouseComments(houses_id).then(result=> {
+        next(result);
+    }).catch(e=> {
+        console.log(e);
+        res.json({code: 1000, message: "评论删除失败"});
+    });
+});
+//获取酒店评论 分页
+router.post('/findhousecommentpage',(req, res, next)=> {
+    let param = req.body;
+    let id = param.id;
+    HousesCommentService.findHouseCommentsPage(id).then(result=> {
+        next(result);
+    }).catch(e=> {
+        console.log(e);
+        res.json({code: 1000, message: "评论删除失败"});
+    });
+});
 //上传酒店附件（批量）
 router.post('/addhouseattachlist', (req, res, next)=> {
     let param = req.body;
