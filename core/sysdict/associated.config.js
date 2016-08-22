@@ -14,18 +14,6 @@ SysDict.sequlize.belongsTo(SysUsers.sequlize, {
     as: 'modifier_user'
 });
 
-//字典表自关联自己 一条字典数据有多个子数据
-SysDict.sequlize.hasMany(SysDict.sequlize, {
-    foreignKey: 'parent_id',
-    as: 'sys_dict_child'
-});
-//字典表自关联自己 一条字典数据有一个父数据
-SysDict.sequlize.belongsTo(SysDict.sequlize, {
-    foreignKey: 'parent_id',
-    targetKey: 'id',
-    as: 'sys_dict_parent'
-});
-
 //一个洲对应多个国家
 SysDict.sequlize.hasMany(SysDict.sequlize, {
     foreignKey: 'parent_id',
@@ -48,5 +36,4 @@ SysDict.sequlize.belongsTo(SysDict.sequlize, {
     targetKey: 'id',
     as: 'country'
 });
-
 export default SysDict;
