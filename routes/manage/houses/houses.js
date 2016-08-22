@@ -285,5 +285,4 @@ router.post('/findhousedetails', (req, res, next)=> {
         res.json({code: 1000, message: "酒店详情查询失败"});
     });
 });
-
 export default router;
