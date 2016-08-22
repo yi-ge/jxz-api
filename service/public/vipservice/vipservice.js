@@ -17,6 +17,61 @@ class VipService {
     }
 
     /**
+     * 会员注册
+     * @param account_name
+     * @param users_id
+     * @param password
+     * @returns {*}
+     */
+    registerVip(account_name, users_id, password) {
+        return UsersVip.findAccountName(account_name).then(vip=> {
+            if (!!vip) return UsersVip.encrypMD5('用户已存在');
+            return UsersVip.transaction(t=> {
+                return UsersVip.insert(UsersVip.createModel(account_name, null, null, 2, password), {transaction: t}).then(vip=> {
+                    console.log(vip);
+                    return Users.update({user_vip_id: vip.id}, {
+                        where: {id: users_id},
+                        transaction: t,
+                        lock: t.LOCK.UPDATE
+                    }).then(()=> {
+                        return vip;
+                    })
+                });
+            });
+        });
+    }
+
+    /**
+     * 会员登陆
+     * @param account_name
+     * @param users_id
+     * @param password
+     * @returns {Promise.<T>}
+     */
+    loginVip(account_name, users_id, password) {
+        return UsersVip.findAccountName(account_name).then(vip=> {
+            if (!vip) return UsersVip.errorPromise("用户不存在");
+            else return UsersVip.findOnlyOne({
+                where: {
+                    account_name: account_name,
+                    passwd: UsersVip.encrypMD5(password)
+                }
+            });
+        }).then(vip=> {
+            if (!vip) return UsersVip.errorPromise("密码错误");
+            else return Users.transaction(t=> {
+                return Users.update({user_vip_id: vip.id}, {
+                    where: {id: users_id},
+                    transaction: t,
+                    lock: t.LOCK.UPDATE
+                });
+            }).then(()=> {
+                return vip;
+            });
+        });
+    }
+
+    /**
      * 查询关联了vip的用户
      * @param page
      * @param sortType
@@ -41,7 +96,7 @@ class VipService {
         }).then(result=> {
             result.list.map(users=> {
                 Users.formatUser(users);
-                UsersVip.formatUserVip(users.users_vip.dataValues);
+                UsersVip.formatUserVip(users.users_vip && users.users_vip.dataValues);
             });
             return result;
         });

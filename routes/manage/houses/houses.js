@@ -114,7 +114,7 @@ router.post('/addhousecomment', (req, res, next)=> {
         comment_source = param.comment_source,
         content = param.content,
         creater = param.creater;
-    HousesCommentService.addComment(houses_id, comment_source, content,creater).then(result=> {
+    HousesCommentService.addManageComment(houses_id, comment_source, content, creater).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);
@@ -127,7 +127,7 @@ router.post('/addhousecommentlist', (req, res, next)=> {
     let houses_id = param.houses_id,
         comments = param.comments,
         creater = param.creater;
-    HousesCommentService.addCommentList(houses_id, comments, creater).then(result=> {
+    HousesCommentService.addManageCommentList(houses_id, comments, creater).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);
@@ -159,13 +159,28 @@ router.post('/destroyhousecomment', (req, res, next)=> {
         res.json({code: 1000, message: "评论删除失败"});
     });
 });
-//上传酒店附件
+//上传酒店附件（批量）
 router.post('/addhouseattachlist', (req, res, next)=> {
     let param = req.body;
     let houses_id = param.houses_id,
         creater = param.creater,
         attachs = param.attachs;
     HousesAttachService.addHousesAttachList(houses_id, attachs, creater).then(result=> {
+        next(result);
+    }).catch(e=> {
+        console.log(e);
+        res.json({code: 1000, message: "附件添加失败"});
+    });
+});
+//上传酒店附件
+router.post('/addhouseattach', (req, res, next)=> {
+    let param = req.body;
+    let houses_id = param.houses_id,
+        creater = param.creater,
+        links_url = param.links_url,
+        file_path = param.file_path,
+        title = param.title;
+    HousesAttachService.addHousesAttach(houses_id, title, links_url, file_path, creater).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);
@@ -181,6 +196,17 @@ router.post('/findhouseattachlist', (req, res, next)=> {
     }).catch(e=> {
         console.log(e);
         res.json({code: 1000, message: "附件查询失败"});
+    });
+});
+//删除酒店附件
+router.post('/destroyhouseattach', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id;
+    HousesAttachService.destroyHouseAttach(id).then(result=> {
+        next(result);
+    }).catch(e=> {
+        console.log(e);
+        res.json({code: 1000, message: "附件删除失败"});
     });
 });
 //添加酒店

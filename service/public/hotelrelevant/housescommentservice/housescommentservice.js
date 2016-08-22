@@ -8,7 +8,7 @@ class HousesCommentService {
      * @param modifier
      * @returns {*}
      */
-    addComment(houses_id, comment_source, content, creater) {
+    addManageComment(houses_id, comment_source, content, creater) {
         return SysUsers.getJXZUser(creater).then(user=> {
             HousesComment.addComment(houses_id, comment_source, content, user.id);
         });
@@ -21,7 +21,7 @@ class HousesCommentService {
      * @param creater
      * @returns {Promise.<T>}
      */
-    addCommentList(houses_id, comments, creater) {
+    addManageCommentList(houses_id, comments, creater) {
         return SysUsers.getJXZUser(creater).then(user=> {
             return HousesComment.addCommentList(houses_id, comments, user.id);
         });

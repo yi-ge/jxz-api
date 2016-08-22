@@ -4,6 +4,7 @@ import Articles from './../articles/articles';
 import SysUsers from './../sysusers/sysusers';
 import UsersVip from './../usersvip/usersvip';
 import HousesComment from './../housescomment/housescomment';
+import UsersAt from './../usersat/usersat';
 //一个用户对应一个openid
 Users.sequlize.hasOne(UsersOpenid.sequlize, {
     foreignKey: "user_id"
@@ -32,4 +33,19 @@ Users.sequlize.hasOne(SysUsers.sequlize, {
 });
 //用户管理vip 外键存在于Users中
 Users.sequlize.belongsTo(UsersVip.sequlize, {foreignKey: 'user_vip_id', targetKey: 'id'});
+
+//关注别人
+Users.sequlize.belongsToMany(Users.sequlize,{
+    through:UsersAt.sequlize,
+    foreignKey:'users_id',
+    otherKey:'at_user_id',
+    as:'at_user'
+});
+//被别人关注
+Users.sequlize.belongsToMany(Users.sequlize,{
+    through:UsersAt.sequlize,
+    foreignKey:'at_user_id',
+    otherKey:'users_id',
+    as:'users_at'
+});
 export default Users;

@@ -4,6 +4,7 @@
 import users from './users.config';
 import Base from './../base';
 import Articles from './../articles/articles';
+import UsersAt from './../usersat/usersat';
 
 import UserOauthOpenid from './../useroauthopenid';
 class Users extends Base {
@@ -58,10 +59,6 @@ class Users extends Base {
         return user;
     }
 
-    insert(user, option) {
-        return super.insert(user, option);
-    }
-
     /**
      * 获取用户发表文章数
      * @param id
@@ -71,6 +68,22 @@ class Users extends Base {
         return Articles.count({where:{author:id}});
     }
 
+    /**
+     * 统计用户关注人的数目
+     * @param id
+     * @returns {*}
+     */
+    countUserAt(id){
+        return UsersAt.count({where:{user_id:id,}});
+    }
+    /**
+     * 统计被关注的数目
+     * @param id
+     * @returns {*}
+     */
+    countAtUser(id){
+        return UsersAt.count({where:{at_user_id:id}});
+    }
 }
 
 export default new Users();

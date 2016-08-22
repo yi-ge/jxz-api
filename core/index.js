@@ -21,6 +21,7 @@ import HousesKeyword from './houseskeyword';
 import SysHousesKeyword from './syshouseskeyword';
 import HousesAttach from './housesattach';
 import HousesComment from './housescomment';
+import UsersAt from './usersat';
 
 export {
     Users, //会员
@@ -43,4 +44,5 @@ export {
     Activitys,
     ActivitysApply,
     ActivitysLocation,
+    UsersAt, //用户关注
 }

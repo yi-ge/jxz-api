@@ -8,7 +8,10 @@ import {
     ArticlesService,
     RegionService
 } from './../public';
+
+import {UsersAtService} from './userslevant';
 export {
     UsersService,
     VipService,
+    UsersAtService,
 }

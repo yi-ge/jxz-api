@@ -1,4 +1,4 @@
-import {Users,UsersOpenid} from './../../../core';
+import {Users,UsersOpenid,UsersAt} from './../../../core';
 class UserService {
     /**
      * 通过微信openid注册＃选者
@@ -29,6 +29,7 @@ class UserService {
                     user_name: username,
                     sex: sex,
                     avatar: avatar,
+                    last_login_date: new Date(),
                     updated_at: new Date(),
                 },
                 {
@@ -90,7 +91,7 @@ class UserService {
     updateJXZCover(id, is_cover) {
         if (is_cover != 0 && is_cover != 1) return Users.errorPromise("is_cover值不正确");
         return Users.transaction(t=> {
-            return Users.update({is_cover: is_cover,updated_at:new Date()}, {
+            return Users.update({is_cover: is_cover, updated_at: new Date()}, {
                 where: {id: id},
                 transaction: t,
                 lock: t.LOCK.UPDATE,
@@ -101,6 +102,5 @@ class UserService {
             return Users.formatUser(result.dataValues);
         });
     }
-
 }
 export default new UserService();

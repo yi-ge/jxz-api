@@ -1,0 +1,6 @@
+{
+	"name": "useratservice",
+	"version": "2.0.0",
+	"private": true,
+	"main": "./useratservice.js"
+}

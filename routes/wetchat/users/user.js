@@ -1,5 +1,5 @@
 import express from "express";
-import {UsersService} from './../../../service/wetchat';
+import {UsersService,UsersAtService} from './../../../service/wetchat';
 const router = express.Router();
 
 /**
@@ -26,6 +26,15 @@ router.post('/getjxzinfo', (req, res, next)=> {
         console.log(message);
         res.json({code: 1000, message: message});
     });
+});
+
+router.post('/atusers',(req,res,next)=>{
+    UsersAtService.atUsers(user_id,at_user_id).then(result=>{
+        next(result);
+    }).catch(e=>{
+        console.log(e);
+        res.json({code: 1000, message: "关注失败"});
+    })
 });
 
 
