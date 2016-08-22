@@ -167,7 +167,7 @@ router.post('/findhousecomments',(req, res, next)=> {
         next(result);
     }).catch(e=> {
         console.log(e);
-        res.json({code: 1000, message: "评论删除失败"});
+        res.json({code: 1000, message: "评论查询失败"});
     });
 });
 //获取酒店评论 分页
@@ -178,7 +178,7 @@ router.post('/findhousecommentpage',(req, res, next)=> {
         next(result);
     }).catch(e=> {
         console.log(e);
-        res.json({code: 1000, message: "评论删除失败"});
+        res.json({code: 1000, message: "评论查询失败"});
     });
 });
 //上传酒店附件（批量）

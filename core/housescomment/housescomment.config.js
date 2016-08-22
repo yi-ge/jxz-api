@@ -5,53 +5,22 @@ export default {
         allowNull: false,
         primaryKey: true
     },
-    activity_type: {
+    houses_id: {
+        type: DataTypes.BIGINT,
+        allowNull: true
+    },
+    comment_source: {
         type: DataTypes.STRING,
         allowNull: true
     },
-    activity_banner: {
+    content: {
         type: DataTypes.STRING,
         allowNull: true
     },
-    activity_title: {
-        type: DataTypes.STRING,
-        allowNull: true
-    },
-    activity_begin_date: {
+    comment_date: {
         type: DataTypes.DATE,
         allowNull: false,
         defaultValue: '0000-00-00 00:00:00'
-    },
-    activity_end_date: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: '0000-00-00 00:00:00'
-    },
-    apply_begin_date: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: '0000-00-00 00:00:00'
-    },
-    apply_end_date: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: '0000-00-00 00:00:00'
-    },
-    activity_desc: {
-        type: DataTypes.STRING,
-        allowNull: true
-    },
-    sort_order: {
-        type: DataTypes.INTEGER(4),
-        allowNull: true
-    },
-    link_url: {
-        type: DataTypes.STRING,
-        allowNull: true
-    },
-    status: {
-        type: DataTypes.INTEGER(4),
-        allowNull: true
     },
     creater: {
         type: DataTypes.BIGINT,
@@ -70,5 +39,10 @@ export default {
         type: DataTypes.DATE,
         allowNull: false,
         defaultValue: '0000-00-00 00:00:00'
+    },
+    status: {
+        type: DataTypes.INTEGER(4),
+        allowNull: true,
+        defaultValue: '1'
     }
 };
