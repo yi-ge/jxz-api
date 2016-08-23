@@ -236,6 +236,11 @@ class Base {
         });
     }
 
+    /**
+     * 删除数据
+     * @param option
+     * @returns {Promise.<Integer>}
+     */
     destroy(option) {
         return this.sequlize.destroy(option).catch(e=> {
             throw e;
