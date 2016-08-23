@@ -8,9 +8,9 @@ class HousesCommentService {
      * @param modifier
      * @returns {*}
      */
-    addManageComment(houses_id, comment_source, content, creater) {
+    addManageComment(houses_id, comment_source, content, comment_date, creater) {
         return SysUsers.getJXZUser(creater).then(user=> {
-            HousesComment.addComment(houses_id, comment_source, content, user.id);
+            HousesComment.addComment(houses_id, comment_source, content, user.id, comment_date);
         });
     }
 
@@ -40,6 +40,7 @@ class HousesCommentService {
                 comment_source: comment_source,
                 modifier: modifier,
                 updated_at: new Date(),
+                content: content
             }, {
                 where: {id: id},
                 transaction: t,
@@ -99,7 +100,7 @@ class HousesCommentService {
     findHouseCommentsPage(houses_id, page) {
         let where = {houses_id: houses_id};
         return HousesComment.count({where: where}).then(count=> {
-            return HousesComment.findPage({where:where},page,count);
+            return HousesComment.findPage({where: where}, page, count);
         }).then(result=> {
             result.list.map(comment=> {
                 HousesComment.formatHousesComment(comment.dataValues);
@@ -107,5 +108,22 @@ class HousesCommentService {
             return result;
         });
     }
+
+    /**
+     * 微信添加酒店评论
+     * @param houses_id
+     * @param comment_source
+     * @param content
+     * @param creater
+     * @returns {Promise.<T>}
+     */
+    addWatchHousesComment(houses_id, comment_source, content, creater) {
+        return HousesComment.addComment(houses_id, comment_source, content, creater).then(result=>{
+            console.log(result);
+            return HousesComment.formatHousesComment(result.dataValues);
+        });
+    }
+
+
 }
 export default new HousesCommentService();

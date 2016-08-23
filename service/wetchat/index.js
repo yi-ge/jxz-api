@@ -14,4 +14,5 @@ export {
     UsersService,
     VipService,
     UsersAtService,
+    HousesCommentService,
 }

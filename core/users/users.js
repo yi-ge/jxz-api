@@ -50,12 +50,12 @@ class Users extends Base {
     }
 
     formatUser(user) {
-        user.last_login_ip = this.intToIp(user.last_login_ip);
-        user.created_at = this.formatDate(user.created_at, "yyyy-MM-dd hh:mm:ss");
-        user.updated_at = this.formatDate(user.updated_at, "yyyy-MM-dd hh:mm:ss");
-        user.last_login_date = this.formatDate(user.last_login_date, "yyyy-MM-dd hh:mm:ss");
-        user.join_date = this.formatDate(user.join_date, "yyyy-MM-dd hh:mm:ss");
-        user.sex = this.getStrSex(user.sex);
+        !!user.last_login_ip && (user.last_login_ip = this.intToIp(user.last_login_ip));
+        !!user.created_at && (user.created_at = this.formatDate(user.created_at, "yyyy-MM-dd hh:mm:ss"));
+        !!user.updated_at && (user.updated_at = this.formatDate(user.updated_at, "yyyy-MM-dd hh:mm:ss"));
+        !!user.last_login_date && (user.last_login_date = this.formatDate(user.last_login_date, "yyyy-MM-dd hh:mm:ss"));
+        !!user.join_date && (user.join_date = this.formatDate(user.join_date, "yyyy-MM-dd hh:mm:ss"));
+        !!user.sex && (user.sex = this.getStrSex(user.sex));
         return user;
     }
 

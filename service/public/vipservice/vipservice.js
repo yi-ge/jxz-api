@@ -102,7 +102,7 @@ class VipService {
                 page, count, sortType, pagesize);
         }).then(result=> {
             result.list.map(users=> {
-                Users.formatUser(users);
+                Users.formatUser(users.dataValues);
                 UsersVip.formatUserVip(users.users_vip && users.users_vip.dataValues);
             });
             return result;

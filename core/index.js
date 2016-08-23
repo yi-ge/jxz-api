@@ -22,6 +22,7 @@ import SysHousesKeyword from './syshouseskeyword';
 import HousesAttach from './housesattach';
 import HousesComment from './housescomment';
 import UsersAt from './usersat';
+import ArticlesComment from './articlescomment';
 
 export {
     Users, //会员
@@ -36,6 +37,7 @@ export {
     UserOauthOpenid, // 第三方用户
     SysHotKeyword, // 系统热词
     Articles, // 文章
+    ArticlesComment, //文章评论
     Houses, // 酒店
     HousesKeyword, // 酒店亮点
     SysHousesKeyword, //系统酒店亮点
