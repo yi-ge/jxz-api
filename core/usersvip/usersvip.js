@@ -37,7 +37,7 @@ class UsersVip extends Base {
         return value;
     }
 
-    createModel(account_name, user_name, email, sex, password = 666666, user_status = 0, is_cover = 0) {
+    createModel(account_name, user_name, email, sex, password = '666666', user_status = 0, is_cover = 0) {
         let model = {
             id: this.generateId(),
             account_name: account_name,

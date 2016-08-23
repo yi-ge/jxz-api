@@ -4,7 +4,7 @@ import Houses from './../houses/houses';
 //一篇文章对应一个作者
 Articles.sequlize.belongsTo(Users.sequlize, {
     foreignKey: "author",
-    targetKey: "id"
+    targetKey: "id",
 });
 //创建人
 Articles.sequlize.belongsTo(Users.sequlize, {
@@ -20,8 +20,8 @@ Articles.sequlize.belongsTo(Users.sequlize, {
 });
 //一篇文章对应一个酒店
 Articles.sequlize.belongsTo(Houses.sequlize, {
-    as: 'houses',
     foreignKey: 'houses_id',
-    targetKey: 'id'
+    targetKey: 'id',
+    as: 'houses'
 });
 export default Articles;

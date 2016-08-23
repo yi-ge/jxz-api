@@ -122,7 +122,6 @@ class Base {
     col(str) {
         return Sequelize.col(str);
     }
-
     /**
      * 插入一条数据
      * @param model

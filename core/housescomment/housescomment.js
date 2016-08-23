@@ -19,7 +19,7 @@ class HousesComment extends Base {
             content: content,
             creater: creater,
             modifier: modifier,
-            comment_date: new Date(comment_date),
+            comment_date: comment_date ? new Date(comment_date) : new Date(),
             created_at: created_at ? new Date(created_at) : new Date(),
             updated_at: new Date(),
         };
@@ -37,8 +37,8 @@ class HousesComment extends Base {
      */
     addComment(houses_id, comment_source, content, creater, comment_date) {
         return Houses.getCommentCount(houses_id).then(count=> {
-            return HousesComment.transaction(t=> {
-                return HousesComment.insert(HousesComment.createModel(houses_id, comment_source, content, creater, creater, comment_date), {transaction: t}).then(result=> {
+            return this.transaction(t=> {
+                return this.insert(this.createModel(houses_id, comment_source, content, creater, creater, comment_date), {transaction: t}).then(result=> {
                     return result;
                 }).then(result=> {
                     return Houses.update({comment_num: ++count}, {

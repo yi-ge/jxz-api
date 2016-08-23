@@ -44,6 +44,18 @@ class UserService {
     }
 
     /**
+     * 通过id 查询精选者
+     * @param id
+     * @returns {*|Promise.<T>}
+     */
+    getInfo(id){
+        if(!id) return Users.errorPromise('用户id不能为空');
+        return Users.findById(id).then(result=>{
+            return Users.formatUser(result.dataValues);
+        });
+    }
+
+    /**
      * 通过微信openid查询精选者 不存在就创建 存在如果有修改则同步数据库修改
      * @param openid
      * @returns {*}
@@ -52,11 +64,31 @@ class UserService {
         if (!openid) return UsersOpenid.errorPromise("openid不能为空");
         return UsersOpenid.findOnlyOne({
             where: {openid: openid},
-        }).then(result=> {
-            if (!result) return this.registryJXZ(openid, username, sex, avatar);
-            return this.updateJXZ(result.user_id, username, Users.getSexValue(sex), avatar).then(()=> {
-                return result;
-            });
+            include:[{
+                model:Users.sequlize,
+                attributes:['id','user_vip_id']
+            }]
+        }).then(useropenid=> {
+            if (!useropenid) return this.registryJXZ(openid, username, sex, avatar); //useropenid不存在
+            else if(!useropenid.user){  // 存在openi 不存在user
+                return Users.transaction(t=>{
+                    return Users.insert(Users.createModel(username, sex, avatar),{transaction:t}).then(user=>{
+                        console.log(user);
+                        return UsersOpenid.update({
+                            user_id:user.id
+                        },{
+                            where:{id:useropenid.id},
+                            transaction:t,
+                            lock: t.LOCK.UPDATE
+                        });
+                    }).then(()=>{
+                        return useropenid;
+                    });
+                });
+            }
+            return useropenid;
+        }).then(result=>{
+            return Users.formatUser(result);
         });
     }
 

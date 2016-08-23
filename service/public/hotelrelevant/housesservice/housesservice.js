@@ -54,30 +54,6 @@ class HousesService {
     }
 
     /**
-     * 酒店上下架状态
-     * @param id
-     * @param is_putaway
-     */
-    changeHousesPutaway(id, is_putaway, modifier) {
-        if (is_putaway != 0 && is_putaway != 1) return Houses.errorPromise('状态传递不正却');
-        return Houses.transaction(t=> {
-            return Houses.update({
-                is_putaway: is_putaway,
-                modifier: modifier,
-                updated_at: new Date(),
-            }, {
-                where: {id: id},
-                transaction: t,
-                lock: t.LOCK.UPDATE
-            });
-        }).then(()=> {
-            return Houses.findById(id);
-        }).then(result=> {
-            return Houses.formatHouse(result.dataValues);
-        });
-    }
-
-    /**
      * 编辑酒店
      * @param id
      * @param name
@@ -110,11 +86,11 @@ class HousesService {
     }
 
     /**
-     * 查询酒店详情 (加上亮点)
+     * 查询酒店详情 后台列表进入后的详情 (加上亮点)
      * @param id
      * @returns {*|Promise.<T>}
      */
-    findHouseDetails(id) {
+    findManageHouseDetails(id) {
         return Houses.findById(id, {
             include: [{
                 model: HousesKeyword.sequlize,
@@ -139,6 +115,52 @@ class HousesService {
                 }]
             }]
         }).then(result=> {
+            return Houses.formatHouse(result.dataValues);
+        });
+    }
+
+    /**
+     *
+     * @param id
+     * @returns {*|Promise.<T>}
+     */
+    findHouseDetails(id){
+        return Houses.findById(id,{
+            include:[{
+                model:HousesAttach.sequlize,
+                attributes:['id','houses_id','links_url']
+            }]
+        }).then(result=> {
+            if(!result) return Houses.errorPromise('酒店不存在!');
+            Houses.formatHouse(result.dataValues);
+            result.houses_attaches.map(attach=>{
+                HousesAttach.formatHousesAttach(attach.dataValues);
+            });
+            return result;
+        });
+    }
+
+    /**
+     * 改变酒店上下架状态
+     * @param id
+     * @param is_putaway
+     * @returns {Promise.<T>}
+     */
+    putaway(id,is_putaway,modifier){
+        if(is_putaway !=0 && is_putaway != 1) return Houses.errorPromise("状态值不正确");
+        return Houses.transaction(t=>{
+            return Houses.update({
+                is_putaway:is_putaway,
+                modifier:modifier,
+                updated_at:new Date(),
+            },{
+                where:{id:id},
+                transaction:t,
+                lock: t.LOCK.UPDATE,
+            });
+        }).then(()=>{
+            return Houses.findById(id);
+        }).then(result=>{
             return Houses.formatHouse(result.dataValues);
         });
     }

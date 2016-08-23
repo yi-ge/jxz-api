@@ -35,6 +35,8 @@ class VipService {
                 return UsersVip.insert(UsersVip.createModel(account_name, null, null, 2, password), {
                     transaction: t,
                 }).then(vip=> {
+                    console.log(users_id);
+                    console.log(vip.id);
                     return Users.update({user_vip_id: vip.id}, {
                         where: {id: users_id},
                         transaction: t,
@@ -55,7 +57,6 @@ class VipService {
      * @returns {Promise.<T>}
      */
     loginVip(account_name, users_id, password) {
-        console.log(account_name);
         return UsersVip.findAccountName(account_name).then(vip=> {
             if (!vip) return UsersVip.errorPromise("用户不存在");
             else return UsersVip.findOnlyOne({
@@ -67,7 +68,7 @@ class VipService {
         }).then(vip=> {
             if (!vip) return UsersVip.errorPromise("密码错误");
             else return Users.transaction(t=> {
-                return Users.update({user_vip_id: vip.id}, {
+                return Users.update({user_vip_id: vip.id}, { //关联新用户
                     where: {id: users_id},
                     transaction: t,
                     lock: t.LOCK.UPDATE

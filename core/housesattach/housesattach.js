@@ -28,6 +28,7 @@ class HousesAttach extends Base {
     }
 
     formatHousesAttach(attach){
+        if(!attach) return attach;
         !!attach.created_at && (attach.created_at = this.formatDate(attach.created_at,'yyyy-MM-dd hh:mm:ss'));
         !!attach.updated_at && (attach.updated_at = this.formatDate(attach.updated_at,'yyyy-MM-dd hh:mm:ss'));
         return attach;

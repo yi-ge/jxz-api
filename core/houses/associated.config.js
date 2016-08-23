@@ -8,7 +8,6 @@ import SysDict from './../sysdict/sysdict';
 //一个酒店对应多篇文章
 Houses.sequlize.hasMany(Articles.sequlize, {
     foreignKey: 'houses_id',
-    targetKey: 'id',
     as:'articles'
 });
 //一个酒店对应多个亮点

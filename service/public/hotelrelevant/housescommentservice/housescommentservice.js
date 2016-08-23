@@ -10,7 +10,7 @@ class HousesCommentService {
      */
     addManageComment(houses_id, comment_source, content, comment_date, creater) {
         return SysUsers.getJXZUser(creater).then(user=> {
-            HousesComment.addComment(houses_id, comment_source, content, user.id, comment_date);
+            return HousesComment.addComment(houses_id, comment_source, content, user.id, comment_date);
         });
     }
 
@@ -34,17 +34,20 @@ class HousesCommentService {
      * @param modifier
      * @returns {Promise.<T>}
      */
-    editComment(id, comment_source, content, modifier) {
-        return HousesComment.transaction(t=> {
-            return HousesComment.update({
-                comment_source: comment_source,
-                modifier: modifier,
-                updated_at: new Date(),
-                content: content
-            }, {
-                where: {id: id},
-                transaction: t,
-                lock: t.LOCK.UPDATE
+    editComment(id, comment_source, content, comment_date, modifier) {
+        return SysUsers.getJXZUser(modifier).then(user=> {
+            return HousesComment.transaction(t=> {
+                return HousesComment.update({
+                    comment_source: comment_source,
+                    modifier: user.id,
+                    updated_at: new Date(),
+                    content: content,
+                    comment_date: comment_date,
+                }, {
+                    where: {id: id},
+                    transaction: t,
+                    lock: t.LOCK.UPDATE
+                });
             });
         }).then(()=> {
             return HousesComment.findById(id);
@@ -81,7 +84,8 @@ class HousesCommentService {
      */
     findHouseComments(houses_id) {
         return HousesComment.findList({
-            where: {houses_id: houses_id}
+            where: {houses_id: houses_id},
+            order: `comment_date DESC`
         }).then(result=> {
             result.list.map(comment=> {
                 HousesComment.formatHousesComment(comment.dataValues);
@@ -100,7 +104,7 @@ class HousesCommentService {
     findHouseCommentsPage(houses_id, page) {
         let where = {houses_id: houses_id};
         return HousesComment.count({where: where}).then(count=> {
-            return HousesComment.findPage({where: where}, page, count);
+            return HousesComment.findPage({where: where,order: `comment_date DESC`}, page, count,2);
         }).then(result=> {
             result.list.map(comment=> {
                 HousesComment.formatHousesComment(comment.dataValues);
@@ -118,8 +122,7 @@ class HousesCommentService {
      * @returns {Promise.<T>}
      */
     addWatchHousesComment(houses_id, comment_source, content, creater) {
-        return HousesComment.addComment(houses_id, comment_source, content, creater).then(result=>{
-            console.log(result);
+        return HousesComment.addComment(houses_id, comment_source, content, creater).then(result=> {
             return HousesComment.formatHousesComment(result.dataValues);
         });
     }

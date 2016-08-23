@@ -80,7 +80,7 @@ router.post('/addhousekeyword', (req, res, next)=> {
         next(result);
     }).catch(e=> {
         console.log(e);
-        res.json({code: 1000, message: "系统酒店亮点查询失败"});
+        res.json({code: 1000, message: typeof e == 'string' ? e : "系统酒店亮点查询失败"});
     });
 });
 //编辑关联酒店关联的亮点
@@ -88,15 +88,16 @@ router.post('/edithousekeyword', (req, res, next)=> {
     let param = req.body;
     let id = param.id,
         keyword_desc = param.keyword_desc,
+        keyword_id = param.keyword_id,
         modifier = param.modifier;
-    HousesKeywordService.editHousesKeyword(id, keyword_desc, modifier).then(result=> {
+    HousesKeywordService.editHousesKeyword(id, keyword_id, keyword_desc, modifier).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);
         res.json({code: 1000, message: "编辑酒店亮点失败"});
     });
 });
-//更新关联于酒店关联的亮点状态
+//删除关联于酒店关联的亮点状态
 router.post('/destroyhouseskeywordstatus', (req, res, next)=> {
     let param = req.body;
     let id = param.id;
@@ -113,8 +114,9 @@ router.post('/addhousecomment', (req, res, next)=> {
     let houses_id = param.houses_id,
         comment_source = param.comment_source,
         content = param.content,
+        comment_date = param.comment_date,
         creater = param.creater;
-    HousesCommentService.addManageComment(houses_id, comment_source, content, creater).then(result=> {
+    HousesCommentService.addManageComment(houses_id, comment_source, content, comment_date, creater).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);
@@ -140,8 +142,9 @@ router.post('/edithousecomment', (req, res, next)=> {
     let id = param.id,
         comment_source = param.comment_source,
         content = param.content,
+        comment_date = param.comment_date,
         modifier = param.modifier;
-    HousesCommentService.editComment(id, comment_source, content, modifier).then(result=> {
+    HousesCommentService.editComment(id, comment_source, content, comment_date, modifier).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);
@@ -160,7 +163,7 @@ router.post('/destroyhousecomment', (req, res, next)=> {
     });
 });
 //获取酒店评论 全部
-router.post('/findhousecomments',(req, res, next)=> {
+router.post('/findhousecomments', (req, res, next)=> {
     let param = req.body;
     let houses_id = param.houses_id;
     HousesCommentService.findHouseComments(houses_id).then(result=> {
@@ -171,7 +174,7 @@ router.post('/findhousecomments',(req, res, next)=> {
     });
 });
 //获取酒店评论 分页
-router.post('/findhousecommentpage',(req, res, next)=> {
+router.post('/findhousecommentpage', (req, res, next)=> {
     let param = req.body;
     let id = param.id;
     HousesCommentService.findHouseCommentsPage(id).then(result=> {
@@ -283,28 +286,29 @@ router.post('/findhouses', (req, res, next)=> {
         res.json({code: 1000, message: "酒店查询失败"});
     })
 });
-//修改酒店上下架状态
-router.post('/changehousesputaway', (req, res, next)=> {
-    let param = req.body;
-    let id = param.id,
-        is_putaway = param.is_putaway,
-        modifier = param.modifier;
-    HousesService.changeHousesPutaway(id, is_putaway, modifier).then(result=> {
-        next(result);
-    }).catch(e=> {
-        console.log(e);
-        res.json({code: 1000, message: "酒店查询失败"});
-    });
-});
 //查询酒店详情
 router.post('/findhousedetails', (req, res, next)=> {
     let param = req.body;
     let id = param.id;
-    HousesService.findHouseDetails(id).then(result=> {
+    HousesService.findManageHouseDetails(id).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);
         res.json({code: 1000, message: "酒店详情查询失败"});
     });
 });
+//酒店上下架
+router.post('/putaway', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id,
+        is_putaway = param.is_putaway,
+        modifier = param.modifier;
+    HousesService.putaway(id, is_putaway,modifier).then(result=> {
+        next(result);
+    }).catch(e=> {
+        console.log(e);
+        res.json({code: 1000, message: typeof e == 'string' ? e : "酒店详情查询失败"});
+    });
+})
+
 export default router;

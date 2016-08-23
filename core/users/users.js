@@ -50,11 +50,12 @@ class Users extends Base {
     }
 
     formatUser(user) {
-        !!user.last_login_ip && (user.last_login_ip = this.intToIp(user.last_login_ip));
-        !!user.created_at && (user.created_at = this.formatDate(user.created_at, "yyyy-MM-dd hh:mm:ss"));
-        !!user.updated_at && (user.updated_at = this.formatDate(user.updated_at, "yyyy-MM-dd hh:mm:ss"));
-        !!user.last_login_date && (user.last_login_date = this.formatDate(user.last_login_date, "yyyy-MM-dd hh:mm:ss"));
-        !!user.join_date && (user.join_date = this.formatDate(user.join_date, "yyyy-MM-dd hh:mm:ss"));
+        if(user == void(0)) return user;
+        user.last_login_ip!= void(0) && (user.last_login_ip = this.intToIp(user.last_login_ip));
+        user.created_at!= void(0) && (user.created_at = this.formatDate(user.created_at, "yyyy-MM-dd hh:mm:ss"));
+        user.updated_at!= void(0) && (user.updated_at = this.formatDate(user.updated_at, "yyyy-MM-dd hh:mm:ss"));
+        user.last_login_date!= void(0) && (user.last_login_date = this.formatDate(user.last_login_date, "yyyy-MM-dd hh:mm:ss"));
+        user.join_date!= void(0) && (user.join_date = this.formatDate(user.join_date, "yyyy-MM-dd hh:mm:ss"));
         user.sex != void(0) && (user.sex = this.getStrSex(user.sex));
         return user;
     }
@@ -84,6 +85,24 @@ class Users extends Base {
     countAtUser(id){
         return UsersAt.count({where:{at_user_id:id}});
     }
+
+    /**
+     * 解绑vip
+     * @param user_vip_id
+     * @returns {*}
+     */
+    unbindVip(user_vip_id){
+        return this.transaction(t=>{
+           return this.update({
+               user_vip_id:null
+           },{
+               where:{user_vip_id:user_vip_id},
+               transaction:t,
+               lock: t.LOCK.UPDATE
+           }) ;
+        });
+    }
+
 }
 
 export default new Users();
