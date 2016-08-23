@@ -123,7 +123,5 @@ class HousesCommentService {
             return HousesComment.formatHousesComment(result.dataValues);
         });
     }
-
-
 }
 export default new HousesCommentService();

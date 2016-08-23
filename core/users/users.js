@@ -55,7 +55,7 @@ class Users extends Base {
         !!user.updated_at && (user.updated_at = this.formatDate(user.updated_at, "yyyy-MM-dd hh:mm:ss"));
         !!user.last_login_date && (user.last_login_date = this.formatDate(user.last_login_date, "yyyy-MM-dd hh:mm:ss"));
         !!user.join_date && (user.join_date = this.formatDate(user.join_date, "yyyy-MM-dd hh:mm:ss"));
-        !!user.sex && (user.sex = this.getStrSex(user.sex));
+        user.sex != void(0) && (user.sex = this.getStrSex(user.sex));
         return user;
     }
 
