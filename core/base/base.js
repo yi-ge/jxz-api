@@ -106,24 +106,6 @@ class Base {
     }
 
     /**
-     * 获取事务的隔离级别
-     * @param key
-     * @returns {*}
-     */
-    getTransactionClass(key){
-        return Sequelize.Transaction.ISOLATION_LEVELS[key];
-    }
-
-    /**
-     * 调用mysql函数
-     * @param fnname
-     * @param param
-     */
-    mysqlFn(fnname, param,name) {
-        return Sequelize.fn(fnname,param,name);
-    }
-
-    /**
      * 拼接where逻辑
      * @param name
      * @param logic
