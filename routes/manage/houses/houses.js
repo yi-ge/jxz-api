@@ -294,7 +294,7 @@ router.post('/findhousedetails', (req, res, next)=> {
         next(result);
     }).catch(e=> {
         console.log(e);
-        res.json({code: 1000, message: "酒店详情查询失败"});
+        res.json({code: 1000, message: typeof e == "string" ? e : "酒店详情查询失败"});
     });
 });
 //酒店上下架
@@ -303,7 +303,7 @@ router.post('/putaway', (req, res, next)=> {
     let id = param.id,
         is_putaway = param.is_putaway,
         modifier = param.modifier;
-    HousesService.putaway(id, is_putaway,modifier).then(result=> {
+    HousesService.putaway(id, is_putaway, modifier).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);

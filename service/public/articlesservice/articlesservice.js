@@ -30,7 +30,7 @@ class ArticlesService {
     }
 
     /**
-     * 查询文章列表
+     * 查询文章列表（后台）
      * @param page
      * @param startDate
      * @param endDate
@@ -83,7 +83,17 @@ class ArticlesService {
     }
 
     /**
-     * 微信首页查询文章
+     * 后台预览文章
+     * @param id
+     */
+    articleDetails(id) {
+        return Articles.findById(id).then(article=> {
+            return Articles.formatArticle(article.dataValues);
+        });
+    }
+
+    /**
+     * 微信首页查询文章 列表
      * @param page
      * @param status
      * @param sortType
@@ -105,11 +115,11 @@ class ArticlesService {
                 where: where,
                 include: [{
                     model: Users.sequlize,
-                    attributes:['id','user_name','avatar','user_vip_id']
-                },{
-                    model:Houses.sequlize,
-                    as:'houses',
-                    attributes:['id','address']
+                    attributes: ['id', 'user_name', 'avatar', 'user_vip_id']
+                }, {
+                    model: Houses.sequlize,
+                    as: 'houses',
+                    attributes: ['id', 'address']
                 }]
             }, order ? {order: order} : {}), page, count, sortType, pagesize);
         }).then(result=> {
@@ -122,7 +132,7 @@ class ArticlesService {
     }
 
     /**
-     *
+     * 文章详情
      * @param id
      * @returns {*|Promise.<T>}
      */
@@ -140,7 +150,7 @@ class ArticlesService {
                 article.read_num += 1;
                 return Articles.formatArticle(article.dataValues);
             });
-        })
+        });
     }
 
 }

@@ -1,5 +1,5 @@
 import express from "express";
-import {UsersService,UsersAtService} from './../../../service/wetchat';
+import {UsersService,UsersAtService,UsersFavoriteService} from './../../../service/wetchat';
 const router = express.Router();
 
 //注册成为精选者
@@ -28,40 +28,86 @@ router.post('/getjxzinfo', (req, res, next)=> {
     });
 });
 //关注用户
-router.post('/atusers',(req,res,next)=>{
+router.post('/atusers', (req, res, next)=> {
     let param = req.body;
     let id = param.id,
         at_user_id = param.at_user_id;
-    UsersAtService.atUsers(id,at_user_id).then(result=>{
+    UsersAtService.atUsers(id, at_user_id).then(result=> {
         next(result);
-    }).catch(e=>{
+    }).catch(e=> {
         console.log(e);
         res.json({code: 1000, message: typeof e == 'string' ? e : "关注失败"});
     })
 });
 //是否关注
-router.post('/isat',(req,res,next)=>{
+router.post('/isat', (req, res, next)=> {
     let param = req.body;
     let id = param.id,
         at_user_id = param.at_user_id;
-    UsersAtService.isAtUser(id,at_user_id).then(result=>{
+    UsersAtService.isAtUser(id, at_user_id).then(result=> {
         next(result);
-    }).catch(e=>{
+    }).catch(e=> {
         console.log(e);
         res.json({code: 1000, message: typeof e == 'string' ? e : "判断是否关注失败"});
     })
 });
-
+//取消关注
+router.post('/canceat', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id,
+        at_user_id = param.at_user_id;
+    UsersAtService.cancelAt(id, at_user_id).then(result=> {
+        next(result);
+    }).catch(e=> {
+        console.log(e);
+        res.json({code: 1000, message: typeof e == 'string' ? e : "取消关注失败"});
+    });
+});
+//收藏文章
+router.post('/collectionarticle', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id,
+        favorite_source_id = param.favorite_source_id;
+    UsersFavoriteService.collectionArticle(id, favorite_source_id).then(result=> {
+        next(result);
+    }).catch(e=> {
+        console.log(e);
+        res.json({code: 1000, message: typeof e == 'string' ? e : "收藏文章失败"});
+    });
+});
+//取消收藏
+router.post('/cancelarticle', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id,
+        favorite_source_id = param.favorite_source_id;
+    UsersFavoriteService.cancelArticle(id, favorite_source_id).then(result=> {
+        next(result);
+    }).catch(e=> {
+        console.log(e);
+        res.json({code: 1000, message: typeof e == 'string' ? e : "取消收藏失败"});
+    });
+});
+//是否关注
+router.post('/iscollectionarticle', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id,
+        favorite_source_id = param.favorite_source_id;
+    UsersFavoriteService.isCollectionArticle(id, favorite_source_id).then(result=> {
+        next(result);
+    }).catch(e=> {
+        console.log(e);
+        res.json({code: 1000, message: typeof e == 'string' ? e : "判断收藏是否失败"});
+    });
+});
 //获取用户信息
-router.post('/getinfo',(req,res,next)=>{
+router.post('/getinfo', (req, res, next)=> {
     let param = req.body;
     let id = param.id;
-    UsersService.getInfo(id).then(result=>{
+    UsersService.getInfo(id).then(result=> {
         next(result);
-    }).catch(e=>{
+    }).catch(e=> {
         console.log(e);
         res.json({code: 1000, message: typeof e == 'string' ? e : "获取用户信息失败"});
     });
 });
-
 export default router;

@@ -115,6 +115,7 @@ class HousesService {
                 }]
             }]
         }).then(result=> {
+            if(!result) return Houses.errorPromise('酒店不存在');
             return Houses.formatHouse(result.dataValues);
         });
     }

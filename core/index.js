@@ -23,6 +23,7 @@ import HousesAttach from './housesattach';
 import HousesComment from './housescomment';
 import UsersAt from './usersat';
 import ArticlesComment from './articlescomment';
+import UsersFavorite from './usersfavorite';
 
 export {
     Users, //会员
@@ -38,6 +39,7 @@ export {
     SysHotKeyword, // 系统热词
     Articles, // 文章
     ArticlesComment, //文章评论
+    UsersFavorite, //收藏文章
     Houses, // 酒店
     HousesKeyword, // 酒店亮点
     SysHousesKeyword, //系统酒店亮点

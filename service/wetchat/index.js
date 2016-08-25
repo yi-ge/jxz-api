@@ -9,9 +9,10 @@ import {
     RegionService
 } from './../public';
 
-import {UsersAtService} from './userslevant';
+import {UsersAtService,UsersFavoriteService} from './userslevant';
 export {
-    UsersService,
+    UsersService, //精选者
+    UsersFavoriteService, //收藏文章
     VipService,
     UsersAtService,
     HousesService,

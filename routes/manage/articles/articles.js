@@ -29,7 +29,18 @@ router.post('/addarticle', (req, res, next)=> {
     }).catch(e=> {
         console.log(e);
         res.json({code: 1000, message: '文章添加失败'});
-    })
+    });
+});
+//预览文章
+router.post('articledetails',(req,res,next)=>{
+    let param = req.body;
+    let id = param.id;
+    ArticlesService.articleDetails(id).then(result=>{
+        next(result);
+    }).catch(e=> {
+        console.log(e);
+        res.json({code: 1000, message:typeof e == "string" ? e : '文章查看失败'});
+    });
 });
 
 export default router;

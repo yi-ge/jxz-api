@@ -23,6 +23,24 @@ class UserAtService {
     }
 
     /**
+     * 取消关注
+     * @param user_id
+     * @param at_user_id
+     * @returns {*}
+     */
+    cancelAt(user_id,at_user_id){
+        return UsersAt.transaction(t=>{
+            return UsersAt.destroy({
+                where:{
+                    user_id:user_id,
+                    at_user_id:at_user_id
+                },
+                transaction:t
+            });
+        });
+    }
+
+    /**
      * 是否关注用户
      * @param user_id
      * @param at_user_id
