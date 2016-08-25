@@ -85,6 +85,23 @@ class Users extends Base {
     countAtUser(id){
         return UsersAt.count({where:{at_user_id:id}});
     }
+
+    /**
+     * 修改发布文章数量
+     * @param id
+     * @param num
+     * @param t
+     * @returns {*}
+     */
+    updateArticleNum(id,num,t){
+        return this.update({
+            article_num:num,
+        },{
+            where:{id:id},
+            transaction:t,
+            lock: t.LOCK.UPDATE
+        })
+    }
 }
 
 export default new Users();

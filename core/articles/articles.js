@@ -41,7 +41,7 @@ class Articles extends Base {
     }
 
     /**
-     * 修改关注数文章
+     * 修改文章关注数
      * @param user_id
      * @param favorite_source_id
      * @param favorite_type
@@ -60,12 +60,15 @@ class Articles extends Base {
      * 修改文章封面图
      * @param id
      * @param cover_picture
+     * @param modifier
      * @param t
      * @returns {*}
      */
-    updateCoverPicture(id, cover_picture, t) {
+    updateCoverPicture(id, cover_picture,modifier, t) {
         return this.update({
-            cover_picture: cover_picture
+            cover_picture: cover_picture,
+            modifier:modifier,
+            updated_at:new Date()
         }, {
             where: {id: id},
             transaction: t,
@@ -74,12 +77,15 @@ class Articles extends Base {
     }
 
     /**
-     *
-     * @param status 0未审核1通过2拒绝3离线4上线
-     * @constructor
+     * status 0未审核1通过2拒绝3离线4上线
+     * @param id
+     * @param status
+     * @param modifier
+     * @param t
+     * @returns {*}
      */
-    updateAuditStatus(id,status,t){
-        let updateOption = {};
+    updateAuditStatus(id,status,modifier,t){
+        let updateOption = {modifier:modifier,updated_at:new Date()};
         switch (parseInt(status)) {
             case 0:updateOption['check_status'] = 0;break;
             case 1:updateOption['check_status'] = 1;break;
@@ -88,6 +94,23 @@ class Articles extends Base {
             case 4:updateOption['is_off'] = 1;break;
         }
         return this.update(updateOption,{
+            where:{id:id},
+            transaction:t,
+            lock: t.LOCK.UPDATE
+        });
+    }
+
+    /**
+     * 修改文章阅读数量
+     * @param id
+     * @param num
+     * @param t
+     * @returns {*}
+     */
+    updateReadNum(id,num,t){
+        return this.update({
+            read_num:num
+        },{
             where:{id:id},
             transaction:t,
             lock: t.LOCK.UPDATE

@@ -35,7 +35,11 @@ class HousesAttachService {
      * @returns {*|Promise.<T>}
      */
     findHouseAttach(houses_id) {
-        return HousesAttach.findList({where: {houses_id: houses_id}}).then(result=> {
+        return HousesAttach.findList({
+            where: {
+                houses_id: houses_id
+            }
+        }).then(result=> {
             result.list.map(attach=> {
                 HousesAttach.formatHousesAttach(attach);
             });

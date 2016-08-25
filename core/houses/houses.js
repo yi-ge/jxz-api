@@ -108,9 +108,25 @@ class Houses extends Base {
      * @returns {*}
      */
     getCommentCount(id) {
-        return HousesComment.count({where:{houses_id:id}});
+        return HousesComment.count({where: {houses_id: id}});
     }
 
+    /**
+     * 修改酒店评论数
+     * @param id
+     * @param num
+     * @param t
+     * @returns {*}
+     */
+    updateArticleNum(id, num, t) {
+        return this.update({
+            article_num: num
+        }, {
+            where: {id: id},
+            transaction: t,
+            lock: t.LOCK.UPDATE,
+        });
+    }
 }
 
 export default new Houses();

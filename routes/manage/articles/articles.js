@@ -46,8 +46,9 @@ router.post('/articledetails', (req, res, next)=> {
 router.post('/updatecoverpicture', ()=> {
     let param = req.body;
     let id = param.id,
-        cover_picture = param.cover_picture;
-    ArticlesService.updateCoverPicture(id,cover_picture).then(result=> {
+        cover_picture = param.cover_picture,
+        modifier = param.modifier;
+    ArticlesService.updateCoverPicture(id,cover_picture,modifier).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);
@@ -58,8 +59,9 @@ router.post('/updatecoverpicture', ()=> {
 router.post('/changestatus', ()=> {
     let param = req.body;
     let id = param.id,
-        status = param.status;
-    ArticlesService.updateAudit(id,status).then(result=> {
+        status = param.status,
+        modifier = param.modifier;;
+    ArticlesService.updateAudit(id,status,modifier).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);

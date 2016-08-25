@@ -8,17 +8,13 @@ class ArticlesService {
      * @returns {*}
      */
     manageAddArticles(sys_id, title, content) {
-        return SysUsers.getJXZUser(sys_id).then(user=> {
-            return Users.getArticleCount(user.id).then(count=> {
+        return SysUsers.getJXZUser(sys_id).then(user=> { //获取管理员精选者
+            return Users.getArticleCount(user.id).then(count=> { //统计发布的文章数
                 return Articles.transaction(t=> {
                     return Articles.insert(Articles.createModel(title, content, user.id, 2, user.id, user.id), {
                         transaction: t
                     }).then(articles=> {
-                        return Users.update({article_num: ++count}, {
-                            where: {id: user.id},
-                            transaction: t,
-                            lock: t.LOCK.UPDATE,
-                        }).then(()=> {
+                        return Users.updateArticleNum(user.id, count+1, t).then(()=> {
                             return articles;
                         })
                     });
@@ -46,10 +42,21 @@ class ArticlesService {
         else if (!!startDate) where['created_at'] = {$gte: startDate};
         else if (!!endDate) where['created_at'] = {$lte: endDate};
         switch (parseInt(status)) {
-            case 0:where['check_status'] = 0;break;
-            case 1:where['check_status'] = 1;break;
-            case 2:where['check_status'] = 2;break;
-            case 3:where['is_off'] = 0;break;
+            case 0:
+                where['check_status'] = 0;
+                break;
+            case 1:
+                where['check_status'] = 1;
+                break;
+            case 2:
+                where['check_status'] = 2;
+                break;
+            case 3:
+                where['is_off'] = 0;
+                break;
+            case 4:
+                where['is_off'] = 1;
+                break;
         }
         !!title && (where['title'] = {$like: `%${title}%`});
         !!house_name && (where['$and'] = [Articles.where(Articles.col(`${Houses.sequlize.name}.name`), 'like', `%${house_name}%`)]);
@@ -79,12 +86,12 @@ class ArticlesService {
      * @param id
      * @param cover_picture
      */
-    updateCoverPicture(id,cover_picture){
-        return Articles.transaction(t=>{
-            return Articles.updateCoverPicture(id,cover_picture,t);
-        }).then(()=>{
+    updateCoverPicture(id, cover_picture, modifier) {
+        return Articles.transaction(t=> {
+            return Articles.updateCoverPicture(id, cover_picture, modifier, t);
+        }).then(()=> {
             Articles.findById(id);
-        }).then(result=>{
+        }).then(result=> {
             Articles.formatArticle(result.dataValues);
         });
     }
@@ -94,13 +101,13 @@ class ArticlesService {
      * @param id
      */
     articleDetails(id) {
-        return Articles.findById(id,{
-            include:[{
-                model:Users.sequlize,
-                attributes:['id','user_name']
+        return Articles.findById(id, {
+            include: [{
+                model: Users.sequlize,
+                attributes: ['id', 'user_name']
             }]
         }).then(article=> {
-            if(!article) return Articles.errorPromise('文章不存在');
+            if (!article) return Articles.errorPromise('文章不存在');
             return Articles.formatArticle(article.dataValues);
         });
     }
@@ -110,12 +117,12 @@ class ArticlesService {
      * @param id
      * @param status
      */
-    updateAudit(id,status){
-        return Articles.transaction(t=>{
-            return Articles.updateAuditStatus(id,status,t);
-        }).then(()=>{
+    updateAudit(id, status, modifier) {
+        return Articles.transaction(t=> {
+            return Articles.updateAuditStatus(id, status, modifier, t);
+        }).then(()=> {
             return Articles.findById(id);
-        }).then(result=>{
+        }).then(result=> {
             return Articles.formatArticle(result.dataValues);
         });
     }
@@ -131,8 +138,12 @@ class ArticlesService {
     findWetcharArticlesPageList(page, status, sortType = 2, pagesize = 20) {
         let where = {houses_id: {$ne: null}}, order;
         switch (status) {
-            case 0:order = `created_at DESC`;break;
-            case 1:order = `read_num DESC`;break;
+            case 0:
+                order = `created_at DESC`;
+                break;
+            case 1:
+                order = `read_num DESC`;
+                break;
         }
         return Articles.count({where: where}).then(count=> {
             return Articles.findPage(Object.assign({
@@ -163,20 +174,13 @@ class ArticlesService {
     viewArticle(id) {
         return Articles.findById(id).then(article=> {
             return Articles.transaction(t=> {
-                return Articles.update({
-                    read_num: ++article.read_num
-                }, {
-                    where: {id: id},
-                    transaction: t,
-                    lock: t.LOCK.UPDATE
-                });
+                return Articles.updateReadNum(id,article.read_num+1,t);
             }).then(()=> {
                 article.read_num += 1;
                 return Articles.formatArticle(article.dataValues);
             });
         });
     }
-
 
 
 }
