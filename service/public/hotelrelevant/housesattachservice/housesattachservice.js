@@ -8,7 +8,7 @@ class HousesAttachService {
      */
     addHousesAttachList(houses_id, attachs, creater) {
         return HousesAttach.transaction(t=> {
-            return HousesAttach.addHousesAttachList(houses_id, attachs, creater, t);
+            return HousesAttach.addHousesAttachList(houses_id, attachs, creater, 1, t);
         });
     }
 
@@ -48,7 +48,7 @@ class HousesAttachService {
     }
 
     /**
-     * 删除酒店附近
+     * 删除酒店附件
      * @param id
      * @returns {*}
      */
@@ -56,6 +56,19 @@ class HousesAttachService {
         return HousesAttach.transaction(t=> {
             return HousesAttach.destroy({where: {id: id}, transaction: t});
         });
+    }
+
+    /**
+     * 查询酒店图片
+     * @param houses_id
+     * @returns {*}
+     */
+    findHousesAttach(houses_id){
+        return HousesAttach.findList({
+            houses_id:houses_id,
+            attributes:['id','type','links_url'],
+            order:`id DESC`
+        })
     }
 }
 export default new HousesAttachService();

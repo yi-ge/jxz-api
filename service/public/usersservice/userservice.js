@@ -188,5 +188,22 @@ class UserService {
             else return {isat: false};
         });
     }
+
+    /**
+     * 统计我关注的
+     * @param id
+     * @returns {*}
+     */
+    countUserAt(id){
+        return UsersAt.count({where:{user_id:id,}});
+    }
+
+    /**
+     * 统计关注我的
+     * @param id
+     */
+    countAtUser(id){
+        return UsersAt.count({where:{at_user_id:id}});
+    }
 }
 export default new UserService();

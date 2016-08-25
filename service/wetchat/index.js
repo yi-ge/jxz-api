@@ -18,5 +18,6 @@ export {
     HousesService,
     HousesCommentService,
     HousesKeywordService,
+    HousesAttachService,
     ArticlesService,
 }

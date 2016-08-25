@@ -41,15 +41,15 @@ class HousesAttach extends Base {
      * @param creater
      * @returns {*}
      */
-    addHousesAttachList(houses_id, attachs, creater, t) {
+    addHousesAttachList(houses_id, attachs, creater, type, t) {
         let insertList = [];
         if (Array.isArray(attachs)) {
             attachs.map(attach=> {
                 console.log(attach);
-                insertList.push(this.createModel(houses_id, 1, attach.title, attach.links_url, creater, creater, attach.file_path));
+                insertList.push(this.createModel(houses_id, type, attach.title, attach.links_url, creater, creater, attach.file_path));
             });
         } else {
-            insertList.push(this.createModel(houses_id, 1, attachs.title, attachs.links_url, creater, creater, attachs.file_path));
+            insertList.push(this.createModel(houses_id, type, attachs.title, attachs.links_url, creater, creater, attachs.file_path));
         }
         return this.bulkCreate(insertList, {
             transaction: t

@@ -977,7 +977,7 @@ CREATE TABLE `users_vip` (
   `last_login_ip` int(10) unsigned DEFAULT NULL COMMENT '最后一次登陆IP',
   `last_login_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '最后一次登陆日期',
   `user_status` tinyint(4) DEFAULT NULL COMMENT '会员状态0未充值1已充值',
-  `is_cover` tinyint(4) DEFAULT NULL COMMENT '是否封面0不是1是',
+  `is_cover` tinyint(4) DEFAULT NULL COMMENT '是否绑定0不是1是',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户-vip用户';
 
