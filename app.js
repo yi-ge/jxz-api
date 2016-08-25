@@ -21,6 +21,7 @@ app.use((req, res, next)=> {
     console.log("urlpath======>", req.path);
     next();
 });
+//路由
 app.use('/', wetchat);
 app.use('/manage', manage);
 
