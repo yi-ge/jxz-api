@@ -105,10 +105,10 @@ class HousesCommentService {
      * @param pagesize
      * @returns {Promise.<T>}
      */
-    findHouseCommentsPage(houses_id, page) {
+    findHouseCommentsPage(houses_id, page, pagesize) {
         let where = {houses_id: houses_id};
         return HousesComment.count({where: where}).then(count=> {
-            return HousesComment.findPage({where: where, order: `comment_date DESC`}, page, count, 2);
+            return HousesComment.findPage({where: where, order: `comment_date DESC`}, page, count, 2, pagesize);
         }).then(result=> {
             result.list.map(comment=> {
                 HousesComment.formatHousesComment(comment.dataValues);

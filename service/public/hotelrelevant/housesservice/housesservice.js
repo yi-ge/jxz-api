@@ -121,7 +121,7 @@ class HousesService {
     }
 
     /**
-     *
+     * 酒店详情
      * @param id
      * @returns {*|Promise.<T>}
      */
@@ -179,6 +179,16 @@ class HousesService {
             },
             limit: pagesize,
             offset: pagesize * (page - 1),
+            attributes: ['id', 'name', 'is_orders']
+        });
+    }
+
+    /**
+     * 查询所有酒店
+     * @returns {*}
+     */
+    findAll(){
+        return Houses.findList({
             attributes: ['id', 'name', 'is_orders']
         });
     }

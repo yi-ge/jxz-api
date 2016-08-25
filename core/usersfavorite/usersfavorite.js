@@ -3,7 +3,7 @@
  */
 import usersfavorite from './usersfavorite.config';
 import Base from './../base';
-
+//1是收藏 2是点赞
 class UsersFavorite extends Base {
     constructor() {
         super("users_favorite", usersfavorite, {
@@ -27,6 +27,34 @@ class UsersFavorite extends Base {
         favorite.created_at != void(0) && (favorite.created_at = this.formatDate(favorite.created_at, "yyyy-MM-dd hh:mm:ss"));
         favorite.updated_at != void(0) && (favorite.updated_at = this.formatDate(favorite.updated_at, "yyyy-MM-dd hh:mm:ss"));
         return favorite;
+    }
+
+    /**
+     * 统计某个用户favorite的某个类型
+     * @param user_id
+     * @param favorite_type
+     */
+    countUserFavorite(user_id,favorite_type){
+        return this.count({
+            where:{
+                user_id:user_id,
+                favorite_type:favorite_type
+            }
+        });
+    }
+
+    /**
+     * 统计摸个收藏源的favorite
+     * @param favorite_source_id
+     * @param favorite_type
+     */
+    countSourceFavorite(favorite_source_id,favorite_type){
+        return this.count({
+            where:{
+                favorite_source_id:favorite_source_id,
+                favorite_type:favorite_type
+            }
+        });
     }
 
     /**

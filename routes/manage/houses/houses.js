@@ -264,7 +264,7 @@ router.post('/putaway', (req, res, next)=> {
         msg: '酒店详情查询失败'
     });
 });
-
+//模糊查询酒店
 router.post('/vaguehouses',(req, res, next)=>{
     let param = req.body;
     let name = param.name;
@@ -273,5 +273,11 @@ router.post('/vaguehouses',(req, res, next)=>{
         msg: '查询失败'
     });
 });
-
+//查询所有酒店
+router.post('/listall',(req,res,next)=>{
+    next({
+        $promise: HousesService.findAll(),
+        msg: '查询失败'
+    });
+});
 export default router;

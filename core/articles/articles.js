@@ -91,7 +91,7 @@ class Articles extends Base {
             case 1:updateOption['check_status'] = 1;break;
             case 2:updateOption['check_status'] = 2;break;
             case 3:updateOption['is_off'] = 0;break;
-            case 4:updateOption['is_off'] = 1;break;
+            case 4:updateOption['is_off'] = 1,updateOption['check_status']=1;break;
         }
         return this.update(updateOption,{
             where:{id:id},
@@ -129,6 +129,23 @@ class Articles extends Base {
     updateReadNum(id,num,t){
         return this.update({
             read_num:num
+        },{
+            where:{id:id},
+            transaction:t,
+            lock: t.LOCK.UPDATE
+        });
+    }
+
+    /**
+     * 修改文章点赞数
+     * @param id
+     * @param num
+     * @param t
+     * @returns {*}
+     */
+    updateLikeNum(id,num,t){
+        return this.update({
+            like_num:num
         },{
             where:{id:id},
             transaction:t,

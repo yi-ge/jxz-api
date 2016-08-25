@@ -1,5 +1,5 @@
 import express from "express";
-import {HousesCommentService,HousesService} from './../../../service/wetchat';
+import {HousesCommentService,HousesService,HousesKeywordService} from './../../../service/wetchat';
 const router = express.Router();
 //添加酒店评论
 router.post('/addcomment', (req, res, next)=> {
@@ -23,14 +23,25 @@ router.post('/details', (req, res, next)=> {
         msg: '详情查询失败'
     });
 });
+//酒店评论列表
 router.post('/commentlist', (req, res, next)=> {
     let param = req.body;
     let houses_id = param.houses_id,
-        page = param.page;
+        page = param.page,
+        pagesize = param.pagesize;
     next({
-        $promise: HousesCommentService.findHouseCommentsPage(houses_id, page),
+        $promise: HousesCommentService.findHouseCommentsPage(houses_id, page, pagesize),
         msg: '评论查询失败'
     });
 });
 
+//查询酒店亮点
+router.post('/keyword', (req, res, next)=> {
+    let param = req.body;
+    let houses_id = param.houses_id;
+    next({
+        $promise: HousesKeywordService.findWetchatHousesKeyword(houses_id),
+        msg: '酒店亮点查询失败'
+    });
+});
 export default router;

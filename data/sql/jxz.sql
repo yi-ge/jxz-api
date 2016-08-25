@@ -847,7 +847,7 @@ DROP TABLE IF EXISTS `users_favorite`;
 CREATE TABLE `users_favorite` (
   `id` bigint(20) NOT NULL COMMENT '主键ID，由程序生成',
   `user_id` bigint(20) DEFAULT NULL COMMENT '点赞人',
-  `favorite_type` tinyint(4) DEFAULT NULL COMMENT '收藏类型1文章',
+  `favorite_type` tinyint(4) DEFAULT NULL COMMENT '收藏类型1文章 2点赞文章',
   `favorite_source_id` bigint(20) DEFAULT NULL COMMENT '收藏源id',
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '修改时间',

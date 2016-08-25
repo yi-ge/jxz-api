@@ -60,5 +60,27 @@ class HousesKeywordService {
             return HousesKeyword.destroy({where:{id:id}});
         })
     }
+
+    /**
+     * 查询指定酒店亮点
+     * @param houses_id
+     * @returns {*}
+     */
+    findWetchatHousesKeyword(houses_id){
+        return HousesKeyword.findList({
+            where:{houses_id:houses_id},
+            attributes:['id','keyword_id','keyword_desc'],
+            include:[{
+                model:SysHousesKeyword.sequlize,
+                attributes:['id','name','picture']
+            }],
+            order:`id DESC`
+        }).then(result=>{
+            result.list.map(keyword=>{
+                HousesKeyword.formatHousesKeyword(keyword.dataValues);
+            });
+            return result;
+        });
+    }
 }
 export default new HousesKeywordService();

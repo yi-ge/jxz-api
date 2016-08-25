@@ -1,4 +1,4 @@
-import {Articles,Users,Houses,SysUsers,SysDict} from './../../../core';
+import {Articles,Users,Houses,SysUsers,SysDict,UsersFavorite} from './../../../core';
 class ArticlesService {
     /**
      * 添加一篇文章
@@ -114,6 +114,10 @@ class ArticlesService {
             include: [{
                 model: Users.sequlize,
                 attributes: ['id', 'user_name']
+            }, {
+                model: Houses.sequlize,
+                as: 'houses',
+                attributes: ['id', 'name']
             }]
         }).then(article=> {
             if (!article) return Articles.errorPromise('文章不存在');
@@ -155,7 +159,6 @@ class ArticlesService {
      * @returns {*}
      */
     updateHousesId(id, houses_id, modifier) {
-
         return Articles.transaction(t=> {
             return Articles.updateHousesId(id, houses_id, modifier, t);
         }).then(()=> {
@@ -184,7 +187,7 @@ class ArticlesService {
      * @returns {Promise.<T>}
      */
     findWetcharArticlesPageList(page, status, sortType = 2, pagesize = 20) {
-        let where = {houses_id: {$ne: null}}, order;
+        let where = {is_off:1}, order;
         switch (status) {
             case 0:
                 order = `created_at DESC`;
@@ -230,6 +233,142 @@ class ArticlesService {
         });
     }
 
+    /**
+     * 查询用户上线文章列表
+     * @param user_id
+     * @param page
+     * @returns {*}
+     */
+    findUserArticleOnline(user_id, page) {
+        let where = {author: user_id,is_off:1};
+        return Articles.count({where: where}).then(count=> {
+            return Articles.findPage({
+                where: where,
+                include: [{
+                    model: Houses.sequlize,
+                    as: 'houses',
+                    attributes: ['id', 'address']
+                }],
+                order: `created_at DESC`
+            }, page, count, 2);
+        }).then(result=> {
+            result.list.map(article=> {
+                Articles.formatArticle(article.dataValues);
+            });
+            return result;
+        });
+    }
 
+    /**
+     * 收藏文章
+     * @param user_id
+     * @param favorite_source_id
+     * @returns {*}
+     */
+    collectionArticle(user_id, favorite_source_id) {
+        return UsersFavorite.isCollection(user_id, favorite_source_id, 1).then(result=> {
+            if (result.iscollection) return UsersFavorite.errorPromise("已经收藏该文章");
+            return true;
+        }).then(()=> {
+            return UsersFavorite.transaction(t=> {
+                return UsersFavorite.collection(user_id, favorite_source_id, 1, t)
+                    .then(result=> {
+                        return UsersFavorite.countSourceFavorite(favorite_source_id, 1)
+                            .then(count=> {
+                                return Articles.updateAtNum(favorite_source_id, count + 1, t);
+                            }).then(()=> {
+                                return result;
+                            });
+                    });
+            });
+        })
+    }
+
+
+    /**
+     * 取消收藏
+     * @param user_id
+     * @param favorite_source_id
+     * @returns {*}
+     */
+    cancelArticle(user_id, favorite_source_id) {
+        return UsersFavorite.transaction(t=> {
+            return UsersFavorite.cancel(user_id, favorite_source_id, 1, t).then(result=> {
+                return UsersFavorite.countSourceFavorite(favorite_source_id, 1)
+                    .then(count=> {
+                        count > 0 ? count = count - 1 : 0;
+                        return Articles.updateAtNum(favorite_source_id, count, t);
+                    }).then(()=> {
+                        return result;
+                    });
+            })
+        });
+    }
+
+    /**
+     * 是否收藏
+     * @param user_id
+     * @param favorite_source_id
+     * @returns {*}
+     */
+    isCollectionArticle(user_id, favorite_source_id) {
+        return UsersFavorite.isCollection(user_id, favorite_source_id, 1);
+    }
+
+    /**
+     * 点赞文章
+     * @param user_id
+     * @param favorite_source_id
+     * @returns {*}
+     */
+    likeArticle(user_id, favorite_source_id) {
+        return UsersFavorite.isCollection(user_id, favorite_source_id, 2).then(result=> {
+            if (result.iscollection) return UsersFavorite.errorPromise("已经点赞文章");
+            return true;
+        }).then(()=> {
+            return UsersFavorite.transaction(t=> {
+                return UsersFavorite.collection(user_id, favorite_source_id, 2, t)
+                    .then(result=> {
+                        return UsersFavorite.countSourceFavorite(favorite_source_id, 2)
+                            .then(count=> {
+                                return Articles.updateLikeNum(favorite_source_id, count + 1, t);
+                            }).then(()=> {
+                                return result;
+                            });
+                    });
+            });
+        })
+    }
+
+    /**
+     * 取消点赞
+     * @param user_id
+     * @param favorite_source_id
+     * @returns {*}
+     */
+    cancelLikeArticle(user_id, favorite_source_id) {
+        return UsersFavorite.transaction(t=> {
+            return UsersFavorite.cancel(user_id, favorite_source_id, 2, t)
+                .then(result=> {
+                    return UsersFavorite.countSourceFavorite(favorite_source_id, 2)
+                        .then(count=> {
+                            count > 0 ? count = count - 1 : 0;
+                            return Articles.updateLikeNum(favorite_source_id, count, t);
+                        }).then(()=> {
+                            return result;
+                        });
+                })
+        });
+    }
+
+    /**
+     * 是否点赞
+     * @param user_id
+     * @param favorite_source_id
+     * @returns {*}
+     */
+    isLikeArticle(user_id, favorite_source_id) {
+        return UsersFavorite.isCollection(user_id, favorite_source_id, 2);
+    }
 }
 export default new ArticlesService();
