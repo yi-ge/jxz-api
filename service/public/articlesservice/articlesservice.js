@@ -90,7 +90,7 @@ class ArticlesService {
         return Articles.transaction(t=> {
             return Articles.updateCoverPicture(id, cover_picture, modifier, t);
         }).then(()=> {
-            Articles.findById(id,{
+            return Articles.findById(id,{
                 include: [{
                     model: Users.sequlize,
                     attributes: ['id', 'user_name', 'avatar', 'user_vip_id']
@@ -101,7 +101,7 @@ class ArticlesService {
                 }]
             });
         }).then(result=> {
-            Articles.formatArticle(result.dataValues);
+            return Articles.formatArticle(result.dataValues);
         });
     }
 

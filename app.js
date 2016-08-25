@@ -18,25 +18,32 @@ import {
 } from "./routes";
 
 app.use((req, res, next)=> {
-    console.log("urlpath======>",req.path);
+    console.log("urlpath======>", req.path);
     next();
 });
 app.use('/', wetchat);
 app.use('/manage', manage);
 
-app.use((data, req, res, next)=> {
-    console.log({
-        code: 200,
-        message: "成功",
-        data: data,
-    });
-    if (typeof data == 'object' || typeof data == 'number')
-        res.json({
+//返回数据处理中间件
+app.use((obj, req, res, next)=> {
+    obj.$promise.then(result=> {
+        console.log({
             code: 200,
             message: "成功",
-            data: data,
+            data: result,
         });
-    else next();
+        if (typeof result == 'object' || typeof result == 'number')
+            res.json({
+                code: 200,
+                message: "成功",
+                data: result,
+            });
+        else next();
+    }).catch(e=> {
+        console.log(obj);
+        console.log(e);
+        res.json({code: 1000, message: typeof e == "string" ? e : obj.errormsg});
+    });
 });
 
 // catch 404 and forward to error handler

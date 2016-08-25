@@ -9,11 +9,9 @@ router.post('/createvip', (req, res, next)=> {
         email = param.email,
         sex = param.sex,
         password = param.password;
-    VipService.createVip(account_name, user_name, email, sex,password).then(result=> {
-        next(result);
-    }).catch(e=> {
-        console.log(e);
-        res.json({code: 1000, message: "用户录入失败"});
+    next({
+        $promise:VipService.createVip(account_name, user_name, email, sex,password),
+        msg: '用户录入失败'
     });
 });
 //查询vip关联列表
@@ -23,11 +21,9 @@ router.post('/userviplist', (req, res, next)=> {
         startDate = req.body.startDate,
         endDate = req.body.endDate,
         is_cover = req.body.is_cover;
-    VipService.findUserToVipList(page, sortType, startDate, endDate, is_cover).then(result=> {
-        next(result);
-    }).catch(e=> {
-        console.log(e);
-        res.json({code: 1000, message: "vip查询失败"})
+    next({
+        $promise:VipService.findUserToVipList(page, sortType, startDate, endDate, is_cover),
+        msg: 'vip查询失败'
     });
 });
 
