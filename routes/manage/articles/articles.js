@@ -11,7 +11,7 @@ router.post('/articlelist', (req, res, next)=> {
         status = param.status,
         house_name = param.house_name,
         sortType = param.sortType;
-    ArticlesService.findPageList(page,title, startDate, endDate, status, house_name, sortType).then(result=> {
+    ArticlesService.findPageList(page, title, startDate, endDate, status, house_name, sortType).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);
@@ -32,16 +32,38 @@ router.post('/addarticle', (req, res, next)=> {
     });
 });
 //预览文章
-router.post('/articledetails',(req,res,next)=>{
+router.post('/articledetails', (req, res, next)=> {
     let param = req.body;
     let id = param.id;
-    console.log(id);
-    ArticlesService.articleDetails(id).then(result=>{
+    ArticlesService.articleDetails(id).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);
-        res.json({code: 1000, message:typeof e == "string" ? e : '文章查看失败'});
+        res.json({code: 1000, message: typeof e == "string" ? e : '文章查看失败'});
     });
 });
-
+//修改文章封面
+router.post('/updatecoverpicture', ()=> {
+    let param = req.body;
+    let id = param.id,
+        cover_picture = param.cover_picture;
+    ArticlesService.updateCoverPicture(id,cover_picture).then(result=> {
+        next(result);
+    }).catch(e=> {
+        console.log(e);
+        res.json({code: 1000, message: typeof e == "string" ? e : '文章封面修改失败'});
+    });
+});
+//改变文章状态
+router.post('/changestatus', ()=> {
+    let param = req.body;
+    let id = param.id,
+        status = param.status;
+    ArticlesService.updateAudit(id,status).then(result=> {
+        next(result);
+    }).catch(e=> {
+        console.log(e);
+        res.json({code: 1000, message: typeof e == "string" ? e : '文章状态修改失败'});
+    });
+});
 export default router;

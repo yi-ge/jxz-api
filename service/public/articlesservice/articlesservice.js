@@ -75,6 +75,21 @@ class ArticlesService {
     }
 
     /**
+     * 修改文章封面
+     * @param id
+     * @param cover_picture
+     */
+    updateCoverPicture(id,cover_picture){
+        return Articles.transaction(t=>{
+            return Articles.updateCoverPicture(id,cover_picture,t);
+        }).then(()=>{
+            Articles.findById(id);
+        }).then(result=>{
+            Articles.formatArticle(result.dataValues);
+        });
+    }
+
+    /**
      * 后台预览文章
      * @param id
      */
@@ -87,6 +102,21 @@ class ArticlesService {
         }).then(article=> {
             if(!article) return Articles.errorPromise('文章不存在');
             return Articles.formatArticle(article.dataValues);
+        });
+    }
+
+    /**
+     * 改变文章上线状态
+     * @param id
+     * @param status
+     */
+    updateAudit(id,status){
+        return Articles.transaction(t=>{
+            return Articles.updateAuditStatus(id,status,t);
+        }).then(()=>{
+            return Articles.findById(id);
+        }).then(result=>{
+            return Articles.formatArticle(result.dataValues);
         });
     }
 
@@ -146,6 +176,8 @@ class ArticlesService {
             });
         });
     }
+
+
 
 }
 export default new ArticlesService();

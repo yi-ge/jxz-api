@@ -46,12 +46,50 @@ class Articles extends Base {
      * @param favorite_source_id
      * @param favorite_type
      */
-    updateAtNum(favorite_source_id, at_num, t) {
+    updateAtNum(id, at_num, t) {
         return this.update({
             at_num: at_num
         }, {
-            where: {id: favorite_source_id},
+            where: {id: id},
             transaction: t,
+            lock: t.LOCK.UPDATE
+        });
+    }
+
+    /**
+     * 修改文章封面图
+     * @param id
+     * @param cover_picture
+     * @param t
+     * @returns {*}
+     */
+    updateCoverPicture(id, cover_picture, t) {
+        return this.update({
+            cover_picture: cover_picture
+        }, {
+            where: {id: id},
+            transaction: t,
+            lock: t.LOCK.UPDATE
+        });
+    }
+
+    /**
+     *
+     * @param status 0未审核1通过2拒绝3离线4上线
+     * @constructor
+     */
+    updateAuditStatus(id,status,t){
+        let updateOption = {};
+        switch (parseInt(status)) {
+            case 0:updateOption['check_status'] = 0;break;
+            case 1:updateOption['check_status'] = 1;break;
+            case 2:updateOption['check_status'] = 2;break;
+            case 3:updateOption['is_off'] = 0;break;
+            case 4:updateOption['is_off'] = 1;break;
+        }
+        return this.update(updateOption,{
+            where:{id:id},
+            transaction:t,
             lock: t.LOCK.UPDATE
         });
     }

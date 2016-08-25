@@ -85,24 +85,6 @@ class Users extends Base {
     countAtUser(id){
         return UsersAt.count({where:{at_user_id:id}});
     }
-
-    /**
-     * 解绑vip
-     * @param user_vip_id
-     * @returns {*}
-     */
-    unbindVip(user_vip_id){
-        return this.transaction(t=>{
-           return this.update({
-               user_vip_id:null
-           },{
-               where:{user_vip_id:user_vip_id},
-               transaction:t,
-               lock: t.LOCK.UPDATE
-           }) ;
-        });
-    }
-
 }
 
 export default new Users();

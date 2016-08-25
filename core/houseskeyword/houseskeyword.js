@@ -22,41 +22,42 @@ class HousesKeyword extends Base {
      * @param modifier 修改人
      * @returns {{id: number, houses_id: *, keyword_id: *, keyword_desc: *, creater: *, modifier: *, created_at: Date, updated_at: Date}}
      */
-    createModel(houses_id,keyword_id,keyword_desc,creater,modifier){
+    createModel(houses_id, keyword_id, keyword_desc, creater, modifier) {
         let model = {
-            id:this.generateId(),
-            houses_id:houses_id,
-            keyword_id:keyword_id,
-            keyword_desc:keyword_desc,
-            creater:creater,
-            modifier:modifier,
-            created_at:new Date(),
-            updated_at:new Date(),
+            id: this.generateId(),
+            houses_id: houses_id,
+            keyword_id: keyword_id,
+            keyword_desc: keyword_desc,
+            creater: creater,
+            modifier: modifier,
+            created_at: new Date(),
+            updated_at: new Date(),
         };
         return model;
     }
 
-    formatHousesKeyword(keyword){
+    formatHousesKeyword(keyword) {
         !!keyword.created_at && (keyword.created_at = this.formatDate(keyword.created_at, 'yyyy-MM-dd hh:mm:ss'));
         !!keyword.updated_at && (keyword.updated_at = this.formatDate(keyword.updated_at, 'yyyy-MM-dd hh:mm:ss'));
         return keyword;
     }
 
-    findById(id,option){
-        return super.findById(id,Object.assign({
-            include:[{
-                model:SysHousesKeyword.sequlize,
-            },{
-                model:SysUsers.sequlize,
-                attribute:['id','user_name'],
-                as:'creater_user'
-            },{
-                model:SysUsers.sequlize,
-                attribute:['id','user_name'],
-                as:'modifier_user'
+    findById(id, option) {
+        return super.findById(id, Object.assign({
+            include: [{
+                model: SysHousesKeyword.sequlize,
+            }, {
+                model: SysUsers.sequlize,
+                attribute: ['id', 'user_name'],
+                as: 'creater_user'
+            }, {
+                model: SysUsers.sequlize,
+                attribute: ['id', 'user_name'],
+                as: 'modifier_user'
             }]
-        },option));
+        }, option));
     }
+
     /**
      * 批量添加酒店关键词
      * @param houses_id
@@ -64,19 +65,17 @@ class HousesKeyword extends Base {
      * @param creater
      * @returns {*}
      */
-    addHousesKeywordList(houses_id, keywords, creater){
+    addHousesKeywordList(houses_id, keywords, creater, t) {
         let insertList = [];
         if (Array.isArray(keywords)) {
             keywords.map(keyword => {
                 insertList.push(this.createModel(houses_id, keyword.keyword_id, keyword.keyword_desc, creater, creater));
             });
-        }else{
+        } else {
             insertList.push(this.createModel(houses_id, keywords.keyword_id, keywords.keyword_desc, creater, creater));
         }
-        return this.transaction(t=> {
-            return this.bulkCreate(insertList, {
-                transaction: t,
-            });
+        return this.bulkCreate(insertList, {
+            transaction: t,
         });
     }
 }

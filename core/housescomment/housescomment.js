@@ -11,7 +11,7 @@ class HousesComment extends Base {
         });
     }
 
-    createModel(houses_id, comment_source, content, creater, modifier, created_at,comment_date) {
+    createModel(houses_id, comment_source, content, creater, modifier, created_at, comment_date) {
         let model = {
             id: this.generateId(),
             houses_id: houses_id,
@@ -35,19 +35,17 @@ class HousesComment extends Base {
      * @param creater
      * @returns {Promise.<T>}
      */
-    addComment(houses_id, comment_source, content, creater, comment_date) {
+    addComment(houses_id, comment_source, content, creater, comment_date, t) {
         return Houses.getCommentCount(houses_id).then(count=> {
-            return this.transaction(t=> {
-                return this.insert(this.createModel(houses_id, comment_source, content, creater, creater, comment_date), {transaction: t}).then(result=> {
+            return this.insert(this.createModel(houses_id, comment_source, content, creater, creater, comment_date), {transaction: t}).then(result=> {
+                return result;
+            }).then(result=> {
+                return Houses.update({comment_num: ++count}, {
+                    where: {id: houses_id},
+                    transaction: t,
+                    lock: t.LOCK.UPDATE,
+                }).then(()=> {
                     return result;
-                }).then(result=> {
-                    return Houses.update({comment_num: ++count}, {
-                        where: {id: houses_id},
-                        transaction: t,
-                        lock: t.LOCK.UPDATE,
-                    }).then(()=> {
-                        return result;
-                    });
                 });
             });
         });
@@ -60,25 +58,23 @@ class HousesComment extends Base {
      * @param creater
      * @returns {*}
      */
-    addCommentList(houses_id, comments, creater) {
+    addCommentList(houses_id, comments, creater, t) {
         let insertList = [], length;
         if (Array.isArray(comments)) {
             comments.map(comment=> {
-                insertList.push(this.createModel(houses_id, comment.comment_source, comment.content, creater, creater,comment.comment_date));
+                insertList.push(this.createModel(houses_id, comment.comment_source, comment.content, creater, creater, comment.comment_date));
             });
         } else
-            insertList.push(this.createModel(houses_id, comments.comment_source, comments.content, creater, creater,comments.comment_date));
+            insertList.push(this.createModel(houses_id, comments.comment_source, comments.content, creater, creater, comments.comment_date));
         length = insertList.length;
         return Houses.getCommentCount(houses_id).then(count=> {
-            return this.transaction(t=> {
-                return this.bulkCreate(insertList, {transaction: t}).then(result=> {
-                    return Houses.update({comment_num: count + length}, {
-                        where: {id: houses_id},
-                        transaction: t,
-                        lock: t.LOCK.UPDATE,
-                    }).then(()=> {
-                        return result;
-                    });
+            return this.bulkCreate(insertList, {transaction: t}).then(result=> {
+                return Houses.update({comment_num: count + length}, {
+                    where: {id: houses_id},
+                    transaction: t,
+                    lock: t.LOCK.UPDATE,
+                }).then(()=> {
+                    return result;
                 });
             });
         });

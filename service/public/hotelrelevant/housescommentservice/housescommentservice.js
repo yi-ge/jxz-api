@@ -10,7 +10,9 @@ class HousesCommentService {
      */
     addManageComment(houses_id, comment_source, content, comment_date, creater) {
         return SysUsers.getJXZUser(creater).then(user=> {
-            return HousesComment.addComment(houses_id, comment_source, content, user.id, comment_date);
+            return HousesComment.transaction(t=> {
+                return HousesComment.addComment(houses_id, comment_source, content, user.id, comment_date, t);
+            });
         });
     }
 
@@ -23,7 +25,9 @@ class HousesCommentService {
      */
     addManageCommentList(houses_id, comments, creater) {
         return SysUsers.getJXZUser(creater).then(user=> {
-            return HousesComment.addCommentList(houses_id, comments, user.id);
+            return HousesComment.transaction(t=> {
+                return HousesComment.addCommentList(houses_id, comments, user.id, t);
+            });
         });
     }
 
@@ -104,7 +108,7 @@ class HousesCommentService {
     findHouseCommentsPage(houses_id, page) {
         let where = {houses_id: houses_id};
         return HousesComment.count({where: where}).then(count=> {
-            return HousesComment.findPage({where: where,order: `comment_date DESC`}, page, count,2);
+            return HousesComment.findPage({where: where, order: `comment_date DESC`}, page, count, 2);
         }).then(result=> {
             result.list.map(comment=> {
                 HousesComment.formatHousesComment(comment.dataValues);
@@ -122,7 +126,9 @@ class HousesCommentService {
      * @returns {Promise.<T>}
      */
     addWatchHousesComment(houses_id, comment_source, content, creater) {
-        return HousesComment.addComment(houses_id, comment_source, content, creater).then(result=> {
+        return HousesComment.transaction(t=> {
+            return HousesComment.addComment(houses_id, comment_source, content, creater, t)
+        }).then(result=> {
             return HousesComment.formatHousesComment(result.dataValues);
         });
     }

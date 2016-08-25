@@ -7,7 +7,9 @@ class HousesAttachService {
      * @param creater
      */
     addHousesAttachList(houses_id, attachs, creater) {
-        return HousesAttach.addHousesAttachList(houses_id, attachs, creater);
+        return HousesAttach.transaction(t=> {
+            return HousesAttach.addHousesAttachList(houses_id, attachs, creater, t);
+        });
     }
 
     /**
@@ -48,7 +50,7 @@ class HousesAttachService {
      */
     destroyHouseAttach(id) {
         return HousesAttach.transaction(t=> {
-            return HousesAttach.destroy({where: {id: id},transaction:t});
+            return HousesAttach.destroy({where: {id: id}, transaction: t});
         });
     }
 }

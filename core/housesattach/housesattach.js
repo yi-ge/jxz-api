@@ -11,26 +11,26 @@ class HousesAttach extends Base {
         });
     }
 
-    createModel(houses_id,type,title,links_url,creater,modifier,file_path){
+    createModel(houses_id, type, title, links_url, creater, modifier, file_path) {
         let model = {
-            id:this.generateId(),
-            houses_id:houses_id,
-            type:type,
-            title:title,
-            links_url:links_url,
-            creater:creater,
-            modifier:modifier,
-            file_path:file_path,
-            created_at:new Date(),
-            updated_at:new Date()
+            id: this.generateId(),
+            houses_id: houses_id,
+            type: type,
+            title: title,
+            links_url: links_url,
+            creater: creater,
+            modifier: modifier,
+            file_path: file_path,
+            created_at: new Date(),
+            updated_at: new Date()
         };
         return model;
     }
 
-    formatHousesAttach(attach){
-        if(!attach) return attach;
-        !!attach.created_at && (attach.created_at = this.formatDate(attach.created_at,'yyyy-MM-dd hh:mm:ss'));
-        !!attach.updated_at && (attach.updated_at = this.formatDate(attach.updated_at,'yyyy-MM-dd hh:mm:ss'));
+    formatHousesAttach(attach) {
+        if (!attach) return attach;
+        !!attach.created_at && (attach.created_at = this.formatDate(attach.created_at, 'yyyy-MM-dd hh:mm:ss'));
+        !!attach.updated_at && (attach.updated_at = this.formatDate(attach.updated_at, 'yyyy-MM-dd hh:mm:ss'));
         return attach;
     }
 
@@ -41,20 +41,18 @@ class HousesAttach extends Base {
      * @param creater
      * @returns {*}
      */
-    addHousesAttachList(houses_id, attachs, creater){
+    addHousesAttachList(houses_id, attachs, creater, t) {
         let insertList = [];
         if (Array.isArray(attachs)) {
             attachs.map(attach=> {
                 console.log(attach);
                 insertList.push(this.createModel(houses_id, 1, attach.title, attach.links_url, creater, creater, attach.file_path));
             });
-        }else{
+        } else {
             insertList.push(this.createModel(houses_id, 1, attachs.title, attachs.links_url, creater, creater, attachs.file_path));
         }
-        return this.transaction(t=> {
-            return this.bulkCreate(insertList, {
-                transaction: t
-            });
+        return this.bulkCreate(insertList, {
+            transaction: t
         });
     }
 }

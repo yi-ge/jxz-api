@@ -101,7 +101,7 @@ CREATE TABLE `articles` (
   `houses_id` bigint(20) DEFAULT NULL COMMENT '对应房屋id',
   `author_type` tinyint(4) DEFAULT NULL COMMENT '作者类型1前端用户2后台用户',
   `author` bigint(20) DEFAULT NULL COMMENT '作者',
-  `check_status` tinyint(4) DEFAULT NULL COMMENT '审核状态1通过2拒绝',
+  `check_status` tinyint(4) DEFAULT NULL COMMENT '审核状态0未审核1通过2拒绝',
   `check_cause` varchar(200) COLLATE utf8_bin DEFAULT NULL COMMENT '审核原因',
   `check_user_id` bigint(20) DEFAULT NULL COMMENT '审核人',
   `check_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '审核时间',
