@@ -265,4 +265,13 @@ router.post('/putaway', (req, res, next)=> {
     });
 });
 
+router.post('/vaguehouses',(req, res, next)=>{
+    let param = req.body;
+    let name = param.name;
+    next({
+        $promise: HousesService.vagueFindHouses(name),
+        msg: '查询失败'
+    });
+});
+
 export default router;

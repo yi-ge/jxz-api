@@ -165,5 +165,22 @@ class HousesService {
             return Houses.formatHouse(result.dataValues);
         });
     }
+
+    /**
+     * 模糊查询酒店
+     * @param name
+     * @returns {*}
+     */
+    vagueFindHouses(name, page = 1, pagesize = 10) {
+        return Houses.findList({
+            where: {
+                name: {$like: `%${name}%`},
+                type: 1,
+            },
+            limit: pagesize,
+            offset: pagesize * (page - 1),
+            attributes: ['id', 'name', 'is_orders']
+        });
+    }
 }
 export default new HousesService();
