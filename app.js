@@ -27,23 +27,27 @@ app.use('/manage', manage);
 //返回数据处理中间件
 app.use((obj, req, res, next)=> {
     obj.$promise.then(result=> {
-        console.log({
-            code: 200,
-            message: "成功",
-            data: result,
-        });
-        if (typeof result == 'object' || typeof result == 'number')
-            res.json({
-                code: 200,
-                message: "成功",
-                data: result,
-            });
-        else next();
+        next(result);
     }).catch(e=> {
-        console.log(obj);
         console.log(e);
         res.json({code: 1000, message: typeof e == "string" ? e : obj.errormsg});
     });
+});
+
+//数据返回接口
+app.use((data, req, res, next)=> {
+    console.log({
+        code: 200,
+        message: "成功",
+        data: data,
+    });
+    if (typeof data == 'object' || typeof data == 'number')
+        res.json({
+            code: 200,
+            message: "成功",
+            data: data,
+        });
+    else next();
 });
 
 // catch 404 and forward to error handler
