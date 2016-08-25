@@ -84,5 +84,9 @@ export default {
     at_num: {
         type: DataTypes.INTEGER(11),
         allowNull: true
+    },
+    like_num: {
+        type: DataTypes.INTEGER(11),
+        allowNull: true
     }
 };

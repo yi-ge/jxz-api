@@ -46,18 +46,10 @@ class ArticlesService {
         else if (!!startDate) where['created_at'] = {$gte: startDate};
         else if (!!endDate) where['created_at'] = {$lte: endDate};
         switch (parseInt(status)) {
-            case 0:
-                where['check_status'] = 0;
-                break;
-            case 1:
-                where['check_status'] = 1;
-                break;
-            case 2:
-                where['check_status'] = 2;
-                break;
-            case 3:
-                where['is_off'] = 0;
-                break;
+            case 0:where['check_status'] = 0;break;
+            case 1:where['check_status'] = 1;break;
+            case 2:where['check_status'] = 2;break;
+            case 3:where['is_off'] = 0;break;
         }
         !!title && (where['title'] = {$like: `%${title}%`});
         !!house_name && (where['$and'] = [Articles.where(Articles.col(`${Houses.sequlize.name}.name`), 'like', `%${house_name}%`)]);
@@ -87,7 +79,13 @@ class ArticlesService {
      * @param id
      */
     articleDetails(id) {
-        return Articles.findById(id).then(article=> {
+        return Articles.findById(id,{
+            include:[{
+                model:Users.sequlize,
+                attributes:['id','user_name']
+            }]
+        }).then(article=> {
+            if(!article) return Articles.errorPromise('文章不存在');
             return Articles.formatArticle(article.dataValues);
         });
     }
@@ -103,12 +101,8 @@ class ArticlesService {
     findWetcharArticlesPageList(page, status, sortType = 2, pagesize = 20) {
         let where = {houses_id: {$ne: null}}, order;
         switch (status) {
-            case 0:
-                order = `created_at DESC`;
-                break;
-            case 1:
-                order = `read_num DESC`;
-                break;
+            case 0:order = `created_at DESC`;break;
+            case 1:order = `read_num DESC`;break;
         }
         return Articles.count({where: where}).then(count=> {
             return Articles.findPage(Object.assign({

@@ -67,8 +67,8 @@ router.post('/canceat', (req, res, next)=> {
 router.post('/collectionarticle', (req, res, next)=> {
     let param = req.body;
     let id = param.id,
-        favorite_source_id = param.favorite_source_id;
-    UsersFavoriteService.collectionArticle(id, favorite_source_id).then(result=> {
+        article_id = param.article_id;
+    UsersFavoriteService.collectionArticle(id, article_id).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);
@@ -79,20 +79,20 @@ router.post('/collectionarticle', (req, res, next)=> {
 router.post('/cancelarticle', (req, res, next)=> {
     let param = req.body;
     let id = param.id,
-        favorite_source_id = param.favorite_source_id;
-    UsersFavoriteService.cancelArticle(id, favorite_source_id).then(result=> {
+        article_id = param.article_id;
+    UsersFavoriteService.cancelArticle(id, article_id).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);
         res.json({code: 1000, message: typeof e == 'string' ? e : "取消收藏失败"});
     });
 });
-//是否关注
+//是否收藏
 router.post('/iscollectionarticle', (req, res, next)=> {
     let param = req.body;
     let id = param.id,
-        favorite_source_id = param.favorite_source_id;
-    UsersFavoriteService.isCollectionArticle(id, favorite_source_id).then(result=> {
+        article_id = param.article_id;
+    UsersFavoriteService.isCollectionArticle(id, article_id).then(result=> {
         next(result);
     }).catch(e=> {
         console.log(e);

@@ -86,6 +86,10 @@ module.exports = function(sequelize, DataTypes) {
     at_num: {
       type: DataTypes.INTEGER(11),
       allowNull: true
+    },
+    like_num: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true
     }
   }, {
     tableName: 'articles'

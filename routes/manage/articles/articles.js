@@ -32,9 +32,10 @@ router.post('/addarticle', (req, res, next)=> {
     });
 });
 //预览文章
-router.post('articledetails',(req,res,next)=>{
+router.post('/articledetails',(req,res,next)=>{
     let param = req.body;
     let id = param.id;
+    console.log(id);
     ArticlesService.articleDetails(id).then(result=>{
         next(result);
     }).catch(e=> {
