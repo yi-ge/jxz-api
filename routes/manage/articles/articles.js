@@ -23,7 +23,7 @@ router.post('/addarticle', (req, res, next)=> {
         title = param.title,
         content = param.content;
     next({
-        $promise:  ArticlesService.manageAddArticles(sys_id, title, content),
+        $promise: ArticlesService.manageAddArticles(sys_id, title, content),
         msg: '文章添加失败'
     });
 });
@@ -32,7 +32,7 @@ router.post('/articledetails', (req, res, next)=> {
     let param = req.body;
     let id = param.id;
     next({
-        $promise:  ArticlesService.articleDetails(id),
+        $promise: ArticlesService.articleDetails(id),
         msg: '文章查看失败'
     });
 });
@@ -43,7 +43,7 @@ router.post('/updatecoverpicture', (req, res, next)=> {
         cover_picture = param.cover_picture,
         modifier = param.modifier;
     next({
-        $promise:  ArticlesService.updateCoverPicture(id, cover_picture, modifier),
+        $promise: ArticlesService.updateCoverPicture(id, cover_picture, modifier),
         msg: '文章封面修改失败'
     });
 });
@@ -54,7 +54,7 @@ router.post('/changestatus', (req, res, next)=> {
         status = param.status,
         modifier = param.modifier;
     next({
-        $promise:  ArticlesService.updateAudit(id, status, modifier),
+        $promise: ArticlesService.updateAudit(id, status, modifier),
         msg: '文章状态修改失败'
     });
 });
@@ -64,8 +64,9 @@ router.post('/relationhouse', (req, res, next)=> {
     let id = param.id,
         houses_id = param.houses_id,
         modifier = param.modifier;
+    console.log(param);
     next({
-        $promise:   ArticlesService.updateHousesId(id, houses_id, modifier),
+        $promise: ArticlesService.updateHousesId(id, houses_id, modifier),
         msg: '关联酒店失败'
     });
 });

@@ -14,7 +14,7 @@ class ArticlesService {
                     return Articles.insert(Articles.createModel(title, content, user.id, 2, user.id, user.id), {
                         transaction: t
                     }).then(articles=> {
-                        return Users.updateArticleNum(user.id, count+1, t).then(()=> {
+                        return Users.updateArticleNum(user.id, count + 1, t).then(()=> {
                             return articles;
                         })
                     });
@@ -90,7 +90,7 @@ class ArticlesService {
         return Articles.transaction(t=> {
             return Articles.updateCoverPicture(id, cover_picture, modifier, t);
         }).then(()=> {
-            return Articles.findById(id,{
+            return Articles.findById(id, {
                 include: [{
                     model: Users.sequlize,
                     attributes: ['id', 'user_name', 'avatar', 'user_vip_id']
@@ -130,7 +130,7 @@ class ArticlesService {
         return Articles.transaction(t=> {
             return Articles.updateAuditStatus(id, status, modifier, t);
         }).then(()=> {
-            return Articles.findById(id,{
+            return Articles.findById(id, {
                 include: [{
                     model: Users.sequlize,
                     attributes: ['id', 'user_name', 'avatar', 'user_vip_id']
@@ -142,7 +142,8 @@ class ArticlesService {
             });
         }).then(article=> {
             article.user && Users.formatUser(article.user.dataValues);
-            return  Articles.formatArticle(article.dataValues);;
+            return Articles.formatArticle(article.dataValues);
+            ;
         });
     }
 
@@ -153,25 +154,24 @@ class ArticlesService {
      * @param modifier
      * @returns {*}
      */
-    updateHousesId(id,houses_id,modifier){
-        return Articles.transaction(t=>{
-           return Articles.updateHousesId(id,houses_id,modifier,t);
-        }).then(()=>{
-            return Articles.findById(id,{
-                include:[{
-                    include: [{
-                        model: Users.sequlize,
-                        attributes: ['id', 'user_name', 'avatar', 'user_vip_id']
-                    }, {
-                        model: Houses.sequlize,
-                        as: 'houses',
-                        attributes: ['id', 'address']
-                    }]
+    updateHousesId(id, houses_id, modifier) {
+
+        return Articles.transaction(t=> {
+            return Articles.updateHousesId(id, houses_id, modifier, t);
+        }).then(()=> {
+            return Articles.findById(id, {
+                include: [{
+                    model: Users.sequlize,
+                    attributes: ['id', 'user_name', 'avatar', 'user_vip_id']
+                }, {
+                    model: Houses.sequlize,
+                    as: 'houses',
+                    attributes: ['id', 'address']
                 }]
-            })
-        }).then(article=>{
-            Articles.formatArticle(article.dataValues);
+            });
+        }).then(article=> {
             article.user && Users.formatUser(article.user.dataValues);
+            return Articles.formatArticle(article.dataValues);
         });
     }
 
@@ -222,7 +222,7 @@ class ArticlesService {
     viewArticle(id) {
         return Articles.findById(id).then(article=> {
             return Articles.transaction(t=> {
-                return Articles.updateReadNum(id,article.read_num+1,t);
+                return Articles.updateReadNum(id, article.read_num + 1, t);
             }).then(()=> {
                 article.read_num += 1;
                 return Articles.formatArticle(article.dataValues);
