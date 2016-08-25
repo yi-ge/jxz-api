@@ -43,7 +43,7 @@ router.post('/articledetails', (req, res, next)=> {
     });
 });
 //修改文章封面
-router.post('/updatecoverpicture', ()=> {
+router.post('/updatecoverpicture', (req, res, next)=> {
     let param = req.body;
     let id = param.id,
         cover_picture = param.cover_picture,
@@ -56,7 +56,7 @@ router.post('/updatecoverpicture', ()=> {
     });
 });
 //改变文章状态
-router.post('/changestatus', ()=> {
+router.post('/changestatus', (req, res, next)=> {
     let param = req.body;
     let id = param.id,
         status = param.status,

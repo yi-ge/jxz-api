@@ -1,4 +1,4 @@
-import {Users,UsersOpenid,UsersAt} from './../../../core';
+import {Users,UsersOpenid,UsersAt,UsersVip} from './../../../core';
 class UserService {
     /**
      * 通过微信openid注册＃选者
@@ -48,15 +48,15 @@ class UserService {
      * @param id
      * @returns {*|Promise.<T>}
      */
-    getInfo(id){
-        if(!id) return Users.errorPromise('用户id不能为空');
-        return Users.findById(id).then(result=>{
+    getInfo(id) {
+        if (!id) return Users.errorPromise('用户id不能为空');
+        return Users.findById(id).then(result=> {
             return Users.formatUser(result.dataValues);
         });
     }
 
     /**
-     * 通过微信openid查询精选者 不存在就创建 存在如果有修改则同步数据库修改
+     * 通过微信openid查询精选者 不存在就创建 存在如果有修改则同步数据库修改 （微信端服务）
      * @param openid
      * @returns {*}
      */
@@ -64,36 +64,31 @@ class UserService {
         if (!openid) return UsersOpenid.errorPromise("openid不能为空");
         return UsersOpenid.findOnlyOne({
             where: {openid: openid},
-            include:[{
-                model:Users.sequlize,
-                attributes:['id','user_vip_id']
+            include: [{
+                model: Users.sequlize,
+                attributes: ['id', 'user_vip_id']
             }]
         }).then(useropenid=> {
             if (!useropenid) return this.registryJXZ(openid, username, sex, avatar); //useropenid不存在
-            else if(!useropenid.user){  // 存在openi 不存在user
-                return Users.transaction(t=>{
-                    return Users.insert(Users.createModel(username, sex, avatar),{transaction:t}).then(user=>{
-                        console.log(user);
-                        return UsersOpenid.update({
-                            user_id:user.id
-                        },{
-                            where:{id:useropenid.id},
-                            transaction:t,
-                            lock: t.LOCK.UPDATE
-                        });
-                    }).then(()=>{
+            else if (!useropenid.user) {  // 存在openi 不存在user
+                return Users.transaction(t=> {
+                    return Users.insert(Users.createModel(username, sex, avatar), {
+                        transaction: t
+                    }).then(user=> {
+                        return UsersOpenid.updateUsersId(useropenid.id, user.id, t);
+                    }).then(()=> {
                         return useropenid;
                     });
                 });
             }
             return useropenid;
-        }).then(result=>{
+        }).then(result=> {
             return Users.formatUser(result);
         });
     }
 
     /**
-     * 获取用户列表 分页(只是jxz)
+     * 获取用户列表 分页(只是jxz  后台服务)
      * @param page
      * @returns {*}
      */
@@ -115,7 +110,7 @@ class UserService {
     }
 
     /**
-     * 修改用户的封面写手状态
+     * 修改用户的封面写手状态 (后台服务)
      * @param id
      * @param is_cover
      * @returns {*}
@@ -123,14 +118,15 @@ class UserService {
     updateJXZCover(id, is_cover) {
         if (is_cover != 0 && is_cover != 1) return Users.errorPromise("is_cover值不正确");
         return Users.transaction(t=> {
-            return Users.update({is_cover: is_cover, updated_at: new Date()}, {
-                where: {id: id},
-                transaction: t,
-                lock: t.LOCK.UPDATE,
-            });
+            return Users.updateCoverStatus(id, is_cover, t);
         }).then(()=> {
-            return Users.findById(id);
+            return Users.findById(id, {
+                include: [{
+                    model: UsersVip.sequlize
+                }]
+            });
         }).then(result=> {
+            result.users_vip && UsersVip.formatUserVip(result.users_vip.dataValues);
             return Users.formatUser(result.dataValues);
         });
     }

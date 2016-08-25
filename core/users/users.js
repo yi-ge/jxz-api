@@ -102,6 +102,24 @@ class Users extends Base {
             lock: t.LOCK.UPDATE
         })
     }
+
+    /**
+     * 修改用户封面写手状态
+     * @param id
+     * @param is_cover
+     * @param t
+     * @returns {*}
+     */
+    updateCoverStatus(id,is_cover,t){
+        return this.update({
+            is_cover:is_cover,
+            updated_at: new Date()
+        },{
+            where:{id:id},
+            transaction:t,
+            lock: t.LOCK.UPDATE
+        })
+    }
 }
 
 export default new Users();

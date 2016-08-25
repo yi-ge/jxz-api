@@ -28,6 +28,23 @@ class UsersOpenid extends Base {
         jxz.updated_at = this.formatDate(jxz.updated_at,"yyyy-MM-dd hh:mm:ss");
         return jxz;
     }
+
+    /**
+     * 修改openid关联的精选者
+     * @param id
+     * @param user_id
+     * @param t
+     * @returns {*}
+     */
+    updateUsersId(id,user_id,t){
+        return this.update({
+            user_id:user_id
+        },{
+            where:{id:id},
+            transaction:t,
+            lock: t.LOCK.UPDATE
+        })
+    }
 }
 
 export default new UsersOpenid();

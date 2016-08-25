@@ -90,7 +90,16 @@ class ArticlesService {
         return Articles.transaction(t=> {
             return Articles.updateCoverPicture(id, cover_picture, modifier, t);
         }).then(()=> {
-            Articles.findById(id);
+            Articles.findById(id,{
+                include: [{
+                    model: Users.sequlize,
+                    attributes: ['id', 'user_name', 'avatar', 'user_vip_id']
+                }, {
+                    model: Houses.sequlize,
+                    as: 'houses',
+                    attributes: ['id', 'address']
+                }]
+            });
         }).then(result=> {
             Articles.formatArticle(result.dataValues);
         });
@@ -121,7 +130,16 @@ class ArticlesService {
         return Articles.transaction(t=> {
             return Articles.updateAuditStatus(id, status, modifier, t);
         }).then(()=> {
-            return Articles.findById(id);
+            return Articles.findById(id,{
+                include: [{
+                    model: Users.sequlize,
+                    attributes: ['id', 'user_name', 'avatar', 'user_vip_id']
+                }, {
+                    model: Houses.sequlize,
+                    as: 'houses',
+                    attributes: ['id', 'address']
+                }]
+            });
         }).then(result=> {
             return Articles.formatArticle(result.dataValues);
         });
