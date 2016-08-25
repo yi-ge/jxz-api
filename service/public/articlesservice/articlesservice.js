@@ -140,8 +140,38 @@ class ArticlesService {
                     attributes: ['id', 'address']
                 }]
             });
-        }).then(result=> {
-            return Articles.formatArticle(result.dataValues);
+        }).then(article=> {
+            article.user && Users.formatUser(article.user.dataValues);
+            return  Articles.formatArticle(article.dataValues);;
+        });
+    }
+
+    /**
+     * 修改关联酒店
+     * @param id
+     * @param houses_id
+     * @param modifier
+     * @returns {*}
+     */
+    updateHousesId(id,houses_id,modifier){
+        return Articles.transaction(t=>{
+           return Articles.updateHousesId(id,houses_id,modifier,t);
+        }).then(()=>{
+            return Articles.findById(id,{
+                include:[{
+                    include: [{
+                        model: Users.sequlize,
+                        attributes: ['id', 'user_name', 'avatar', 'user_vip_id']
+                    }, {
+                        model: Houses.sequlize,
+                        as: 'houses',
+                        attributes: ['id', 'address']
+                    }]
+                }]
+            })
+        }).then(article=>{
+            Articles.formatArticle(article.dataValues);
+            article.user && Users.formatUser(article.user.dataValues);
         });
     }
 

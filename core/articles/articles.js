@@ -101,6 +101,25 @@ class Articles extends Base {
     }
 
     /**
+     * 修改关联酒店
+     * @param id
+     * @param houses_id
+     * @param modifier
+     * @param t
+     * @returns {*}
+     */
+    updateHousesId(id,houses_id,modifier,t){
+        return this.update({
+            houses_id:houses_id,
+            updated_at:new Date(),
+            modifier:modifier,
+        },{
+            where:{id:id},
+            transaction:t,
+            lock: t.LOCK.UPDATE
+        });
+    }
+    /**
      * 修改文章阅读数量
      * @param id
      * @param num

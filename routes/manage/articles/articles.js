@@ -68,4 +68,18 @@ router.post('/changestatus', (req, res, next)=> {
         res.json({code: 1000, message: typeof e == "string" ? e : '文章状态修改失败'});
     });
 });
+//关联酒店
+router.post('/relationhouse', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id,
+        houses_id = param.houses_id,
+        modifier = param.modifier;;
+    ArticlesService.updateHousesId(id,houses_id,modifier).then(result=> {
+        next(result);
+    }).catch(e=> {
+        console.log(e);
+        res.json({code: 1000, message: typeof e == "string" ? e : '关联酒店失败'});
+    });
+});
+
 export default router;
