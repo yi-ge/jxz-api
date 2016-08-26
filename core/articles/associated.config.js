@@ -32,4 +32,11 @@ Articles.sequlize.belongsToMany(Users.sequlize,{
     foreignKey:'favorite_source_id',
     otherKey:'user_id'
 });
+//文章被点赞
+Articles.sequlize.belongsToMany(Users.sequlize,{
+    through:UsersFavorite.sequlize,
+    as:'like_user',
+    foreignKey:'favorite_source_id',
+    otherKey:'user_id'
+});
 export default Articles;

@@ -5,7 +5,7 @@ import SysUsers from './../sysusers/sysusers';
 import UsersVip from './../usersvip/usersvip';
 import HousesComment from './../housescomment/housescomment';
 import UsersAt from './../usersat/usersat';
-import UsersFavorite from './../usersfavorite/usersfavorite'
+import UsersFavorite from './../usersfavorite/usersfavorite';
 //一个用户对应一个openid
 Users.sequlize.hasOne(UsersOpenid.sequlize, {
     foreignKey: "user_id"
@@ -55,5 +55,12 @@ Users.sequlize.belongsToMany(Articles.sequlize,{
     foreignKey:'user_id',
     otherKey:'favorite_source_id',
     as:'favorite_article',
+});
+//点赞文章
+Users.sequlize.belongsToMany(Articles.sequlize,{
+    through:UsersFavorite.sequlize,
+    foreignKey:'user_id',
+    otherKey:'favorite_source_id',
+    as:'like_article',
 });
 export default Users;
