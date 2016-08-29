@@ -34,6 +34,7 @@ class ArticlesService {
      * @returns {*}
      */
     wetchatCommentArticle(articles_id,comment_user_id,content){
+        if(!content) return ArticlesComment.errorPromise("评论不能为空");
         return ArticlesComment.transaction(t=>{
             return ArticlesComment.insert(ArticlesComment.createModel(articles_id,comment_user_id,content,comment_user_id,comment_user_id),{
                 transaction:t
@@ -417,7 +418,13 @@ class ArticlesService {
         return ArticlesComment.count({where:where}).then(count=>{
             return ArticlesComment.findPage({
                 where:where,
-                order:`created_at DESC`
+                order:`created_at DESC`,
+                attributes:{exclude:'comment_user_id'},
+                include:[{
+                    model:Users.sequlize,
+                    as:'comment_user',
+                    attributes:['id','avatar',`user_name`]
+                }]
             },page,count,2,pagesize);
         }).then(result=>{
             result.list.map(comment=>{

@@ -21,25 +21,6 @@ class VipService {
         });
     }
 
-    /**
-     * 查询vip列表
-     * @param page
-     * @param sortType
-     * @param pagesize
-     */
-    findVipList(page, sortType = 1, pagesize = 20) {
-        let where = {};
-        return UsersVip.count({where: where}).then(count=> {
-            return UsersVip.findPage({
-                where: where
-            }, page, count, sortType, pagesize);
-        }).then(result=> {
-            result.list.map(vip=> {
-                UsersVip.formatUserVip(vip.dataValues);
-            });
-            return result;
-        });
-    }
 
     /**
      * vip详情
@@ -49,6 +30,31 @@ class VipService {
         return UsersVip.findById(id).then(vip=> {
             if (!vip)return UsersVip.errorPromise("不存在改会员");
             return UsersVip.formatUserVip(vip.dataValues);
+        });
+    }
+
+    /**
+     * 获取为绑定的vip用户
+     * @param page
+     * @param sortType
+     * @param pagesize
+     */
+    findNotBindVip(page, startDate, endDate, user_status, account_name, pagesize = 20) {
+        let where = {};
+        !!user_status && (where['user_status'] = user_status);
+        !!account_name && (where['account_name'] = {$like:`%${account_name}%`});
+        if (!!startDate && !!endDate) where['created_at'] = {$between: [startDate, endDate]};
+        else if (!!startDate) where['created_at'] = {$gte: startDate};
+        else if (!!endDate) where['created_at'] = {$lte: endDate};
+        return UsersVip.count({where: where}).then(count=> {
+            return UsersVip.findPage({
+                where: where,
+            }, page, count, 1, pagesize);
+        }).then(result=> {
+            result.list.map(vip=> {
+                UsersVip.formatUserVip(vip.dataValues);
+            });
+            return result;
         });
     }
 
@@ -63,16 +69,10 @@ class VipService {
         return UsersVip.findAccountName(account_name).then(vip=> {
             if (!!vip) return UsersVip.errorPromise('用户已存在');
             return UsersVip.transaction(t=> {
-                return UsersVip.insert(UsersVip.createModel(account_name, null, null, 2, password, 0, 1), {
+                return UsersVip.insert(UsersVip.createModel(account_name, null, null, 2, password, UsersVip.NORECHARGE, UsersVip.BINDING), {
                     transaction: t,
                 }).then(vip=> {
-                    return Users.update({user_vip_id: vip.id}, {
-                        where: {id: users_id},
-                        transaction: t,
-                        lock: t.LOCK.UPDATE
-                    }).then(()=> {
-                        return vip;
-                    });
+                    return Users.relationVip(users_id, vip.id, t); //绑定vip
                 });
             });
         });
@@ -97,20 +97,10 @@ class VipService {
         }).then(vip=> {
             if (!vip) return UsersVip.errorPromise("密码错误");
             else return Users.transaction(t=> {
-                return Users.update({user_vip_id: vip.id}, { //关联新用户
-                    where: {id: users_id},
-                    transaction: t,
-                    lock: t.LOCK.UPDATE
-                }).then(()=> {
-                    UsersVip.update({is_cover: 1}, { //绑定精选者
-                        where: {
-                            account_name: account_name,
-                            passwd: UsersVip.encrypMD5(password)
-                        },
-                        transaction: t,
-                        lock: t.LOCK.UPDATE
+                return Users.relationVip(users_id, vip.id, t) //users关联vip
+                    .then(()=> {
+                        return UsersVip.updateBindStatus(account_name, UsersVip.BINDING, t);//改变vip为绑定状态
                     });
-                });
             }).then(()=> {
                 return vip;
             });

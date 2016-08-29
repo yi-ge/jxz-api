@@ -61,17 +61,21 @@ class UserService {
      * @param sortType
      * @param startDate
      * @param endDate
-     * @param is_cover
+     * @param user_status vip表中充值状态状态
+     * @param is_cover 是否是封面 users表中
+     * @param vip_account_name vip 账号
      * @param pagesize
      * @returns {Promise.<T>}
      */
-    findUserToVipList(page, sortType, startDate, endDate, is_cover, pagesize) {
+    findUserToVipList(page, sortType, startDate, endDate, user_status, vip_account_name ,is_cover, pagesize) {
         let where = {user_vip_id: {$ne: null}};
         !!is_cover && (where['is_cover'] = is_cover);
+        !!user_status && (where['$and'] = UsersVip.where(UsersVip.col('users_vip.user_status'),'=',user_status));
+        !!vip_account_name && (where['$and'] = UsersVip.where(UsersVip.col('users_vip.account_name'),'like',`%${vip_account_name}%`));
         if (!!startDate && !!endDate) where['created_at'] = {$between: [startDate, endDate]};
         else if (!!startDate) where['created_at'] = {$gte: startDate};
         else if (!!endDate) where['created_at'] = {$lte: endDate};
-        return Users.count({where: where}).then(count=> {
+        return Users.count({where: where, include: {model: UsersVip.sequlize}}).then(count=> {
             return Users.findPage(Object.assign({
                     where: where,
                     include: {model: UsersVip.sequlize},

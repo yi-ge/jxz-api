@@ -25,13 +25,24 @@ router.post('/userarticlelistonline', (req, res, next)=> {
 //评论文章
 router.post('/commentarticle',(req,res,next)=>{
     let param = req.body;
-    let articles_id = param.articles_id,
+    let article_id = param.article_id,
         comment_user_id = param.comment_user_id,
-        content = param.content,
-        creater = param.creater;
+        content = param.content;
     next({
-        $promise: ArticlesService.wetchatCommentArticle(articles_id,comment_user_id,content),
+        $promise: ArticlesService.wetchatCommentArticle(article_id,comment_user_id,content),
         msg: '文章评论失败'
+    });
+});
+
+//查看文章评论
+router.post('/findcomment',(req,res,next)=>{
+    let param = req.body;
+    let article_id = param.article_id,
+        page = param.page,
+        pagesize = param.pagesize;
+    next({
+        $promise: ArticlesService.findArticleCommentList(article_id,page,pagesize),
+        msg: '文章评论获取失败'
     });
 });
 //收藏文章
@@ -101,17 +112,6 @@ router.post('/view', (req, res, next)=> {
     next({
         $promise: ArticlesService.viewArticle(id),
         msg: '阅读文章失败'
-    });
-});
-//查看文章评论
-router.post('/findcomment',(req,res,next)=>{
-    let param = req.body;
-    let article_id = param.article_id,
-        page = param.page,
-        pagesize = param.pagesize;
-    next({
-        $promise: ArticlesService.findArticleCommentList(article_id,page,pagesize),
-        msg: '文章评论获取失败'
     });
 });
 export default router;

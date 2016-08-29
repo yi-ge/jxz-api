@@ -13,48 +13,56 @@ class Users extends Base {
         });
     }
 
-    createModel(user_name,sex,avatar,lastloginip) {
+    createModel(user_name, sex, avatar, lastloginip) {
         let model = {
-            id:this.generateId(),
+            id: this.generateId(),
             created_at: new Date(),
             updated_at: new Date(),
-            user_name:user_name,
-            avatar:avatar,
-            article_num:0,
-            is_cover:0,
-            sex:typeof sex == 'number'? sex : this.getSexValue(sex),
-            last_login_ip:this.ipToInt(lastloginip || "0.0.0.0"),
-            last_login_date:new Date(),
-            join_date:new Date(),
+            user_name: user_name,
+            avatar: avatar,
+            article_num: 0,
+            is_cover: 0,
+            sex: typeof sex == 'number' ? sex : this.getSexValue(sex),
+            last_login_ip: this.ipToInt(lastloginip || "0.0.0.0"),
+            last_login_date: new Date(),
+            join_date: new Date(),
         };
         return model;
     }
 
-    getSexValue(str){
+    getSexValue(str) {
         let value = 2;
-        switch (str){
-            case "男" : value = 0;break;
-            case "女" :value = 1;break;
+        switch (str) {
+            case "男" :
+                value = 0;
+                break;
+            case "女" :
+                value = 1;
+                break;
         }
         return value;
     }
 
-    getStrSex(num){
+    getStrSex(num) {
         let value = "保密";
-        switch (num){
-            case 0 : value = "男";break;
-            case 1 :value = "女";break;
+        switch (num) {
+            case 0 :
+                value = "男";
+                break;
+            case 1 :
+                value = "女";
+                break;
         }
         return value;
     }
 
     formatUser(user) {
-        if(user == void(0)) return user;
-        user.last_login_ip!= void(0) && (user.last_login_ip = this.intToIp(user.last_login_ip));
-        user.created_at!= void(0) && (user.created_at = this.formatDate(user.created_at, "yyyy-MM-dd hh:mm:ss"));
-        user.updated_at!= void(0) && (user.updated_at = this.formatDate(user.updated_at, "yyyy-MM-dd hh:mm:ss"));
-        user.last_login_date!= void(0) && (user.last_login_date = this.formatDate(user.last_login_date, "yyyy-MM-dd hh:mm:ss"));
-        user.join_date!= void(0) && (user.join_date = this.formatDate(user.join_date, "yyyy-MM-dd hh:mm:ss"));
+        if (user == void(0)) return user;
+        user.last_login_ip != void(0) && (user.last_login_ip = this.intToIp(user.last_login_ip));
+        user.created_at != void(0) && (user.created_at = this.formatDate(user.created_at, "yyyy-MM-dd hh:mm:ss"));
+        user.updated_at != void(0) && (user.updated_at = this.formatDate(user.updated_at, "yyyy-MM-dd hh:mm:ss"));
+        user.last_login_date != void(0) && (user.last_login_date = this.formatDate(user.last_login_date, "yyyy-MM-dd hh:mm:ss"));
+        user.join_date != void(0) && (user.join_date = this.formatDate(user.join_date, "yyyy-MM-dd hh:mm:ss"));
         user.sex != void(0) && (user.sex = this.getStrSex(user.sex));
         return user;
     }
@@ -64,8 +72,8 @@ class Users extends Base {
      * @param id
      * @returns {*}
      */
-    getArticleCount(id){
-        return Articles.count({where:{author:id}});
+    getArticleCount(id) {
+        return Articles.count({where: {author: id}});
     }
 
     /**
@@ -75,12 +83,12 @@ class Users extends Base {
      * @param t
      * @returns {*}
      */
-    updateArticleNum(id,num,t){
+    updateArticleNum(id, num, t) {
         return this.update({
-            article_num:num,
-        },{
-            where:{id:id},
-            transaction:t,
+            article_num: num,
+        }, {
+            where: {id: id},
+            transaction: t,
             lock: t.LOCK.UPDATE
         })
     }
@@ -92,15 +100,32 @@ class Users extends Base {
      * @param t
      * @returns {*}
      */
-    updateCoverStatus(id,is_cover,t){
+    updateCoverStatus(id, is_cover, t) {
         return this.update({
-            is_cover:is_cover,
+            is_cover: is_cover,
             updated_at: new Date()
-        },{
-            where:{id:id},
-            transaction:t,
+        }, {
+            where: {id: id},
+            transaction: t,
             lock: t.LOCK.UPDATE
         })
+    }
+
+    /**
+     * 关联vip用户
+     * @param id
+     * @param user_vip_id
+     * @param t
+     * @returns {*}
+     */
+    relationVip(id, user_vip_id, t) {
+        return this.update({
+            user_vip_id: user_vip_id
+        }, {
+            where: {id: id},
+            transaction: t,
+            lock: t.LOCK.UPDATE
+        });
     }
 }
 

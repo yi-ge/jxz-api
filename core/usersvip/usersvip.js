@@ -4,14 +4,21 @@
 import usersvip from './usersvip.config';
 import Base from './../base';
 
+const BINDING = 1; //绑定
+const NOTBINDING = 0; //为绑定
+const RECHARGE = 1; //充值
+const NORECHARGE = 0; // 未充值
 class UsersVip extends Base {
     constructor() {
         super("users_vip", usersvip, {
             tableName: 'users_vip'
         });
+
+        this.BINDING = BINDING;
+        this.NOTBINDING = NOTBINDING;
+        this.RECHARGE = RECHARGE;
+        this.NORECHARGE = NORECHARGE;
     }
-
-
 
     getSexValue(str) {
         let value = 2;
@@ -50,7 +57,7 @@ class UsersVip extends Base {
      * @param is_cover 是否绑定精选者0不是1是
      * @returns {{id: number, account_name: *, user_name: *, email: *, sex: *, passwd: (*|string), created_at: Date, updated_at: Date, last_login_date: Date, user_status: number, is_cover: number}}
      */
-    createModel(account_name, user_name, email, sex, password = '666666', user_status = 0, is_cover = 0) {
+    createModel(account_name, user_name, email, sex, password = '666666', user_status = NORECHARGE, is_cover = NOTBINDING) {
         let model = {
             id: this.generateId(),
             account_name: account_name,
@@ -83,6 +90,24 @@ class UsersVip extends Base {
     findAccountName(account_name, option) {
         return this.findOnlyOne(Object.assign({where: {account_name: account_name}}, option));
     }
+
+    /**
+     * 改变会员绑定精选者状态
+     * @param account_name
+     * @param bindstatus
+     * @param t
+     * @returns {*}
+     */
+    updateBindStatus(account_name,bindstatus,t){
+        return this.update({
+            is_cover:bindstatus,
+        },{
+            where:{account_name:account_name},
+            transaction:t,
+            lock: t.LOCK.UPDATE
+        })
+    }
+
 }
 
 export default new UsersVip();

@@ -15,13 +15,15 @@ router.post('/createvip', (req, res, next)=> {
     });
 });
 //获取vip列表
-router.post('/list', (req, res, next)=> {
+router.post('/notbindlist', (req, res, next)=> {
     let param = req.body;
     let page = param.page,
-        sortType = param.sortType,
-        pagesize = param.pagesize;
+        startDate = req.body.startDate,
+        endDate = req.body.endDate,
+        user_status = req.body.user_status,
+        account_name = req.body.account_name;
     next({
-        $promise:VipService.findVipList(page,sortType,pagesize),
+        $promise:VipService.findNotBindVip(page, startDate, endDate,user_status, account_name),
         msg: '获取列表失败'
     });
 });

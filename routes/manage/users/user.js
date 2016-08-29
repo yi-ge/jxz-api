@@ -17,9 +17,11 @@ router.post('/userviplist', (req, res, next)=> {
     let page = param.page, sortType = req.body.sortType,
         startDate = req.body.startDate,
         endDate = req.body.endDate,
+        user_status = req.body.user_status,
+        vip_account_name = req.body.vip_account_name,
         is_cover = req.body.is_cover;
     next({
-        $promise:UsersService.findUserToVipList(page, sortType, startDate, endDate, is_cover),
+        $promise:UsersService.findUserToVipList(page, sortType, startDate, endDate,user_status, vip_account_name,is_cover),
         msg: '用户查询失败'
     });
 });
