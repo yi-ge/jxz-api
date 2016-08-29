@@ -1,0 +1,6 @@
+{
+	"name": "resourcesservice",
+	"version": "2.0.0",
+	"private": true,
+	"main": "./resourcesservice.js"
+}

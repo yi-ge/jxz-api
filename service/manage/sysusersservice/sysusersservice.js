@@ -1,4 +1,4 @@
-import {SysUsers,SysRoles,SysUserRoles,Users,SysRoleResources} from './../../../core';
+import {SysUsers,SysRoles,SysUserRoles,Users,SysResources} from './../../../core';
 class SysUserService {
     /**
      * 管理员注册
@@ -34,15 +34,13 @@ class SysUserService {
      * @returns {*|Promise.<T>}
      */
     login(accountname, password) {
-        return SysUsers.findOnlyOne(
-            {
-                where: {
-                    account_name: accountname,
-                    passwd: SysUsers.encrypMD5(password),
-                },
-            }
-        ).then(sysUser=> {
-            if (!sysUser) return {code: 1000, msg: "用户名或者密码错误！"};
+        return SysUsers.findOnlyOne({
+            where: {
+                account_name: accountname,
+                passwd: SysUsers.encrypMD5(password),
+            },
+        }).then(sysUser=> {
+            if (!sysUser) return SysUsers.errorPromise("用户名或者密码错误！");
             else return SysUsers.formaySysUser(sysUser.dataValues);
         });
     }
@@ -51,9 +49,9 @@ class SysUserService {
      * 获取管理员员精选者
      * @param id
      */
-    findSysUsersIsJXZ(id){
-        return SysUsers.getJXZUser(id).then(user=>{
-           return Users.formatUser(user);
+    findSysUsersIsJXZ(id) {
+        return SysUsers.getJXZUser(id).then(user=> {
+            return Users.formatUser(user);
         });
     }
 
@@ -83,11 +81,11 @@ class SysUserService {
      * 查询所有管理员 不分页
      * @returns {*|Promise.<T>}
      */
-    findSysUsersAll(){
+    findSysUsersAll() {
         return SysUsers.findList({
-            attributes:['id','user_name']
-        }).then(result=>{
-            result.list.map(user=>{
+            attributes: ['id', 'user_name']
+        }).then(result=> {
+            result.list.map(user=> {
                 user.dataValues.name = user.dataValues.user_name;
                 delete user.dataValues.account_name;
             });
@@ -103,7 +101,7 @@ class SysUserService {
      */
     updateSysUsersStatus(id, status) {
         return SysUsers.transaction(t=> {
-            return SysUsers.update({status: status,updated_at:new Date()}, {
+            return SysUsers.update({status: status, updated_at: new Date()}, {
                 where: {id: id},
                 transaction: t,
                 lock: t.LOCK.UPDATE,
@@ -124,23 +122,23 @@ class SysUserService {
      */
     editSysUsers(id, user_name, email, role_id) {
         return SysUsers.transaction(t=> {
-            return SysUsers.update({user_name: user_name, email: email,updated_at:new Date()}, {
+            return SysUsers.update({user_name: user_name, email: email, updated_at: new Date()}, {
                 where: {id: id},
                 transaction: t,
                 lock: t.LOCK.UPDATE,
             }).then(()=> {
-                return SysUserRoles.destroy({where: {user_id: id},transaction:t});
+                return SysUserRoles.destroy({where: {user_id: id}, transaction: t});
             }).then(()=> {
-                if(!!role_id) return SysUserRoles.insert(SysUserRoles.createModel(id, role_id), {transaction: t});
+                if (!!role_id) return SysUserRoles.insert(SysUserRoles.createModel(id, role_id), {transaction: t});
                 return null;
             });
         }).then(()=> {
             return SysUsers.findById(id, {
                 include: [{
-                    model:SysRoles.sequlize,
-                    through:{
-                        model:SysUserRoles.sequlize,
-                        attributes:[]
+                    model: SysRoles.sequlize,
+                    through: {
+                        model: SysUserRoles.sequlize,
+                        attributes: []
                     }
                 }]
             });
@@ -179,7 +177,7 @@ class SysUserService {
                 attributes: ['id', 'name'],
                 through: {attributes: []},
                 include: [{
-                    model: SysRoleResources.sequlize,
+                    model: SysResources.sequlize,
                     through: {attributes: []},
                 }]
             }]

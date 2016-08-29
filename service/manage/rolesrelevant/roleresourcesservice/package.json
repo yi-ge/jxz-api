@@ -1,0 +1,6 @@
+{
+	"name": "roleresourcesservice",
+	"version": "2.0.0",
+	"private": true,
+	"main": "./roleresourcesservice.js"
+}

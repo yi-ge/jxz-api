@@ -21,7 +21,7 @@ class SysUsers extends Base {
             created_at:new Date(),
             updated_at:new Date(),
             last_login_date:new Date(),
-            passwd:this.encrypMD5("password"),
+            passwd:this.encrypMD5(passwd),
         };
         return model;
     }

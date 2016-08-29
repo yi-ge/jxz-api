@@ -27,6 +27,10 @@ class ArticlesComment extends Base {
     }
 
     formatArticleComment(comment){
+        if (comment == void(0)) return comment;
+        comment.comment_date != void(0) && (comment.comment_date = this.formatDate(comment.comment_date, "yyyy-MM-dd hh:mm:ss"));
+        comment.created_at != void(0) && (comment.created_at = this.formatDate(comment.created_at, "yyyy-MM-dd hh:mm:ss"));
+        comment.updated_at != void(0) && (comment.updated_at = this.formatDate(comment.updated_at, "yyyy-MM-dd hh:mm:ss"));
         return comment;
     }
 }
