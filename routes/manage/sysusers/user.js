@@ -12,8 +12,10 @@ router.post('/register', (req, res, next)=> {
 //登陆
 router.post('/login', (req, res, next)=> {
     let param = req.body;
+    let account_name = param.account_name,
+        password = param.password;
     next({
-        $promise:SysUsersService.login(param.account_name, param.password),
+        $promise:SysUsersService.login(account_name, password),
         msg: '登陆失败'
     });
 });
@@ -51,19 +53,27 @@ router.post('/finduserall', (req, res, next)=> {
         msg: '查询失败'
     });
 });
+//查询管理员的精选者
+router.post('/jxz',(req,res,next)=>{
+    let id = req.body.id;
+    next({
+        $promise: SysUsersService.findSysUsersIsJXZ(id),
+        msg: '精选者查询失败'
+    });
+});
 //查询用户角色
 router.post("/finduserroles", (req, res, next)=> {
-    let user_id = req.body.user_id;
+    let id = req.body.id;
     next({
-        $promise: RolesService.findUsersRoles(user_id),
+        $promise: SysUsersService.findUsersRoles(id),
         msg: '查询失败'
     });
 });
 //查询用户权限
 router.post("/finduserresource", (req, res, next)=> {
-    let user_id = req.body.user_id;
+    let id = req.body.id;
     next({
-        $promise: RolesService.findUsersResource(user_id),
+        $promise: SysUsersService.findUsersResource(id),
         msg: '查询失败'
     });
 });

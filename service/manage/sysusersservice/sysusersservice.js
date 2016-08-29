@@ -1,4 +1,4 @@
-import {SysUsers,SysRoles,SysUserRoles,Users} from './../../../core';
+import {SysUsers,SysRoles,SysUserRoles,Users,SysRoleResources} from './../../../core';
 class SysUserService {
     /**
      * 管理员注册
@@ -44,6 +44,16 @@ class SysUserService {
         ).then(sysUser=> {
             if (!sysUser) return {code: 1000, msg: "用户名或者密码错误！"};
             else return SysUsers.formaySysUser(sysUser.dataValues);
+        });
+    }
+
+    /**
+     * 获取管理员员精选者
+     * @param id
+     */
+    findSysUsersIsJXZ(id){
+        return SysUsers.getJXZUser(id).then(user=>{
+           return Users.formatUser(user);
         });
     }
 
@@ -105,6 +115,13 @@ class SysUserService {
         });
     }
 
+    /**
+     * 编辑管理员
+     * @param id
+     * @param user_name
+     * @param email
+     * @param role_id
+     */
     editSysUsers(id, user_name, email, role_id) {
         return SysUsers.transaction(t=> {
             return SysUsers.update({user_name: user_name, email: email,updated_at:new Date()}, {
@@ -129,6 +146,45 @@ class SysUserService {
             });
         }).then(result=> {
             return SysUsers.formaySysUser(result.dataValues);
+        });
+    }
+
+
+    /**
+     * 用户角色查询
+     * @param userId
+     * @returns {*}
+     */
+    findUsersRoles(id) {
+        return SysUsers.findList({
+            where: {id: id},
+            include: {
+                model: SysRoles.sequlize
+            }
+        }).then(result=> {
+            return result;
+        });
+    }
+
+    /**
+     * 用户权限查询
+     * @param userId
+     * @returns {*|Promise.<T>}
+     */
+    findUsersResource(id) {
+        return SysUsers.findList({
+            where: {id: id},
+            include: [{
+                model: SysRoles.sequlize,
+                attributes: ['id', 'name'],
+                through: {attributes: []},
+                include: [{
+                    model: SysRoleResources.sequlize,
+                    through: {attributes: []},
+                }]
+            }]
+        }).then(result=> {
+            return result;
         });
     }
 }

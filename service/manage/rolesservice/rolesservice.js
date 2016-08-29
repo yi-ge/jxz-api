@@ -193,43 +193,6 @@ class RolesService {
         });
     }
 
-    /**
-     * 用户角色查询
-     * @param userId
-     * @returns {*}
-     */
-    findUsersRoles(userId) {
-        return SysUsers.findList({
-            where: {id: userId},
-            include: {
-                model: SysRoles.sequlize
-            }
-        }).then(result=> {
-            return result;
-        });
-    }
-
-    /**
-     * 用户权限查询
-     * @param userId
-     * @returns {*|Promise.<T>}
-     */
-    findUsersResource(userId) {
-        return SysUsers.findList({
-            where: {id: userId},
-            include: [{
-                model: SysRoles.sequlize,
-                attributes: ['id', 'name'],
-                through: {attributes: []},
-                include: [{
-                    model: SysRoleResources.sequlize,
-                    through: {attributes: []},
-                }]
-            }]
-        }).then(result=> {
-            return result;
-        });
-    }
 
     /**
      * 查询角色 分页
