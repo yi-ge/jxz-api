@@ -31,4 +31,15 @@ SysResources.sequlize.belongsTo(SysResources.sequlize,{
     targetKey:'id',
     as:'second'
 });
+//一个权限对应多个功能
+SysResources.sequlize.hasMany(SysResources.sequlize,{
+    foreignKey:'parent_id',
+    as:'facility'
+});
+//功能对应权限
+SysResources.sequlize.belongsTo(SysResources.sequlize,{
+    foreignKey:'parent_id',
+    targetKey:'id',
+    as:'menu_resources'
+});
 export default SysResources;
