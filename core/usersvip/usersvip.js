@@ -11,6 +11,8 @@ class UsersVip extends Base {
         });
     }
 
+
+
     getSexValue(str) {
         let value = 2;
         switch (str) {
@@ -37,6 +39,17 @@ class UsersVip extends Base {
         return value;
     }
 
+    /**
+     *
+     * @param account_name 账号
+     * @param user_name
+     * @param email
+     * @param sex
+     * @param password
+     * @param user_status 会员状态0未充值1已充值
+     * @param is_cover 是否绑定精选者0不是1是
+     * @returns {{id: number, account_name: *, user_name: *, email: *, sex: *, passwd: (*|string), created_at: Date, updated_at: Date, last_login_date: Date, user_status: number, is_cover: number}}
+     */
     createModel(account_name, user_name, email, sex, password = '666666', user_status = 0, is_cover = 0) {
         let model = {
             id: this.generateId(),

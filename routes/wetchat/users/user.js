@@ -80,4 +80,16 @@ router.post('/getinfo', (req, res, next)=> {
         msg: '获取用户信息失败'
     });
 });
+//发私信
+router.post('/sponsoredmsg', (req, res, next)=> {
+    let param = req.body;
+    let user_id = param.user_id,
+        from_user_id = param.from_user_id,
+        content = param.content;
+    next({
+        $promise: UsersService.sponsoredMsg(user_id, from_user_id, content),
+        msg: '私信发送失败'
+    });
+});
+
 export default router;

@@ -1,7 +1,7 @@
 import {UsersVip,Users} from './../../../core';
 class VipService {
     /**
-     * 后台录入vip用户
+     * 录入vip用户（后台）
      * @param account_name
      * @param user_name
      * @param email
@@ -12,7 +12,7 @@ class VipService {
         return UsersVip.findAccountName(account_name).then(vip=> {
             if (!!vip) return UsersVip.errorPromise('用户已存在');
             return UsersVip.transaction(t=> {
-                return UsersVip.insert(UsersVip.createModel(account_name, user_name, email, sex, password), {
+                return UsersVip.insert(UsersVip.createModel(account_name, user_name, email, sex, password, 0, 0), {
                     transaction: t,
                 }).then(result=> {
                     return UsersVip.formatUserVip(result.dataValues);
@@ -22,7 +22,38 @@ class VipService {
     }
 
     /**
-     * 会员注册
+     * 查询vip列表
+     * @param page
+     * @param sortType
+     * @param pagesize
+     */
+    findVipList(page, sortType = 1, pagesize = 20) {
+        let where = {};
+        return UsersVip.count({where: where}).then(count=> {
+            return UsersVip.findPage({
+                where: where
+            }, page, count, sortType, pagesize);
+        }).then(result=> {
+            result.list.map(vip=> {
+                UsersVip.formatUserVip(vip.dataValues);
+            });
+            return result;
+        });
+    }
+
+    /**
+     * vip详情
+     * @param id
+     */
+    vipDetails(id) {
+        return UsersVip.findById(id).then(vip=> {
+            if (!vip)return UsersVip.errorPromise("不存在改会员");
+            return UsersVip.formatUserVip(vip.dataValues);
+        });
+    }
+
+    /**
+     * 会员注册（微信）
      * @param account_name
      * @param users_id
      * @param password
@@ -32,11 +63,9 @@ class VipService {
         return UsersVip.findAccountName(account_name).then(vip=> {
             if (!!vip) return UsersVip.errorPromise('用户已存在');
             return UsersVip.transaction(t=> {
-                return UsersVip.insert(UsersVip.createModel(account_name, null, null, 2, password), {
+                return UsersVip.insert(UsersVip.createModel(account_name, null, null, 2, password, 0, 1), {
                     transaction: t,
                 }).then(vip=> {
-                    console.log(users_id);
-                    console.log(vip.id);
                     return Users.update({user_vip_id: vip.id}, {
                         where: {id: users_id},
                         transaction: t,
@@ -50,7 +79,7 @@ class VipService {
     }
 
     /**
-     * 会员登陆
+     * 会员登陆 （微信）
      * @param account_name
      * @param users_id
      * @param password
@@ -72,41 +101,19 @@ class VipService {
                     where: {id: users_id},
                     transaction: t,
                     lock: t.LOCK.UPDATE
+                }).then(()=> {
+                    UsersVip.update({is_cover: 1}, { //绑定精选者
+                        where: {
+                            account_name: account_name,
+                            passwd: UsersVip.encrypMD5(password)
+                        },
+                        transaction: t,
+                        lock: t.LOCK.UPDATE
+                    });
                 });
             }).then(()=> {
                 return vip;
             });
-        });
-    }
-
-    /**
-     * 查询关联了vip的用户
-     * @param page
-     * @param sortType
-     * @param startDate
-     * @param endDate
-     * @param is_cover
-     * @param pagesize
-     * @returns {Promise.<T>}
-     */
-    findUserToVipList(page, sortType, startDate, endDate, is_cover, pagesize) {
-        let where = {user_vip_id: {$ne: null}};
-        !!is_cover && (where['is_cover'] = is_cover);
-        if (!!startDate && !!endDate) where['created_at'] = {$between: [startDate, endDate]};
-        else if (!!startDate) where['created_at'] = {$gte: startDate};
-        else if (!!endDate) where['created_at'] = {$lte: endDate};
-        return Users.count({where: where}).then(count=> {
-            return Users.findPage(Object.assign({
-                    where: where,
-                    include: {model: UsersVip.sequlize},
-                }, sortType ? {order: `article_num ${sortType == 1 ? `ASC` : `DESC`}`} : {}),
-                page, count, sortType, pagesize);
-        }).then(result=> {
-            result.list.map(users=> {
-                Users.formatUser(users.dataValues);
-                UsersVip.formatUserVip(users.users_vip && users.users_vip.dataValues);
-            });
-            return result;
         });
     }
 }

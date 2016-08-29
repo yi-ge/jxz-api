@@ -24,6 +24,7 @@ import HousesComment from './housescomment';
 import UsersAt from './usersat';
 import ArticlesComment from './articlescomment';
 import UsersFavorite from './usersfavorite';
+import UsersMsg from './usersmsg';
 
 export {
     Users, //会员
@@ -49,4 +50,5 @@ export {
     ActivitysApply,
     ActivitysLocation,
     UsersAt, //用户关注
+    UsersMsg, //用户消息
 }

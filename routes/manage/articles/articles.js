@@ -16,6 +16,16 @@ router.post('/articlelist', (req, res, next)=> {
         msg: '查询失败'
     });
 });
+//查询用户文章列表
+router.post('/finduserartilelist',(req,res,next)=>{
+    let param = req.body;
+    let page = param.page,
+        user_id = param.user_id;
+    next({
+        $promise: ArticlesService.findUserArticleAll(user_id,page),
+        msg: '用户文章查询失败'
+    });
+});
 //添加文章
 router.post('/addarticle', (req, res, next)=> {
     let param = req.body;

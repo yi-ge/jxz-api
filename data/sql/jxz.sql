@@ -890,7 +890,7 @@ CREATE TABLE `users_msg` (
   `content` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '内容',
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '修改时间',
-  `status` tinyint(4) DEFAULT '1' COMMENT '状态1正常0删除',
+  `status` tinyint(4) DEFAULT '1' COMMENT '状态1正常0未读',
   `read_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '读取时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户消息';

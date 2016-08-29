@@ -14,17 +14,23 @@ router.post('/createvip', (req, res, next)=> {
         msg: '用户录入失败'
     });
 });
-//查询vip关联列表
-router.post('/userviplist', (req, res, next)=> {
+//获取vip列表
+router.post('/list', (req, res, next)=> {
     let param = req.body;
-    let page = param.page, sortType = req.body.sortType,
-        startDate = req.body.startDate,
-        endDate = req.body.endDate,
-        is_cover = req.body.is_cover;
+    let page = param.page,
+        sortType = param.sortType,
+        pagesize = param.pagesize;
     next({
-        $promise:VipService.findUserToVipList(page, sortType, startDate, endDate, is_cover),
-        msg: 'vip查询失败'
+        $promise:VipService.findVipList(page,sortType,pagesize),
+        msg: '获取列表失败'
     });
 });
-
+router.post('/details',(req,res,next)=>{
+    let param = req.body;
+    let id = param.id;
+    next({
+        $promise:VipService.vipDetails(id),
+        msg: '用户录入失败'
+    });
+});
 export default router;

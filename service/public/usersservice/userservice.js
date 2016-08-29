@@ -1,4 +1,4 @@
-import {Users,UsersOpenid,UsersAt,UsersVip} from './../../../core';
+import {Users,UsersOpenid,UsersAt,UsersVip,UsersMsg} from './../../../core';
 class UserService {
     /**
      * 通过微信openid注册＃选者
@@ -55,6 +55,36 @@ class UserService {
         });
     }
 
+    /**
+     * 查询关联了vip的用户(后台)
+     * @param page
+     * @param sortType
+     * @param startDate
+     * @param endDate
+     * @param is_cover
+     * @param pagesize
+     * @returns {Promise.<T>}
+     */
+    findUserToVipList(page, sortType, startDate, endDate, is_cover, pagesize) {
+        let where = {user_vip_id: {$ne: null}};
+        !!is_cover && (where['is_cover'] = is_cover);
+        if (!!startDate && !!endDate) where['created_at'] = {$between: [startDate, endDate]};
+        else if (!!startDate) where['created_at'] = {$gte: startDate};
+        else if (!!endDate) where['created_at'] = {$lte: endDate};
+        return Users.count({where: where}).then(count=> {
+            return Users.findPage(Object.assign({
+                    where: where,
+                    include: {model: UsersVip.sequlize},
+                }, sortType ? {order: `article_num ${sortType == 1 ? `ASC` : `DESC`}`} : {}),
+                page, count, sortType, pagesize);
+        }).then(result=> {
+            result.list.map(users=> {
+                Users.formatUser(users.dataValues);
+                UsersVip.formatUserVip(users.users_vip && users.users_vip.dataValues);
+            });
+            return result;
+        });
+    }
     /**
      * 通过微信openid查询精选者 不存在就创建 存在如果有修改则同步数据库修改 （微信端服务）
      * @param openid
@@ -204,6 +234,23 @@ class UserService {
      */
     countAtUser(id){
         return UsersAt.count({where:{at_user_id:id}});
+    }
+
+    /**
+     * 给别人发私信
+     * @param user_id
+     * @param from_user_id
+     * @param content
+     * @returns {*}
+     */
+    sponsoredMsg(user_id,from_user_id,content){
+        return UsersMsg.transaction(t=>{
+            return UsersMsg.insert(UsersMsg.createModel(user_id,from_user_id,content),{
+                transaction:t
+            }).then(result=>{
+                return UsersMsg.formateUserMsg(result.dataValues);
+            })
+        });
     }
 }
 export default new UserService();

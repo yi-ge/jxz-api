@@ -1,11 +1,13 @@
 import Users from './users';
-import UsersOpenid from './../usersopenid/usersopenid';
-import Articles from './../articles/articles';
-import SysUsers from './../sysusers/sysusers';
-import UsersVip from './../usersvip/usersvip';
-import HousesComment from './../housescomment/housescomment';
-import UsersAt from './../usersat/usersat';
-import UsersFavorite from './../usersfavorite/usersfavorite';
+import UsersOpenid from './../usersopenid/usersopenid'; //第三方
+import Articles from './../articles/articles'; //文章
+import SysUsers from './../sysusers/sysusers';  // 系统用户
+import UsersVip from './../usersvip/usersvip'; // vip用户
+import HousesComment from './../housescomment/housescomment'; //评论酒店
+import UsersAt from './../usersat/usersat'; // 关注用户
+import UsersFavorite from './../usersfavorite/usersfavorite'; // 关注 点赞文章
+import ArticlesComment from './../articlescomment/articlescomment'; //文章评论
+import UsersMsg from './../usersmsg/usersmsg'; //用户私信
 //一个用户对应一个openid
 Users.sequlize.hasOne(UsersOpenid.sequlize, {
     foreignKey: "user_id"
@@ -62,5 +64,19 @@ Users.sequlize.belongsToMany(Articles.sequlize,{
     foreignKey:'user_id',
     otherKey:'favorite_source_id',
     as:'like_article',
+});
+//用户关联多个文章评论
+Users.sequlize.hasMany(ArticlesComment.sequlize,{
+    foreignKey:'comment_user_id',
+});
+//给其他人发私信
+Users.sequlize.hasMany(UsersMsg.sequlize,{
+   foreignKey:'user_id',
+    as:'sponsored_msg'
+});
+//接收其他人私信
+Users.sequlize.hasMany(UsersMsg.sequlize,{
+    foreignKey:'user_id',
+    as:'receive_msg'
 });
 export default Users;

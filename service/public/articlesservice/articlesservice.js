@@ -1,4 +1,4 @@
-import {Articles,Users,Houses,SysUsers,SysDict,UsersFavorite} from './../../../core';
+import {Articles,Users,Houses,SysUsers,SysDict,UsersFavorite,ArticlesComment} from './../../../core';
 class ArticlesService {
     /**
      * 添加一篇文章
@@ -22,6 +22,24 @@ class ArticlesService {
             });
         }).then(articles=> {
             return Articles.formatArticle(articles.dataValues);
+        });
+    }
+
+    /**
+     * 评论文章（微信端）
+     * @param articles_id
+     * @param comment_user_id
+     * @param content
+     * @param creater
+     * @returns {*}
+     */
+    wetchatCommentArticle(articles_id,comment_user_id,content){
+        return ArticlesComment.transaction(t=>{
+            return ArticlesComment.insert(ArticlesComment.createModel(articles_id,comment_user_id,content,comment_user_id,comment_user_id),{
+                transaction:t
+            }).then(result=>{
+                return ArticlesComment.formatArticleComment(result.dataValues);
+            })
         });
     }
 
@@ -260,6 +278,23 @@ class ArticlesService {
     }
 
     /**
+     * 查询用户的所有文章列表(通过作者)
+     * @param user_id
+     * @param page
+     * @param pagesize
+     * @returns {*}
+     */
+    findUserArticleAll(user_id,page,pagesize){
+        let where = {author:user_id};
+        return Articles.count({where:where}).then(count=>{
+            return Articles.findPage({
+                where: where,
+                order: `created_at DESC`
+            }, page, count, 2,pagesize);
+        });
+    }
+
+    /**
      * 收藏文章
      * @param user_id
      * @param favorite_source_id
@@ -369,6 +404,27 @@ class ArticlesService {
      */
     isLikeArticle(user_id, favorite_source_id) {
         return UsersFavorite.isCollection(user_id, favorite_source_id, 2);
+    }
+
+    /**
+     * 查询文章评论
+     * @param article_id
+     * @param page
+     * @param pagesize
+     */
+    findArticleCommentList(article_id,page,pagesize){
+        let where = {articles_id:article_id};
+        return ArticlesComment.count({where:where}).then(count=>{
+            return ArticlesComment.findPage({
+                where:where,
+                order:`created_at DESC`
+            },page,count,2,pagesize);
+        }).then(result=>{
+            result.list.map(comment=>{
+               ArticlesComment.formatArticleComment(comment.dataValues);
+            });
+            return result;
+        });
     }
 }
 export default new ArticlesService();
