@@ -25,11 +25,31 @@ router.post('/editroles',(req,res,next)=>{
         msg: '角色编辑失败'
     });
 });
-//添加权限
+//添加菜单权限
 router.post('/addresources', (req, res, next)=> {
     let param = req.body;
+    let name = param.name,
+        res_desc = param.res_desc,
+        level = param.level,
+        parent_id = param.parent_id,
+        url = param.url,
+        creater = param.creater;
     next({
-        $promise:ResourceService.addResources(param.name, param.url, param.res_desc),
+        $promise:ResourceService.addResources(name, res_desc,level, parent_id, url, creater),
+        msg: '权限添加失败'
+    });
+});
+//添加功能权限
+router.post('/addfacility', (req, res, next)=> {
+    let param = req.body;
+    let name = param.name,
+        res_desc = param.res_desc,
+        level = param.level,
+        parent_id = param.parent_id,
+        url = param.url,
+        creater = param.creater;
+    next({
+        $promise:ResourceService.addFacilityResource(name, res_desc,level, parent_id, url, creater),
         msg: '权限添加失败'
     });
 });
