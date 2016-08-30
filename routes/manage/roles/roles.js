@@ -64,8 +64,12 @@ router.post('/updateresource', (req, res, next)=> {
 //权限编辑
 router.post('/editresource', (req, res, next)=> {
     let param = req.body;
+    let id = param.id,
+        name = param.name,
+        url = param.url,
+        res_desc = param.res_desc;
     next({
-        $promise:ResourceService.editResource(param.id, param.name, param.res_desc, param.url),
+        $promise:ResourceService.editResource(id, name, res_desc, url),
         msg: '编辑修改失败'
     });
 });
@@ -116,19 +120,12 @@ router.post('/findallresource', (req, res, next)=> {
         msg: '查询失败'
     });
 });
-//查询权限列表（所有）
-router.get('/findallresource', (req, res, next)=> {
-    next({
-        $promise:ResourceService.findAllResource(),
-        msg: '查询失败'
-    });
-});
 //查询权限下功能权限列表（所有）
-router.get('/findmenuchildfacility', (req, res, next)=> {
+router.post('/findmenuchildfacility', (req, res, next)=> {
     let id = req.body.id;
     next({
         $promise:ResourceService.findMenuChildFacility(id),
-        msg: '查询失败'
+        msg: '查询功能失败'
     });
 });
 export default router;

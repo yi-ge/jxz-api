@@ -70,6 +70,7 @@ class VipService {
         return UsersVip.findAccountName(account_name).then(vip=> {
             if (!!vip) return UsersVip.errorPromise('用户已存在');
             return UsersVip.transaction(t=> {
+                console.log(password);
                 return UsersVip.insert(UsersVip.createModel(account_name, null, null, 2, password, UsersVip.NORECHARGE, UsersVip.BINDING), {
                     transaction: t,
                 }).then(vip=> {

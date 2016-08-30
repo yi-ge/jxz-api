@@ -458,7 +458,7 @@ class ArticlesService {
         where[`$or`] = [
             Houses.where(Houses.col('houses.name'), 'like', `%${text}%`),
             SysDict.where(SysDict.col('houses.regions.name'), 'like', `%${text}%`),
-            SysDict.where(SysDict.col('houses.regions.country.name'), 'like', `%${text}%`),
+            SysDict.where(SysDict.col('houses.regions.country_p.name'), 'like', `%${text}%`),
         ];
         return Articles.count({
             where: where,
@@ -470,7 +470,7 @@ class ArticlesService {
                     as: 'regions',
                     include: [{
                         model: SysDict.sequlize,
-                        as: 'country',
+                        as: 'country_p',
                     }]
                 }]
             }]
@@ -491,7 +491,7 @@ class ArticlesService {
                         attributes: [],
                         include: [{
                             model: SysDict.sequlize,
-                            as: 'country',
+                            as: 'country_p',
                             attributes: [],
                         }]
                     }]

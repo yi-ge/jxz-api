@@ -75,6 +75,7 @@ class ResourceService {
      */
     addResources(name, res_desc,level, parent_id, url, creater) {
         let $promise;
+        if(level != 1 && parent_id == void(0)) return SysResources.errorPromise("参数不正确");
         switch (level){
             case SysResources.ONE:$promise = this.addOneResource(name, res_desc, url, creater);break;
             case SysResources.SECOND:$promise = this.addSecondResource(name, res_desc,parent_id, url, creater);break;
@@ -155,7 +156,7 @@ class ResourceService {
      * @returns {*}
      */
     findMenuChildFacility(id){
-        let where = {level:{$ne:1},parent_id:id};
+        let where = {level:{$ne:1},parent_id:id,type:SysResources.TYPE.BUTTON};
         return SysResources.findList({where:where}).then(result=>{
             result.list.map(resource=>{
                 SysResources.formatSysResources(resource.dataValues);

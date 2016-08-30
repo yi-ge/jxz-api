@@ -34,6 +34,6 @@ SysDict.sequlize.hasMany(SysDict.sequlize, {
 SysDict.sequlize.belongsTo(SysDict.sequlize, {
     foreignKey: 'parent_id',
     targetKey: 'id',
-    as: 'country'
+    as: 'country_p'
 });
 export default SysDict;
