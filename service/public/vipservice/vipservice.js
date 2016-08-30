@@ -42,7 +42,7 @@ class VipService {
     findNotBindVip(page, startDate, endDate, user_status, account_name, pagesize = 20) {
         let where = {};
         !!user_status && (where['user_status'] = user_status);
-        !!account_name && (where['account_name'] = {$like:`%${account_name}%`});
+        !!account_name && (where['account_name'] = {$like: `%${account_name}%`});
         if (!!startDate && !!endDate) where['created_at'] = {$between: [startDate, endDate]};
         else if (!!startDate) where['created_at'] = {$gte: startDate};
         else if (!!endDate) where['created_at'] = {$lte: endDate};
@@ -66,7 +66,7 @@ class VipService {
      * @returns {*}
      */
     registerVip(account_name, users_id, password) {
-        if(!users_id) return UsersVip.errorPromise("精选者id格式不正确");
+        if (!users_id) return UsersVip.errorPromise("精选者id格式不正确");
         return UsersVip.findAccountName(account_name).then(vip=> {
             if (!!vip) return UsersVip.errorPromise('用户已存在');
             return UsersVip.transaction(t=> {
@@ -114,16 +114,17 @@ class VipService {
      * @param email
      * @returns {*}
      */
-    modifyInfo(account_name,user_name,email){
-        return UsersVip.findAccountName(account_name).then(vip=>{
-            if(!vip) return UsersVip.errorPromise('用户不存在');
-            return UsersVip.transaction(t=>{
-                return UsersVip.update({
-                    user_name:user_name,
-                    email:email
-                },{
-                    where:{account_name:account_name},
-                    transaction:t,
+    modifyInfo(account_name, user_name, email) {
+        let update = {};
+        if (!account_name) return UsersVip.errorPromise('账号格式不正确');
+        user_name != void(0) && (update.user_name = user_name);
+        email != void(0) && (update.email = email);
+        return UsersVip.findAccountName(account_name).then(vip=> {
+            if (!vip) return UsersVip.errorPromise('用户不存在');
+            return UsersVip.transaction(t=> {
+                return UsersVip.update(update, {
+                    where: {account_name: account_name},
+                    transaction: t,
                     lock: t.LOCK.UPDATE
                 });
             });
@@ -134,15 +135,16 @@ class VipService {
      * 重置密码
      * @returns {*}
      */
-    resizePassword(account_name,password){
+    resizePassword(account_name, password) {
+        if(!account_name || !password) return UsersVip.errorPromise('参数不正确');
         return UsersVip.findAccountName(account_name).then(vip=> {
-            if(!vip) return UsersVip.errorPromise('用户不存在');
+            if (!vip) return UsersVip.errorPromise('用户不存在');
             return UsersVip.transaction(t=> {
                 return UsersVip.update({
-                    passwd:UsersVip.encrypMD5(password),
-                },{
-                    where:{account_name:account_name},
-                    transaction:t,
+                    passwd: UsersVip.encrypMD5(password),
+                }, {
+                    where: {account_name: account_name},
+                    transaction: t,
                     lock: t.LOCK.UPDATE
                 });
             });
