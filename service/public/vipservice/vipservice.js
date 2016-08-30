@@ -107,5 +107,46 @@ class VipService {
             });
         });
     }
+
+    /**
+     * 修改vip的基本信息
+     * @param user_name
+     * @param email
+     * @returns {*}
+     */
+    modifyInfo(account_name,user_name,email){
+        return UsersVip.findAccountName(account_name).then(vip=>{
+            if(!vip) return UsersVip.errorPromise('用户不存在');
+            return UsersVip.transaction(t=>{
+                return UsersVip.update({
+                    user_name:user_name,
+                    email:email
+                },{
+                    where:{account_name:account_name},
+                    transaction:t,
+                    lock: t.LOCK.UPDATE
+                });
+            });
+        });
+    }
+
+    /**
+     * 重置密码
+     * @returns {*}
+     */
+    resizePassword(account_name,password){
+        return UsersVip.findAccountName(account_name).then(vip=> {
+            if(!vip) return UsersVip.errorPromise('用户不存在');
+            return UsersVip.transaction(t=> {
+                return UsersVip.update({
+                    passwd:UsersVip.encrypMD5(password),
+                },{
+                    where:{account_name:account_name},
+                    transaction:t,
+                    lock: t.LOCK.UPDATE
+                });
+            });
+        });
+    }
 }
 export default new VipService();

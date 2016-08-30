@@ -25,5 +25,25 @@ router.post('/login', (req, res, next)=> {
         msg: '用户名或者密码错误'
     });
 });
-
+//修改个人信息
+router.post('/modifyinfo', (req, res, next)=> {
+    let param = req.body;
+    let account_name = param.account_name,
+        user_name = param.user_name,
+        email = param.email;
+    next({
+        $promise: VipService.modifyInfo(account_name,user_name,email),
+        msg: '用户名或者密码错误'
+    });
+});
+//重置密码
+router.post('/resizepassword', (req, res, next)=> {
+    let param = req.body;
+    let account_name = param.account_name,
+        password = param.password;
+    next({
+        $promise: VipService.resizePassword(account_name,password),
+        msg: '用户名或者密码错误'
+    });
+});
 export default router;
