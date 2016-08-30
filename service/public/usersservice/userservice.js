@@ -256,5 +256,25 @@ class UserService {
             })
         });
     }
+
+    /**
+     * 编辑精选者资料
+     * @returns {*}
+     */
+    editInfo(id,user_name,sex,personalized){
+        let update = {};
+        user_name != void(0) && (update.user_name = user_name);
+        sex != void(0) && (update.sex = Users.getSexValue(sex));
+        personalized != void(0) && (update.personalized = personalized);
+        if(!id) return Users.errorPromise('参数格式不正确');
+        return Users.transaction(t=>{
+            return Users.update(update,{
+                where:{id:id},
+                transaction:t,
+                lock: t.LOCK.UPDATE
+            });
+        });
+    }
+
 }
 export default new UserService();

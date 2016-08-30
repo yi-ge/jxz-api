@@ -80,6 +80,18 @@ router.post('/getinfo', (req, res, next)=> {
         msg: '获取用户信息失败'
     });
 });
+//编辑用户信息
+router.post('/editinfo', (req, res, next)=> {
+    let param = req.body;
+    let user_id = param.user_id,
+        user_name = param.user_name,
+        personalized = param.personalized,
+        sex = param.sex;
+    next({
+        $promise: UsersService.editInfo(user_id,user_name,sex,personalized),
+        msg: '编辑信息失败'
+    });
+});
 //发私信
 router.post('/sponsoredmsg', (req, res, next)=> {
     let param = req.body;

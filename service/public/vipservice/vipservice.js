@@ -109,7 +109,7 @@ class VipService {
     }
 
     /**
-     * 修改vip的基本信息
+     * 修改vip的基本信息 前端
      * @param user_name
      * @param email
      * @returns {*}
@@ -132,7 +132,7 @@ class VipService {
     }
 
     /**
-     * 重置密码
+     * 重置密码 前端
      * @returns {*}
      */
     resizePassword(account_name, password) {
