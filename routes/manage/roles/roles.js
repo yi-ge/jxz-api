@@ -116,4 +116,19 @@ router.post('/findallresource', (req, res, next)=> {
         msg: '查询失败'
     });
 });
+//查询权限列表（所有）
+router.get('/findallresource', (req, res, next)=> {
+    next({
+        $promise:ResourceService.findAllResource(),
+        msg: '查询失败'
+    });
+});
+//查询权限下功能权限列表（所有）
+router.get('/findmenuchildfacility', (req, res, next)=> {
+    let id = req.body.id;
+    next({
+        $promise:ResourceService.findMenuChildFacility(id),
+        msg: '查询失败'
+    });
+});
 export default router;

@@ -11,7 +11,7 @@ class ArticlesService {
         return SysUsers.getJXZUser(sys_id).then(user=> { //获取管理员精选者
             return Users.getArticleCount(user.id).then(count=> { //统计发布的文章数
                 return Articles.transaction(t=> {
-                    return Articles.insert(Articles.createModel(title, content, user.id, 2, user.id, user.id), {
+                    return Articles.insert(Articles.createModel(title, content, user.id, Articles.AUTHORTYPE.BACKSTAGE, Articles.DRAFT.NO, user.id, user.id), {
                         transaction: t
                     }).then(articles=> {
                         return Users.updateArticleNum(user.id, count + 1, t).then(()=> {
@@ -37,7 +37,7 @@ class ArticlesService {
         return Users.getArticleCount(user_id).then(count=> {
             if (count == 0) return Users.errorPromise('用户不存在');
             return Articles.transaction(t=> {
-                return Articles.insert(Articles.createModel(title, content, user_id, 1, user_id, user_id), {
+                return Articles.insert(Articles.createModel(title, content, user_id, Articles.AUTHORTYPE.FRONT, Articles.DRAFT.YES, user_id, user_id), {
                     transaction: t
                 }).then(articles=> {
                     return Users.updateArticleNum(user_id, count + 1, t).then(()=> {
@@ -79,27 +79,10 @@ class ArticlesService {
      * @returns {*|Promise.<T>}
      */
     findPageList(page, title, startDate, endDate, status, house_name, sortType, pagesize) {
-        let where = {};
+        let where = Object.assign({is_draft:Articles.DRAFT.NO}, Articles.getAuditStatusWhere(status));
         if (!!startDate && !!endDate) where['created_at'] = {$between: [startDate, endDate]};
         else if (!!startDate) where['created_at'] = {$gte: startDate};
         else if (!!endDate) where['created_at'] = {$lte: endDate};
-        switch (parseInt(status)) {
-            case 0:
-                where['check_status'] = 0;
-                break;
-            case 1:
-                where['check_status'] = 1;
-                break;
-            case 2:
-                where['check_status'] = 2;
-                break;
-            case 3:
-                where['is_off'] = 0;
-                break;
-            case 4:
-                where['is_off'] = 1;
-                break;
-        }
         !!title && (where['title'] = {$like: `%${title}%`});
         !!house_name && (where['$and'] = [Articles.where(Articles.col(`${Houses.sequlize.name}.name`), 'like', `%${house_name}%`)]);
         return Articles.count({where: where}).then(count=> {
@@ -189,7 +172,6 @@ class ArticlesService {
         }).then(article=> {
             article.user && Users.formatUser(article.user.dataValues);
             return Articles.formatArticle(article.dataValues);
-            ;
         });
     }
 
@@ -229,7 +211,7 @@ class ArticlesService {
      * @returns {Promise.<T>}
      */
     findWetcharArticlesPageList(page, status, sortType = 2, pagesize = 20) {
-        let where = {is_off: 1}, order;
+        let where = Articles.getAuditStatusWhere(Articles.AUDITING.HIGHLINE), order;
         switch (status) {
             case 0:
                 order = `created_at DESC`;
@@ -282,7 +264,7 @@ class ArticlesService {
      * @returns {*}
      */
     findUserArticleOnline(user_id, page) {
-        let where = {author: user_id, is_off: 1};
+        let where = Object.assign({author:user_id},Articles.getAuditStatusWhere(Articles.AUDITING.HIGHLINE));
         return Articles.count({where: where}).then(count=> {
             return Articles.findPage({
                 where: where,
@@ -325,14 +307,15 @@ class ArticlesService {
      * @returns {*}
      */
     collectionArticle(user_id, favorite_source_id) {
-        return UsersFavorite.isCollection(user_id, favorite_source_id, 1).then(result=> {
+        let classType = UsersFavorite.FAVORITECLASS.COLLECT;
+        return UsersFavorite.isCollection(user_id, favorite_source_id, classType).then(result=> {
             if (result.iscollection) return UsersFavorite.errorPromise("已经收藏该文章");
             return true;
         }).then(()=> {
             return UsersFavorite.transaction(t=> {
-                return UsersFavorite.collection(user_id, favorite_source_id, 1, t)
+                return UsersFavorite.collection(user_id, favorite_source_id, classType, t)
                     .then(result=> {
-                        return UsersFavorite.countSourceFavorite(favorite_source_id, 1)
+                        return UsersFavorite.countSourceFavorite(favorite_source_id, classType)
                             .then(count=> {
                                 return Articles.updateAtNum(favorite_source_id, count + 1, t);
                             }).then(()=> {
@@ -351,9 +334,10 @@ class ArticlesService {
      * @returns {*}
      */
     cancelArticle(user_id, favorite_source_id) {
+        let classType = UsersFavorite.FAVORITECLASS.COLLECT;
         return UsersFavorite.transaction(t=> {
-            return UsersFavorite.cancel(user_id, favorite_source_id, 1, t).then(result=> {
-                return UsersFavorite.countSourceFavorite(favorite_source_id, 1)
+            return UsersFavorite.cancel(user_id, favorite_source_id, classType, t).then(result=> {
+                return UsersFavorite.countSourceFavorite(favorite_source_id, classType)
                     .then(count=> {
                         count > 0 ? count = count - 1 : 0;
                         return Articles.updateAtNum(favorite_source_id, count, t);
@@ -371,7 +355,8 @@ class ArticlesService {
      * @returns {*}
      */
     isCollectionArticle(user_id, favorite_source_id) {
-        return UsersFavorite.isCollection(user_id, favorite_source_id, 1);
+        let classType = UsersFavorite.FAVORITECLASS.COLLECT;
+        return UsersFavorite.isCollection(user_id, favorite_source_id, classType);
     }
 
     /**
@@ -381,14 +366,15 @@ class ArticlesService {
      * @returns {*}
      */
     likeArticle(user_id, favorite_source_id) {
-        return UsersFavorite.isCollection(user_id, favorite_source_id, 2).then(result=> {
+        let PRAISE = UsersFavorite.FAVORITECLASS.PRAISE;
+        return UsersFavorite.isCollection(user_id, favorite_source_id, PRAISE).then(result=> {
             if (result.iscollection) return UsersFavorite.errorPromise("已经点赞文章");
             return true;
         }).then(()=> {
             return UsersFavorite.transaction(t=> {
-                return UsersFavorite.collection(user_id, favorite_source_id, 2, t)
+                return UsersFavorite.collection(user_id, favorite_source_id, PRAISE, t)
                     .then(result=> {
-                        return UsersFavorite.countSourceFavorite(favorite_source_id, 2)
+                        return UsersFavorite.countSourceFavorite(favorite_source_id, PRAISE)
                             .then(count=> {
                                 return Articles.updateLikeNum(favorite_source_id, count + 1, t);
                             }).then(()=> {
@@ -406,10 +392,11 @@ class ArticlesService {
      * @returns {*}
      */
     cancelLikeArticle(user_id, favorite_source_id) {
+        let PRAISE = UsersFavorite.FAVORITECLASS.PRAISE;
         return UsersFavorite.transaction(t=> {
-            return UsersFavorite.cancel(user_id, favorite_source_id, 2, t)
+            return UsersFavorite.cancel(user_id, favorite_source_id, PRAISE, t)
                 .then(result=> {
-                    return UsersFavorite.countSourceFavorite(favorite_source_id, 2)
+                    return UsersFavorite.countSourceFavorite(favorite_source_id, PRAISE)
                         .then(count=> {
                             count > 0 ? count = count - 1 : 0;
                             return Articles.updateLikeNum(favorite_source_id, count, t);
@@ -427,7 +414,8 @@ class ArticlesService {
      * @returns {*}
      */
     isLikeArticle(user_id, favorite_source_id) {
-        return UsersFavorite.isCollection(user_id, favorite_source_id, 2);
+        let PRAISE = UsersFavorite.FAVORITECLASS.PRAISE;
+        return UsersFavorite.isCollection(user_id, favorite_source_id,PRAISE);
     }
 
     /**
@@ -468,7 +456,7 @@ class ArticlesService {
         if (!text) return Articles.errorPromise("输入格式有误");
         let where = {};
         where[`$or`] = [
-            Houses.where(Houses.col('houses.name'),'like',`%${text}%`),
+            Houses.where(Houses.col('houses.name'), 'like', `%${text}%`),
             SysDict.where(SysDict.col('houses.regions.name'), 'like', `%${text}%`),
             SysDict.where(SysDict.col('houses.regions.country.name'), 'like', `%${text}%`),
         ];
@@ -489,28 +477,28 @@ class ArticlesService {
         }).then(count=> {
             return Articles.findPage({
                 where: where,
-                attributes: {exclude:'content houses_id'},
+                attributes: {exclude: 'content houses_id'},
                 include: [{
-                    model:Users.sequlize,
+                    model: Users.sequlize,
                     attributes: ['id', 'user_name', 'avatar', 'user_vip_id']
-                },{
+                }, {
                     model: Houses.sequlize,
                     as: 'houses',
                     attributes: ['id', 'address'],
                     include: [{
                         model: SysDict.sequlize,
                         as: 'regions',
-                        attributes:[],
+                        attributes: [],
                         include: [{
                             model: SysDict.sequlize,
                             as: 'country',
-                            attributes:[],
+                            attributes: [],
                         }]
                     }]
                 }]
             }, page, count);
-        }).then(result=>{
-            result.list.map(article=>{
+        }).then(result=> {
+            result.list.map(article=> {
                 Articles.formatArticle(article.dataValues);
             });
             return result;

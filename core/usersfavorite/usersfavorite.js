@@ -4,11 +4,18 @@
 import usersfavorite from './usersfavorite.config';
 import Base from './../base';
 //1是收藏 2是点赞
+const FAVORITECLASS = {
+    COLLECT: 1,
+    PRAISE: 2
+};
+
+
 class UsersFavorite extends Base {
     constructor() {
         super("users_favorite", usersfavorite, {
             tableName: 'users_favorite'
         });
+        this.FAVORITECLASS = FAVORITECLASS;
     }
 
     createModel(user_id, favorite_source_id, favorite_type) {
@@ -34,11 +41,11 @@ class UsersFavorite extends Base {
      * @param user_id
      * @param favorite_type
      */
-    countUserFavorite(user_id,favorite_type){
+    countUserFavorite(user_id, favorite_type) {
         return this.count({
-            where:{
-                user_id:user_id,
-                favorite_type:favorite_type
+            where: {
+                user_id: user_id,
+                favorite_type: favorite_type
             }
         });
     }
@@ -48,11 +55,11 @@ class UsersFavorite extends Base {
      * @param favorite_source_id
      * @param favorite_type
      */
-    countSourceFavorite(favorite_source_id,favorite_type){
+    countSourceFavorite(favorite_source_id, favorite_type) {
         return this.count({
-            where:{
-                favorite_source_id:favorite_source_id,
-                favorite_type:favorite_type
+            where: {
+                favorite_source_id: favorite_source_id,
+                favorite_type: favorite_type
             }
         });
     }
@@ -93,7 +100,7 @@ class UsersFavorite extends Base {
      * @param user_id
      * @param favorite_source_id
      */
-    isCollection(user_id, favorite_source_id,favorite_type) {
+    isCollection(user_id, favorite_source_id, favorite_type) {
         return this.count({
             where: {
                 user_id: user_id,

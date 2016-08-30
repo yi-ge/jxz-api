@@ -88,5 +88,9 @@ export default {
     like_num: {
         type: DataTypes.INTEGER(11),
         allowNull: true
+    },
+    is_draft: {
+        type: DataTypes.INTEGER(4),
+        allowNull: true
     }
 };

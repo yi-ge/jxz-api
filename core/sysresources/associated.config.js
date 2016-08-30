@@ -8,28 +8,16 @@ SysResources.sequlize.belongsToMany(SysRoles.sequlize, {
     otherKey: "role_id"
 });
 
-//一级对应多个二级
+//一级对应多个下一级
 SysResources.sequlize.hasMany(SysResources.sequlize,{
     foreignKey:'parent_id',
-    as:'second'
+    as:'resource_c'
 });
-//二级对应一个一级
+//下一级对应多个上一级
 SysResources.sequlize.belongsTo(SysResources.sequlize,{
     foreignKey:'parent_id',
     targetKey:'id',
-    as:'one'
-});
-//二级对应多个三级
-SysResources.sequlize.hasMany(SysResources.sequlize,{
-    foreignKey:'parent_id',
-    targetKey:'id',
-    as:'three'
-});
-//三级属于一个二级
-SysResources.sequlize.belongsTo(SysResources.sequlize,{
-    foreignKey:'parent_id',
-    targetKey:'id',
-    as:'second'
+    as:'resource_p',
 });
 //一个权限对应多个功能
 SysResources.sequlize.hasMany(SysResources.sequlize,{

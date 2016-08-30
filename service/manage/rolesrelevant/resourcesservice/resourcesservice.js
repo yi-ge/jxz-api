@@ -129,21 +129,37 @@ class ResourceService {
     }
 
     /**
-     * 查询所有权限
+     * 查询所有菜单权限
      * @returns {Promise.<T>}
      */
     findAllResource() {
+        let where = {level:SysResources.ONE,type:SysResources.TYPE.MENU};
         return SysResources.findList({
-            where:{level:SysResources.ONE,type:SysResources.TYPE.MENU},
+            where:where,
             include:[{
                 model:SysResources.sequlize,
-                as:'second',
+                as:'resource_c',
                 include:[{
                     model:SysResources.sequlize,
-                    as:'three',
+                    as:'resource_c',
                 }]
             }]
         }).then(result=> {
+            return result;
+        });
+    }
+
+    /**
+     * 查询权限下功能权限
+     * @param id
+     * @returns {*}
+     */
+    findMenuChildFacility(id){
+        let where = {level:{$ne:1},parent_id:id};
+        return SysResources.findList({where:where}).then(result=>{
+            result.list.map(resource=>{
+                SysResources.formatSysResources(resource.dataValues);
+            });
             return result;
         });
     }

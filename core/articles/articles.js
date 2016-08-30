@@ -4,15 +4,31 @@
 import articles from './articles.config';
 import Base from './../base';
 import UsersFavorite from './../usersfavorite/usersfavorite';
+const AUTHORTYPE = {//作者类型
+    FRONT:1,
+    BACKSTAGE:2
+},AUDITING = { //审核状态
+    NOAUDIT:0,
+    PASS:1,
+    REJECT:2,
+    OFFLINE:3,
+    HIGHLINE:4
+},DRAFT={ // 是否是草稿
+    YES:1,
+    NO:2
+};
 
 class Articles extends Base {
     constructor() {
         super("articles", articles, {
             tableName: 'articles'
         });
+        this.AUTHORTYPE = AUTHORTYPE;
+        this.AUDITING = AUDITING;
+        this.DRAFT = DRAFT;
     }
 
-    createModel(title, content, author, author_type, creater, modifier) {
+    createModel(title, content, author, author_type,is_draft=DRAFT.YES, creater, modifier) {
         let model = {
             id: this.generateId(),
             title: title,
@@ -29,6 +45,7 @@ class Articles extends Base {
             read_num: 0,
             at_num: 0,
             like_num: 0,
+            is_draft:is_draft
         };
         return model;
     }
@@ -74,6 +91,25 @@ class Articles extends Base {
             transaction: t,
             lock: t.LOCK.UPDATE
         });
+    }
+
+    /**
+     * 获取审核状态对象
+     * 0未审核1通过2拒绝3离线4上线
+     * @param status
+     * @returns {{}}
+     */
+    getAuditStatusWhere(status){
+        let whereAuditStatus = {};
+        switch (parseInt(status)) {
+            case AUDITING.NOAUDIT:whereAuditStatus['check_status'] = 0;break;
+            case AUDITING.PASS:whereAuditStatus['check_status'] = 1;break;
+            case AUDITING.REJECT:whereAuditStatus['check_status'] = 2;break;
+            case AUDITING.OFFLINE:whereAuditStatus['is_off'] = 0;break;
+            case AUDITING.HIGHLINE:whereAuditStatus['is_off'] = 1;whereAuditStatus['check_status']=1;break;
+            default: break;
+        }
+        return whereAuditStatus;
     }
 
     /**
