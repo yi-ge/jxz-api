@@ -66,6 +66,7 @@ class VipService {
      * @returns {*}
      */
     registerVip(account_name, users_id, password) {
+        if(!users_id) return UsersVip.errorPromise("精选者id格式不正确");
         return UsersVip.findAccountName(account_name).then(vip=> {
             if (!!vip) return UsersVip.errorPromise('用户已存在');
             return UsersVip.transaction(t=> {

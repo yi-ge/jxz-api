@@ -22,6 +22,17 @@ router.post('/userarticlelistonline', (req, res, next)=> {
         msg: '用户文章查询失败'
     });
 });
+//发布文章
+router.post('/release',(req,res,next)=>{
+    let param = req.body;
+    let user_id = param.user_id,
+        title = param.title,
+        content = param.content;
+    next({
+        $promise: ArticlesService.wetchatAddArticles(user_id,title,content),
+        msg: '用户文章查询失败'
+    });
+});
 //评论文章
 router.post('/commentarticle',(req,res,next)=>{
     let param = req.body;
@@ -112,6 +123,17 @@ router.post('/view', (req, res, next)=> {
     next({
         $promise: ArticlesService.viewArticle(id),
         msg: '阅读文章失败'
+    });
+});
+
+//查询酒店
+router.post('/search',(req,res,next)=>{
+    let param = req.body;
+    let text = param.text,
+        page = param.page;
+    next({
+        $promise: ArticlesService.vagueSearchHouses(text, page),
+        msg: '酒店查询失败'
     });
 });
 export default router;

@@ -26,6 +26,29 @@ class ArticlesService {
     }
 
     /**
+     * 前端用户发布文章
+     * @param user_id
+     * @param title
+     * @param content
+     * @returns {*}
+     */
+    wetchatAddArticles(user_id, title, content) {
+        if (!title || !content)return Articles.errorPromise('文章格式不正确');
+        return Users.getArticleCount(user_id).then(count=> {
+            if (count == 0) return Users.errorPromise('用户不存在');
+            return Articles.transaction(t=> {
+                return Articles.insert(Articles.createModel(title, content, user_id, 1, user_id, user_id), {
+                    transaction: t
+                }).then(articles=> {
+                    return Users.updateArticleNum(user_id, count + 1, t).then(()=> {
+                        return articles;
+                    });
+                });
+            });
+        });
+    }
+
+    /**
      * 评论文章（微信端）
      * @param articles_id
      * @param comment_user_id
@@ -33,12 +56,12 @@ class ArticlesService {
      * @param creater
      * @returns {*}
      */
-    wetchatCommentArticle(articles_id,comment_user_id,content){
-        if(!content) return ArticlesComment.errorPromise("评论不能为空");
-        return ArticlesComment.transaction(t=>{
-            return ArticlesComment.insert(ArticlesComment.createModel(articles_id,comment_user_id,content,comment_user_id,comment_user_id),{
-                transaction:t
-            }).then(result=>{
+    wetchatCommentArticle(articles_id, comment_user_id, content) {
+        if (!content) return ArticlesComment.errorPromise("评论不能为空");
+        return ArticlesComment.transaction(t=> {
+            return ArticlesComment.insert(ArticlesComment.createModel(articles_id, comment_user_id, content, comment_user_id, comment_user_id), {
+                transaction: t
+            }).then(result=> {
                 return ArticlesComment.formatArticleComment(result.dataValues);
             })
         });
@@ -206,7 +229,7 @@ class ArticlesService {
      * @returns {Promise.<T>}
      */
     findWetcharArticlesPageList(page, status, sortType = 2, pagesize = 20) {
-        let where = {is_off:1}, order;
+        let where = {is_off: 1}, order;
         switch (status) {
             case 0:
                 order = `created_at DESC`;
@@ -259,7 +282,7 @@ class ArticlesService {
      * @returns {*}
      */
     findUserArticleOnline(user_id, page) {
-        let where = {author: user_id,is_off:1};
+        let where = {author: user_id, is_off: 1};
         return Articles.count({where: where}).then(count=> {
             return Articles.findPage({
                 where: where,
@@ -285,13 +308,13 @@ class ArticlesService {
      * @param pagesize
      * @returns {*}
      */
-    findUserArticleAll(user_id,page,pagesize){
-        let where = {author:user_id};
-        return Articles.count({where:where}).then(count=>{
+    findUserArticleAll(user_id, page, pagesize) {
+        let where = {author: user_id};
+        return Articles.count({where: where}).then(count=> {
             return Articles.findPage({
                 where: where,
                 order: `created_at DESC`
-            }, page, count, 2,pagesize);
+            }, page, count, 2, pagesize);
         });
     }
 
@@ -413,22 +436,82 @@ class ArticlesService {
      * @param page
      * @param pagesize
      */
-    findArticleCommentList(article_id,page,pagesize){
-        let where = {articles_id:article_id};
-        return ArticlesComment.count({where:where}).then(count=>{
+    findArticleCommentList(article_id, page, pagesize) {
+        let where = {articles_id: article_id};
+        return ArticlesComment.count({where: where}).then(count=> {
             return ArticlesComment.findPage({
-                where:where,
-                order:`created_at DESC`,
-                attributes:{exclude:'comment_user_id'},
-                include:[{
-                    model:Users.sequlize,
-                    as:'comment_user',
-                    attributes:['id','avatar',`user_name`]
+                where: where,
+                order: `created_at DESC`,
+                attributes: {exclude: 'comment_user_id'},
+                include: [{
+                    model: Users.sequlize,
+                    as: 'comment_user',
+                    attributes: ['id', 'avatar', `user_name`]
                 }]
-            },page,count,2,pagesize);
+            }, page, count, 2, pagesize);
+        }).then(result=> {
+            result.list.map(comment=> {
+                ArticlesComment.formatArticleComment(comment.dataValues);
+            });
+            return result;
+        });
+    }
+
+
+    /**
+     * 模糊搜索文章
+     * @param text
+     * @param page
+     * @returns {*}
+     */
+    vagueSearchHouses(text, page) {
+        if (!text) return Articles.errorPromise("输入格式有误");
+        let where = {};
+        where[`$or`] = [
+            Houses.where(Houses.col('houses.name'),'like',`%${text}%`),
+            SysDict.where(SysDict.col('houses.regions.name'), 'like', `%${text}%`),
+            SysDict.where(SysDict.col('houses.regions.country.name'), 'like', `%${text}%`),
+        ];
+        return Articles.count({
+            where: where,
+            include: [{
+                model: Houses.sequlize,
+                as: 'houses',
+                include: [{
+                    model: SysDict.sequlize,
+                    as: 'regions',
+                    include: [{
+                        model: SysDict.sequlize,
+                        as: 'country',
+                    }]
+                }]
+            }]
+        }).then(count=> {
+            return Articles.findPage({
+                where: where,
+                attributes: {exclude:'content houses_id'},
+                include: [{
+                    model:Users.sequlize,
+                    attributes: ['id', 'user_name', 'avatar', 'user_vip_id']
+                },{
+                    model: Houses.sequlize,
+                    as: 'houses',
+                    attributes: ['id', 'address'],
+                    include: [{
+                        model: SysDict.sequlize,
+                        as: 'regions',
+                        attributes:[],
+                        include: [{
+                            model: SysDict.sequlize,
+                            as: 'country',
+                            attributes:[],
+                        }]
+                    }]
+                }]
+            }, page, count);
         }).then(result=>{
-            result.list.map(comment=>{
-               ArticlesComment.formatArticleComment(comment.dataValues);
+            result.list.map(article=>{
+                Articles.formatArticle(article.dataValues);
             });
             return result;
         });

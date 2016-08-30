@@ -44,6 +44,7 @@ Articles.sequlize.belongsToMany(Users.sequlize,{
 //文章对应多个评论
 Articles.sequlize.hasMany(ArticlesComment.sequlize,{
     foreignKey:'articles_id',
-    targetKey:'id'
+    targetKey:'id',
+    as:'comment_user'
 });
 export default Articles;

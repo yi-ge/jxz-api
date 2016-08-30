@@ -187,7 +187,7 @@ class HousesService {
      * 查询所有酒店
      * @returns {*}
      */
-    findAll(){
+    findAll() {
         return Houses.findList({
             attributes: ['id', 'name', 'is_orders']
         });

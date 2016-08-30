@@ -66,8 +66,6 @@ class ResourceService {
             });
         });
     }
-
-
     /**
      * 添加权限
      * @param name
@@ -76,12 +74,14 @@ class ResourceService {
      * @returns {*}
      */
     addResources(name, res_desc,level, parent_id, url, creater) {
+        let $promise;
         switch (level){
-            case SysResources.ONE:return this.addOneResource(name, res_desc, url, creater);break;
-            case SysResources.SECOND:return this.addSecondResource(name, res_desc,parent_id, url, creater);break;
-            case SysResources.THREE:return this.addThreeResource(name, res_desc,parent_id, url, creater);break;
-            default : return SysResources.errorPromise('参数不正确');
-        };
+            case SysResources.ONE:$promise = this.addOneResource(name, res_desc, url, creater);break;
+            case SysResources.SECOND:$promise = this.addSecondResource(name, res_desc,parent_id, url, creater);break;
+            case SysResources.THREE:$promise = this.addThreeResource(name, res_desc,parent_id, url, creater);break;
+            default : $promise = SysResources.errorPromise('参数不正确');
+        }
+        return $promise;
     }
 
     /**
@@ -133,7 +133,17 @@ class ResourceService {
      * @returns {Promise.<T>}
      */
     findAllResource() {
-        return SysResources.findList().then(result=> {
+        return SysResources.findList({
+            where:{level:SysResources.ONE,type:SysResources.TYPE.MENU},
+            include:[{
+                model:SysResources.sequlize,
+                as:'second',
+                include:[{
+                    model:SysResources.sequlize,
+                    as:'three',
+                }]
+            }]
+        }).then(result=> {
             return result;
         });
     }
