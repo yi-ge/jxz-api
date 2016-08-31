@@ -188,6 +188,23 @@ class Articles extends Base {
             lock: t.LOCK.UPDATE
         });
     }
+
+    /**
+     * 投稿文章
+     * @param id
+     * @param t
+     * @returns {*}
+     */
+    contribute(id,t){
+        return this.update({
+            is_draft:DRAFT.NO,
+            updated_at:new Date(),
+        },{
+            where:{id:id},
+            transaction:t,
+            lock: t.LOCK.UPDATE
+        });
+    }
 }
 
 export default new Articles();

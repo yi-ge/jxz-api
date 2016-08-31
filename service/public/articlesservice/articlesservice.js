@@ -49,6 +49,53 @@ class ArticlesService {
     }
 
     /**
+     * 编辑文章
+     * @param id
+     * @param title
+     * @param content
+     * @returns {*}
+     */
+    editArticle(id,title,content){
+        return Articles.findById(id).then(article=>{
+            if(!article) return Articles.errorPromise("文章不存在");
+            if(article.is_draft != Articles.DRAFT.YES) return Articles.errorPromise("文章不是可编辑的");
+            return Articles.transaction(t=>{
+                return Articles.update({
+                    title:title,
+                    content:content,
+                    updated_at:new Date()
+                },{
+                    where:{id:id},
+                    transaction:t,
+                    lock: t.LOCK.UPDATE
+                });
+            }).then(()=>{
+                return article;
+            });
+        }).then(article=>{
+            return Articles.formatArticle(article.dataValues);
+        });
+    }
+
+    /**
+     * 投稿文章
+     * @param id
+     * @returns {*}
+     */
+    wetchatContributeArticle(id){
+        return Articles.findById(id).then(article=>{
+            if(!article) return Articles.errorPromise("文章不存在");
+            return Articles.transaction(t=>{
+                return Articles.contribute(id,t);
+            }).then(()=>{
+                return article;
+            })
+        }).then(article=>{
+            return Articles.formatArticle(article.dataValues);
+        });
+    }
+
+    /**
      * 评论文章（微信端）
      * @param articles_id
      * @param comment_user_id

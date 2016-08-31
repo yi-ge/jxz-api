@@ -22,7 +22,7 @@ router.post('/userarticlelistonline', (req, res, next)=> {
         msg: '用户文章查询失败'
     });
 });
-//发布文章
+//保存草稿文章
 router.post('/release',(req,res,next)=>{
     let param = req.body;
     let user_id = param.user_id,
@@ -30,6 +30,26 @@ router.post('/release',(req,res,next)=>{
         content = param.content;
     next({
         $promise: ArticlesService.wetchatAddArticles(user_id,title,content),
+        msg: '用户文章查询失败'
+    });
+});
+//编辑文章
+router.post('/edit',(req,res,next)=>{
+    let param = req.body;
+    let id = param.id,
+        title = param.title,
+        content = param.content;
+    next({
+        $promise: ArticlesService.editArticle(id,title,content),
+        msg: '用户文章查询失败'
+    });
+});
+//文章投稿
+router.post('/contribute',(req,res,next)=>{
+    let param = req.body;
+    let id = param.id;
+    next({
+        $promise: ArticlesService.wetchatContributeArticle(id),
         msg: '用户文章查询失败'
     });
 });
@@ -44,7 +64,6 @@ router.post('/commentarticle',(req,res,next)=>{
         msg: '文章评论失败'
     });
 });
-
 //查看文章评论
 router.post('/findcomment',(req,res,next)=>{
     let param = req.body;
