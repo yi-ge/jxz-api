@@ -2,7 +2,7 @@
  * Created by NX on 2016/8/8.
  */
 import Users from './users';
-import UsersVip from './UsersVip';
+import UsersVip from './usersvip';
 import SysUsers from './sysusers';
 import SysRoles from './sysroles';
 import SysResources from './sysresources';
