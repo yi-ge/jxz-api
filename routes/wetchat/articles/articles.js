@@ -144,8 +144,7 @@ router.post('/view', (req, res, next)=> {
         msg: '阅读文章失败'
     });
 });
-
-//查询酒店
+//模糊查询文章
 router.post('/search',(req,res,next)=>{
     let param = req.body;
     let text = param.text,
