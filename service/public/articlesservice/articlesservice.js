@@ -16,7 +16,7 @@ class ArticlesService {
                     }).then(articles=> {
                         return Users.updateArticleNum(user.id, count + 1, t).then(()=> {
                             return articles;
-                        })
+                        });
                     });
                 });
             });
@@ -33,7 +33,7 @@ class ArticlesService {
      * @param isDraft
      * @returns {*}
      */
-    wetchatAddArticles(user_id, title, content,isDraft){
+    wetchatAddArticles(user_id, title, content, isDraft) {
         if (!title || !content)return Articles.errorPromise('文章格式不正确');
         return Users.getArticleCount(user_id).then(count=> {
             if (count == 0) return Users.errorPromise('用户不存在');
@@ -41,6 +41,7 @@ class ArticlesService {
                 return Articles.insert(Articles.createModel(title, content, user_id, Articles.AUTHORTYPE.FRONT, isDraft, user_id, user_id), {
                     transaction: t
                 }).then(articles=> {
+                    if (isDraft == Articles.DRAFT.YES) return articles; //不存草稿 文章数+1
                     return Users.updateArticleNum(user_id, count + 1, t).then(()=> {
                         return articles;
                     });
@@ -48,6 +49,7 @@ class ArticlesService {
             });
         });
     }
+
     /**
      * 前端用户保存文章至草稿箱
      * @param user_id
@@ -56,7 +58,7 @@ class ArticlesService {
      * @returns {*}
      */
     wetchatAddDraftArticles(user_id, title, content) {
-        return this.wetchatAddArticles(user_id, title, content,Articles.DRAFT.YES);
+        return this.wetchatAddArticles(user_id, title, content, Articles.DRAFT.YES);
     }
 
     /**
@@ -66,8 +68,8 @@ class ArticlesService {
      * @param content
      * @returns {*}
      */
-    wetchatAddReleaseArticles(user_id, title, content){
-        return this.wetchatAddArticles(user_id, title, content,Articles.DRAFT.NO);
+    wetchatAddReleaseArticles(user_id, title, content) {
+        return this.wetchatAddArticles(user_id, title, content, Articles.DRAFT.NO);
     }
 
 
@@ -78,25 +80,46 @@ class ArticlesService {
      * @param content
      * @returns {*}
      */
-    editToDraftArticle(id,title,content){
-        return Articles.findById(id).then(article=>{
-            if(!article) return Articles.errorPromise("文章不存在");
-            if(article.is_draft != Articles.DRAFT.YES) return Articles.errorPromise("文章不是可编辑的");
-            return Articles.transaction(t=>{
+    editToDraftArticle(id, title, content) {
+        return Articles.findById(id).then(article=> {
+            if (!article) return Articles.errorPromise("文章不存在");
+            if (article.is_draft != Articles.DRAFT.YES) return Articles.errorPromise("文章不是可编辑的");
+            return Articles.transaction(t=> {
                 return Articles.update({
-                    title:title,
-                    content:content,
-                    updated_at:new Date()
-                },{
-                    where:{id:id},
-                    transaction:t,
+                    title: title,
+                    content: content,
+                    updated_at: new Date()
+                }, {
+                    where: {id: id},
+                    transaction: t,
                     lock: t.LOCK.UPDATE
                 });
-            }).then(()=>{
+            }).then(()=> {
                 return article;
             });
-        }).then(article=>{
+        }).then(article=> {
             return Articles.formatArticle(article.dataValues);
+        });
+    }
+
+    /**
+     * 删除文章
+     * @param id
+     * @param user_id
+     * @returns {*}
+     */
+    deleteWetchatArticle(id, user_id) {
+        return Articles.findById(id).then(article=>{
+            if(article.is_draft == Articles.DRAFT.NO) return Articles.errorPromise("不是草稿文章");
+            return article;
+        }).then(()=>{
+            return Articles.transaction(t=> {
+                return Articles.destroy({where: {id: id}, transaction: t}).then(()=> {
+                    return Users.getArticleCount(user_id);
+                }).then(count=> {
+                    return Users.updateArticleNum(user_id, count - 1, t); //投稿数+1
+                });
+            });
         });
     }
 
@@ -105,15 +128,19 @@ class ArticlesService {
      * @param id
      * @returns {*}
      */
-    wetchatContributeArticle(id){
-        return Articles.findById(id).then(article=>{
-            if(!article) return Articles.errorPromise("文章不存在");
-            return Articles.transaction(t=>{
-                return Articles.contribute(id,t);
-            }).then(()=>{
+    wetchatContributeArticle(id, user_id) {
+        return Articles.findById(id).then(article=> {
+            if (!article) return Articles.errorPromise("文章不存在");
+            return Articles.transaction(t=> {
+                return Articles.contribute(id, t).then(()=> {
+                    return Users.getArticleCount(user_id); //获取已经投稿的文章数
+                }).then(count=> {
+                    return Users.updateArticleNum(user_id, count + 1, t); //投稿数+1
+                });
+            }).then(()=> {
                 return article;
             })
-        }).then(article=>{
+        }).then(article=> {
             return Articles.formatArticle(article.dataValues);
         });
     }
@@ -149,7 +176,7 @@ class ArticlesService {
      * @returns {*|Promise.<T>}
      */
     findPageList(page, title, startDate, endDate, status, house_name, sortType, pagesize) {
-        let where = Object.assign({is_draft:Articles.DRAFT.NO}, Articles.getAuditStatusWhere(status));
+        let where = Object.assign({is_draft: Articles.DRAFT.NO}, Articles.getAuditStatusWhere(status));
         if (!!startDate && !!endDate) where['created_at'] = {$between: [startDate, endDate]};
         else if (!!startDate) where['created_at'] = {$gte: startDate};
         else if (!!endDate) where['created_at'] = {$lte: endDate};
@@ -311,13 +338,14 @@ class ArticlesService {
         });
     }
 
+
     /**
      * 预览文章
      * @param id
      * @returns {*}
      */
-    previewArticle(id){
-        return Articles.findById(id).then(article=>{
+    previewArticle(id) {
+        return Articles.findById(id).then(article=> {
             return Articles.formatArticle((article.dataValues));
         });
     }
@@ -345,8 +373,8 @@ class ArticlesService {
      * @param auditingStatus
      * @returns {*}
      */
-    findUsersArticle(user_id, page,pagesize,auditingStatus){
-        let where = Object.assign({author:user_id},Articles.getAuditStatusWhere(auditingStatus));
+    findUsersArticle(user_id, page, pagesize, auditingStatus) {
+        let where = Object.assign({author: user_id}, Articles.getAuditStatusWhere(auditingStatus));
         return Articles.count({where: where}).then(count=> {
             return Articles.findPage({
                 where: where,
@@ -356,7 +384,7 @@ class ArticlesService {
                     attributes: ['id', 'address']
                 }],
                 order: `created_at DESC`
-            }, page, count, 2,pagesize);
+            }, page, count, 2, pagesize);
         }).then(result=> {
             result.list.map(article=> {
                 Articles.formatArticle(article.dataValues);
@@ -371,8 +399,8 @@ class ArticlesService {
      * @param page
      * @returns {*}
      */
-    findUserArticleHighline(user_id, page,pagesize) {
-        return this.findUsersArticle(user_id,page,pagesize,Articles.AUDITING.HIGHLINE);
+    findUserArticleHighline(user_id, page, pagesize) {
+        return this.findUsersArticle(user_id, page, pagesize, Articles.AUDITING.HIGHLINE);
     }
 
     /**
@@ -381,8 +409,8 @@ class ArticlesService {
      * @param page
      * @returns {*}
      */
-    findUserArticleOffline(user_id, page,pagesize){
-        return this.findUsersArticle(user_id,page,pagesize,Articles.AUDITING.OFFLINE);
+    findUserArticleOffline(user_id, page, pagesize) {
+        return this.findUsersArticle(user_id, page, pagesize, Articles.AUDITING.OFFLINE);
     }
 
     /**
@@ -393,7 +421,7 @@ class ArticlesService {
      * @returns {*}
      */
     findUserArticleAll(user_id, page, pagesize) {
-        return this.findUsersArticle(user_id,page,pagesize);
+        return this.findUsersArticle(user_id, page, pagesize);
     }
 
     /**
@@ -511,7 +539,7 @@ class ArticlesService {
      */
     isLikeArticle(user_id, favorite_source_id) {
         let PRAISE = UsersFavorite.FAVORITECLASS.PRAISE;
-        return UsersFavorite.isCollection(user_id, favorite_source_id,PRAISE);
+        return UsersFavorite.isCollection(user_id, favorite_source_id, PRAISE);
     }
 
     /**
@@ -540,6 +568,7 @@ class ArticlesService {
             return result;
         });
     }
+
     /**
      * 模糊搜索文章
      * @param text
