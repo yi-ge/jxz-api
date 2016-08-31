@@ -39,5 +39,4 @@ Houses.sequlize.belongsTo(SysDict.sequlize,{
     targetKey:'id',
     as:'regions'
 });
-
 export default Houses;
