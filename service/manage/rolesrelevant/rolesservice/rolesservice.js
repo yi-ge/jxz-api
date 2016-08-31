@@ -1,4 +1,4 @@
-import {SysRoles} from './../../../../core';
+import {SysRoles,SysRoleResources} from './../../../../core';
 class RolesService {
     /**
      * 添加角色
@@ -13,7 +13,7 @@ class RolesService {
                 return SysRoles.formatSysRoles(roles.dataValues);
             }).then(result=> {
                 if (Array.isArray(resources) && resources.length > 0) {
-                    return this.addRolesResources(result.id, resources).then(()=> {
+                    return SysRoleResources.addRolesResources(result.id, resources,t).then(()=> {
                         return result;
                     });
                 }
