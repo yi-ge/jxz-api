@@ -23,7 +23,7 @@ router.post('/userarticlelistonline', (req, res, next)=> {
     });
 });
 //保存草稿文章
-router.post('/adddraft',(req,res,next)=>{
+router.post('/addtodraft',(req,res,next)=>{
     let param = req.body;
     let user_id = param.user_id,
         title = param.title,
@@ -34,7 +34,7 @@ router.post('/adddraft',(req,res,next)=>{
     });
 });
 //保存并发布文章
-router.post('/addrelease',(req,res,next)=>{
+router.post('/addtorelease',(req,res,next)=>{
     let param = req.body;
     let user_id = param.user_id,
         title = param.title,
