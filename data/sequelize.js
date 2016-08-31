@@ -16,7 +16,7 @@ const config = process.env.NODE_ENV ? {
 const sequelize = new Sequelize(config.database, config.username, config.password, {
     host: config.host,
     port:config.port || 3306,
-    dialect: config.dialect,
+    dialect: config.dialect || "mysql",
     pool: {
         max: 5,
         min: 0,
