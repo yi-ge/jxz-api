@@ -124,8 +124,7 @@ class UserService {
             }
             return useropenid;
         }).then(result=> {
-            if(result.user) Users.formatUser(result.user.dataValues);
-            return UsersOpenid.formatUsersOpenid(result.dataValues || result);
+            return Users.formatUser(result.user.dataValues);
         });
     }
 
