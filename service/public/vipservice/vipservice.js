@@ -101,7 +101,7 @@ class VipService {
                 attribute:{exclude:"passwd"}
             });
         }).then(vip=>{
-            return UsersVip.formatUserVip(vip);
+            return UsersVip.formatUserVip(vip.dataValues);
         });
     }
 
@@ -132,7 +132,7 @@ class VipService {
                         return UsersVip.updateBindStatus(account_name, UsersVip.BINDING, t);//改变vip为绑定状态
                     });
             }).then(()=> {
-                return vip;
+                return UsersVip.formatUserVip(vip.dataValues);
             });
         });
     }

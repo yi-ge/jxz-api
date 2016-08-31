@@ -121,14 +121,7 @@ class Articles extends Base {
      * @returns {*}
      */
     updateAuditStatus(id,status,modifier,t){
-        let updateOption = {modifier:modifier,updated_at:new Date()};
-        switch (parseInt(status)) {
-            case 0:updateOption['check_status'] = 0;break;
-            case 1:updateOption['check_status'] = 1;break;
-            case 2:updateOption['check_status'] = 2;break;
-            case 3:updateOption['is_off'] = 0;break;
-            case 4:updateOption['is_off'] = 1,updateOption['check_status']=1;break;
-        }
+        let updateOption = Object.assign({modifier:modifier,updated_at:new Date()},this.getAuditStatusWhere(status));
         return this.update(updateOption,{
             where:{id:id},
             transaction:t,
