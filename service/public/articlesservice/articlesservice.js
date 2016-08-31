@@ -375,6 +375,7 @@ class ArticlesService {
      */
     findUsersArticle(user_id, page, pagesize, auditingStatus) {
         let where = Object.assign({author: user_id}, Articles.getAuditStatusWhere(auditingStatus));
+        if(!user_id) return Articles.errorPromise("作者id不正确");
         return Articles.count({where: where}).then(count=> {
             return Articles.findPage({
                 where: where,

@@ -13,6 +13,16 @@ router.post('/register', (req, res, next)=> {
         msg: '用户注册失败'
     });
 });
+//获取会员信息 （默认登陆）
+router.post('/defaultlogin', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id,
+        users_id = param.users_id;
+    next({
+        $promise: VipService.defaultLogin(id, users_id),
+        msg: '会员信息获取失败'
+    });
+});
 //会员登陆
 router.post('/login', (req, res, next)=> {
     let param = req.body;

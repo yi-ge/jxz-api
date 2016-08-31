@@ -134,17 +134,9 @@ class ResourceService {
      * @returns {Promise.<T>}
      */
     findAllResource() {
-        let where = {level:SysResources.ONE,type:SysResources.TYPE.MENU};
+        let where = {type:SysResources.TYPE.MENU};
         return SysResources.findList({
             where:where,
-            include:[{
-                model:SysResources.sequlize,
-                as:'resource_c',
-                include:[{
-                    model:SysResources.sequlize,
-                    as:'resource_c',
-                }]
-            }]
         }).then(result=> {
             return result;
         });

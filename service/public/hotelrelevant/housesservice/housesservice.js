@@ -106,7 +106,7 @@ class HousesService {
                 include: [{
                     model: SysDict.sequlize,
                     attributes: ['id', 'name'],
-                    as: 'country',
+                    as: 'country_p',
                     include: [{
                         model: SysDict.sequlize,
                         attributes: ['id', 'name'],
@@ -148,7 +148,7 @@ class HousesService {
      * @returns {Promise.<T>}
      */
     putaway(id, is_putaway, modifier) {
-        if (is_putaway != Houses.ISPUTAWAY.NO && is_putaway != Houses.ISPUTAWAY.NO) return Houses.errorPromise("状态值不正确");
+        if (is_putaway != Houses.ISPUTAWAY.NO && is_putaway != Houses.ISPUTAWAY.YES) return Houses.errorPromise("状态值不正确");
         return Houses.transaction(t=> {
             return Houses.update({
                 is_putaway: is_putaway,

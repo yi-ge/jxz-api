@@ -28,7 +28,7 @@ class VipService {
      */
     vipDetails(id) {
         return UsersVip.findById(id).then(vip=> {
-            if (!vip)return UsersVip.errorPromise("不存在改会员");
+            if (!vip)return UsersVip.errorPromise("不存在该会员");
             return UsersVip.formatUserVip(vip.dataValues);
         });
     }
@@ -67,16 +67,41 @@ class VipService {
      */
     registerVip(account_name, users_id, password) {
         if (!users_id) return UsersVip.errorPromise("精选者id格式不正确");
-        return UsersVip.findAccountName(account_name).then(vip=> {
-            if (!!vip) return UsersVip.errorPromise('用户已存在');
-            return UsersVip.transaction(t=> {
-                console.log(password);
-                return UsersVip.insert(UsersVip.createModel(account_name, null, null, 2, password, UsersVip.NORECHARGE, UsersVip.BINDING), {
-                    transaction: t,
-                }).then(vip=> {
-                    return Users.relationVip(users_id, vip.id, t); //绑定vip
+        return Users.findById(users_id).then(user=> {
+            if (!user.user_vip_id) return Users.errorPromise("已经有会员账号,不能重复注册");
+            return user;
+        }).then(()=> {
+            return UsersVip.findAccountName(account_name).then(vip=> {
+                if (!!vip) return UsersVip.errorPromise('用户已存在');
+                return vip;
+            }).then(() =>{
+                return UsersVip.transaction(t=> {
+                    return UsersVip.insert(UsersVip.createModel(account_name, null, null, 2, password, UsersVip.NORECHARGE, UsersVip.BINDING), {
+                        transaction: t,
+                    }).then(vip=> {
+                        return Users.relationVip(users_id, vip.id, t); //绑定vip
+                    });
                 });
             });
+        });
+    }
+
+    /**
+     * 通过精选者获得会员信息
+     * @param id
+     * @param user_id
+     */
+    defaultLogin(id, user_id) {
+        return Users.findById(user_id).then(user=>{
+            if(!user) return Users.errorPromise("精选者不存在");
+            if(user.user_vip_id != id) return Users.errorPromise("精选着绑定会员与获取会员不相同");
+            return user;
+        }).then(()=>{
+            return UsersVip.findById(id,{
+                attribute:{exclude:"passwd"}
+            });
+        }).then(vip=>{
+            return UsersVip.formatUserVip(vip);
         });
     }
 
@@ -90,12 +115,15 @@ class VipService {
     loginVip(account_name, users_id, password) {
         return UsersVip.findAccountName(account_name).then(vip=> {
             if (!vip) return UsersVip.errorPromise("用户不存在");
-            else return UsersVip.findOnlyOne({
-                where: {
-                    account_name: account_name,
-                    passwd: UsersVip.encrypMD5(password)
-                }
-            });
+            else if (vip.is_cover == UsersVip.BINDING)return UsersVip.errorPromise("登陆失败,已绑定精选者");
+            else {
+                return UsersVip.findOnlyOne({
+                    where: {
+                        account_name: account_name,
+                        passwd: UsersVip.encrypMD5(password)
+                    }
+                });
+            }
         }).then(vip=> {
             if (!vip) return UsersVip.errorPromise("密码错误");
             else return Users.transaction(t=> {
@@ -137,7 +165,7 @@ class VipService {
      * @returns {*}
      */
     resizePassword(account_name, password) {
-        if(!account_name || !password) return UsersVip.errorPromise('参数不正确');
+        if (!account_name || !password) return UsersVip.errorPromise('参数不正确');
         return UsersVip.findAccountName(account_name).then(vip=> {
             if (!vip) return UsersVip.errorPromise('用户不存在');
             return UsersVip.transaction(t=> {
