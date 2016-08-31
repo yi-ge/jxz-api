@@ -59,9 +59,10 @@ class Articles extends Base {
 
     /**
      * 修改文章关注数
-     * @param user_id
-     * @param favorite_source_id
-     * @param favorite_type
+     * @param id
+     * @param at_num
+     * @param t
+     * @returns {*}
      */
     updateAtNum(id, at_num, t) {
         return this.update({
@@ -95,8 +96,7 @@ class Articles extends Base {
 
     /**
      * 获取审核状态对象
-     * 0未审核1通过2拒绝3离线4上线
-     * @param status
+     * @param status 0未审核1通过2拒绝3离线4上线
      * @returns {{}}
      */
     getAuditStatusWhere(status){
@@ -113,9 +113,8 @@ class Articles extends Base {
     }
 
     /**
-     * status 0未审核1通过2拒绝3离线4上线
      * @param id
-     * @param status
+     * @param status 审核状态
      * @param modifier
      * @param t
      * @returns {*}
