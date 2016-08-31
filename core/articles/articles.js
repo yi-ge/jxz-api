@@ -118,7 +118,7 @@ class Articles extends Base {
             case AUDITING.NOAUDIT:whereAuditStatus['check_status'] = 0;break;
             case AUDITING.PASS:whereAuditStatus['check_status'] = 1;break;
             case AUDITING.REJECT:whereAuditStatus['check_status'] = 2;break;
-            case AUDITING.OFFLINE:whereAuditStatus['is_off']=0;break;
+            case AUDITING.OFFLINE:whereAuditStatus['is_off'] = 0;break;
             case AUDITING.HIGHLINE:whereAuditStatus['is_off'] = 1;whereAuditStatus['check_status']=1;break;
             default: break;
         }
