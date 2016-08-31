@@ -23,10 +23,10 @@ class UsersOpenid extends Base {
         return model;
     }
 
-    formatUsersOpenid(jxz){
-        jxz.created_at = this.formatDate(jxz.created_at,"yyyy-MM-dd hh:mm:ss");
-        jxz.updated_at = this.formatDate(jxz.updated_at,"yyyy-MM-dd hh:mm:ss");
-        return jxz;
+    formatUsersOpenid(useropen){
+        useropen.created_at!=void(0)&& this.formatDate(useropen.created_at,"yyyy-MM-dd hh:mm:ss");
+        useropen.updated_at !=void(0) &&  this.formatDate(useropen.updated_at,"yyyy-MM-dd hh:mm:ss");
+        return useropen;
     }
 
     /**

@@ -374,16 +374,18 @@ class ArticlesService {
      * @returns {*}
      */
     findUsersArticle(user_id, page, pagesize, auditingStatus) {
-        let where = Object.assign({author: user_id}, Articles.getAuditStatusWhere(auditingStatus));
         if(!user_id) return Articles.errorPromise("作者id不正确");
+        let where = Object.assign({author: user_id}, Articles.getAuditStatusWhere(auditingStatus));
+        let include = [];
+        if(auditingStatus != Articles.AUDITING.OFFLINE) include.push({
+            model: Houses.sequlize,
+            as: 'houses',
+            attributes: ['id', 'address']
+        }) ;
         return Articles.count({where: where}).then(count=> {
             return Articles.findPage({
                 where: where,
-                include: [{
-                    model: Houses.sequlize,
-                    as: 'houses',
-                    attributes: ['id', 'address']
-                }],
+                include: include,
                 order: `created_at DESC`
             }, page, count, 2, pagesize);
         }).then(result=> {

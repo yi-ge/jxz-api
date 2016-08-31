@@ -8,11 +8,11 @@ const AUTHORTYPE = {//作者类型
     FRONT:1,
     BACKSTAGE:2
 },AUDITING = { //审核状态
-    NOAUDIT:0,
-    PASS:1,
-    REJECT:2,
-    OFFLINE:3,
-    HIGHLINE:4
+    NOAUDIT:0, //未审核
+    PASS:1, //通过
+    REJECT:2, //拒绝
+    OFFLINE:3, //离线
+    HIGHLINE:4  //上线
 },DRAFT={ // 是否是草稿
     YES:1,
     NO:2
@@ -28,6 +28,19 @@ class Articles extends Base {
         this.DRAFT = DRAFT;
     }
 
+    /**
+     *
+     * @param title
+     * @param content
+     * @param author
+     * @param author_type
+     * @param is_draft 是否草稿
+     * @param creater
+     * @param modifier
+     *        check_status 审核状态1通过2拒绝
+     *        is_off  0离线1上线
+     * @returns {{id: number, title: *, content: *, author: *, check_status: number, creater: *, modifier: *, author_type: *, created_at: Date, updated_at: Date, check_date: Date, is_off: number, read_num: number, at_num: number, like_num: number, is_draft: number}}
+     */
     createModel(title, content, author, author_type,is_draft=DRAFT.YES, creater, modifier) {
         let model = {
             id: this.generateId(),
@@ -41,7 +54,7 @@ class Articles extends Base {
             created_at: new Date(),
             updated_at: new Date(),
             check_date: new Date(),
-            is_off: 1,
+            is_off: 0,
             read_num: 0,
             at_num: 0,
             like_num: 0,
@@ -105,7 +118,7 @@ class Articles extends Base {
             case AUDITING.NOAUDIT:whereAuditStatus['check_status'] = 0;break;
             case AUDITING.PASS:whereAuditStatus['check_status'] = 1;break;
             case AUDITING.REJECT:whereAuditStatus['check_status'] = 2;break;
-            case AUDITING.OFFLINE:whereAuditStatus['is_off'] = 0;break;
+            case AUDITING.OFFLINE:whereAuditStatus['is_off']=0;break;
             case AUDITING.HIGHLINE:whereAuditStatus['is_off'] = 1;whereAuditStatus['check_status']=1;break;
             default: break;
         }

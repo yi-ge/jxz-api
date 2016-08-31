@@ -130,6 +130,22 @@ class ResourceService {
     }
 
     /**
+     * 删除权限
+     * @param id
+     * @returns {*}
+     */
+    deleteResource(id){
+        return SysResources.count({where:{parent_id:id}}).then(count=>{
+            if(count != 0) return SysResources.errorPromise("不能删除,存在子权限");
+            return count;
+        }).then(()=>{
+            return SysResources.transaction(t=>{
+                return SysResources.destroy({where:{id:id}});
+            });
+        });
+    }
+
+    /**
      * 查询所有菜单权限
      * @returns {Promise.<T>}
      */

@@ -6,13 +6,16 @@ class UserService {
      * @returns {*}
      */
     registryJXZ(openid, username, sex, avatar) {
+        let u;
         return Users.transaction(t=> {
             if (!openid) throw new Error("openid不能为空");
             return Users.insert(Users.createModel(username, sex, avatar), {transaction: t}).then(user=> {
                 //插入一条用户数据
+                u = user;
                 return UsersOpenid.insert(UsersOpenid.createModel(user.id, openid), {transaction: t});
             }).then(wetchatuser=> {
                 //微信openid关联用户
+                wetchatuser.dataValues.user = u;
                 return UsersOpenid.formatUsersOpenid(wetchatuser.dataValues);
             });
         });
@@ -99,25 +102,30 @@ class UserService {
         return UsersOpenid.findOnlyOne({
             where: {openid: openid},
             include: [{
-                model: Users.sequlize,
-                attributes: ['id', 'user_vip_id']
+                model: Users.sequlize
             }]
         }).then(useropenid=> {
+            let user; //精选者
             if (!useropenid) return this.registryJXZ(openid, username, sex, avatar); //useropenid不存在
             else if (!useropenid.user) {  // 存在openi 不存在user
                 return Users.transaction(t=> {
-                    return Users.insert(Users.createModel(username, sex, avatar), {
+                    return Users.insert(Users.createModel(username, sex, avatar), { //添加精选者
                         transaction: t
                     }).then(user=> {
+                        user = user;
                         return UsersOpenid.updateUsersId(useropenid.id, user.id, t);
-                    }).then(()=> {
-                        return useropenid;
                     });
+                }).then(()=>{
+                    return Users.findById(user.id);
+                }).then(user=>{
+                    useropenid.dataValues.user = user;
+                    return useropenid;
                 });
             }
             return useropenid;
         }).then(result=> {
-            return Users.formatUser(result);
+            if(result.user) Users.formatUser(result.user.dataValues);
+            return UsersOpenid.formatUsersOpenid(result.dataValues || result);
         });
     }
 

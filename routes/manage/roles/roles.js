@@ -73,6 +73,15 @@ router.post('/editresource', (req, res, next)=> {
         msg: '编辑修改失败'
     });
 });
+//删除编辑
+router.post('/deleteresource', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id;
+    next({
+        $promise:ResourceService.deleteResource(id),
+        msg: '权限删除失败'
+    });
+});
 //角色权限配置 (批量)
 router.post('/configrolestoresourceslist',(req,res,next)=>{
     let roles_id = req.body.roles_id,
