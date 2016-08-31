@@ -339,13 +339,14 @@ class ArticlesService {
     }
 
     /**
-     * 查询用户上线文章列表
+     * 查询用户文章
      * @param user_id
      * @param page
+     * @param auditingStatus
      * @returns {*}
      */
-    findUserArticleOnline(user_id, page) {
-        let where = Object.assign({author:user_id},Articles.getAuditStatusWhere(Articles.AUDITING.HIGHLINE));
+    findUsersArticle(user_id, page,pagesize,auditingStatus){
+        let where = Object.assign({author:user_id},Articles.getAuditStatusWhere(auditingStatus));
         return Articles.count({where: where}).then(count=> {
             return Articles.findPage({
                 where: where,
@@ -355,13 +356,33 @@ class ArticlesService {
                     attributes: ['id', 'address']
                 }],
                 order: `created_at DESC`
-            }, page, count, 2);
+            }, page, count, 2,pagesize);
         }).then(result=> {
             result.list.map(article=> {
                 Articles.formatArticle(article.dataValues);
             });
             return result;
         });
+    }
+
+    /**
+     * 查询用户上线文章列表
+     * @param user_id
+     * @param page
+     * @returns {*}
+     */
+    findUserArticleHighline(user_id, page,pagesize) {
+        return this.findUsersArticle(user_id,page,pagesize,Articles.AUDITING.HIGHLINE);
+    }
+
+    /**
+     * 查询用户未上线文章
+     * @param user_id
+     * @param page
+     * @returns {*}
+     */
+    findUserArticleOffline(user_id, page,pagesize){
+        return this.findUsersArticle(user_id,page,pagesize,Articles.AUDITING.OFFLINE);
     }
 
     /**
@@ -372,13 +393,7 @@ class ArticlesService {
      * @returns {*}
      */
     findUserArticleAll(user_id, page, pagesize) {
-        let where = {author: user_id};
-        return Articles.count({where: where}).then(count=> {
-            return Articles.findPage({
-                where: where,
-                order: `created_at DESC`
-            }, page, count, 2, pagesize);
-        });
+        return this.findUsersArticle(user_id,page,pagesize);
     }
 
     /**

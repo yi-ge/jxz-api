@@ -3,11 +3,20 @@
  */
 import Sequelize from 'sequelize';
 import {dev239,localhost} from './database.config.json';
-const config = localhost;
+
+const config = process.env.NODE_ENV ? {
+        host:process.env.host,
+        port:process.env.port,
+        dialect:process.env.dialect,
+
+        database:process.env.database,
+        username:process.env.username,
+        password:process.env.password,
+    }:localhost;
 const sequelize = new Sequelize(config.database, config.username, config.password, {
     host: config.host,
     port:config.port || 3306,
-    dialect: 'mysql',
+    dialect: config.dialect,
     pool: {
         max: 5,
         min: 0,

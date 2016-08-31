@@ -101,7 +101,7 @@ class Articles extends Base {
      */
     getAuditStatusWhere(status){
         let whereAuditStatus = {};
-        switch (parseInt(status)) {
+        if(status != void(0)) switch (parseInt(status)) {
             case AUDITING.NOAUDIT:whereAuditStatus['check_status'] = 0;break;
             case AUDITING.PASS:whereAuditStatus['check_status'] = 1;break;
             case AUDITING.REJECT:whereAuditStatus['check_status'] = 2;break;

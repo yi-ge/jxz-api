@@ -4,13 +4,15 @@
     "port": "3306",
     "database": "jxz",
     "username": "mylive",
-    "password": "devsgo"
+    "password": "devsgo",
+    "dialect":"mysql"
   },
   "localhost": {
     "host": "localhost",
     "port": "3306",
     "database": "jxz",
     "username": "root",
-    "password": "tiger"
+    "password": "tiger",
+    "dialect":"mysql"
   }
 }

@@ -50,6 +50,7 @@ class UserService {
      */
     getInfo(id) {
         if (!id) return Users.errorPromise('用户id不能为空');
+        console.log(id);
         return Users.findById(id).then(result=> {
             return Users.formatUser(result.dataValues);
         });

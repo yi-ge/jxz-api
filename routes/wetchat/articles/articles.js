@@ -12,13 +12,23 @@ router.post('/list', (req, res, next)=> {
         msg: '文章查询失败'
     });
 });
-//查询用户的文章列表
+//查询用户上线文章列表
 router.post('/userarticlelistonline', (req, res, next)=> {
     let param = req.body;
     let user_id = param.user_id,
         page = param.page;
     next({
-        $promise: ArticlesService.findUserArticleOnline(user_id, page),
+        $promise: ArticlesService.findUserArticleHighline(user_id, page),
+        msg: '用户文章查询失败'
+    });
+});
+//查询用户未上线文章列表
+router.post('/userarticlelistoffline', (req, res, next)=> {
+    let param = req.body;
+    let user_id = param.user_id,
+        page = param.page;
+    next({
+        $promise: ArticlesService.findUserArticleOffline(user_id, page),
         msg: '用户文章查询失败'
     });
 });
