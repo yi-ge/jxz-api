@@ -5,13 +5,13 @@ import Sequelize from 'sequelize';
 import {dev239,localhost} from './database.config.json';
 
 const config = process.env.NODE_ENV ? {
-        host:process.env.host,
-        port:process.env.port,
-        dialect:process.env.dialect,
+        host:process.env.dbHost,
+        port:process.env.dbPort,
+        dialect:process.env.dbDialect,
 
-        database:process.env.database,
-        username:process.env.username,
-        password:process.env.password,
+        database:process.env.dbName,
+        username:process.env.dbUsername,
+        password:process.env.dbPassword,
     }:localhost;
 const sequelize = new Sequelize(config.database, config.username, config.password, {
     host: config.host,
