@@ -23,25 +23,36 @@ router.post('/userarticlelistonline', (req, res, next)=> {
     });
 });
 //保存草稿文章
-router.post('/release',(req,res,next)=>{
+router.post('/adddraft',(req,res,next)=>{
     let param = req.body;
     let user_id = param.user_id,
         title = param.title,
         content = param.content;
     next({
-        $promise: ArticlesService.wetchatAddArticles(user_id,title,content),
-        msg: '用户文章查询失败'
+        $promise: ArticlesService.wetchatAddDraftArticles(user_id,title,content),
+        msg: '用户文章保存失败'
+    });
+});
+//保存并发布文章
+router.post('/addrelease',(req,res,next)=>{
+    let param = req.body;
+    let user_id = param.user_id,
+        title = param.title,
+        content = param.content;
+    next({
+        $promise: ArticlesService.wetchatAddReleaseArticles(user_id,title,content),
+        msg: '用户文章保存失败'
     });
 });
 //编辑文章
-router.post('/edit',(req,res,next)=>{
+router.post('/edittodraft',(req,res,next)=>{
     let param = req.body;
     let id = param.id,
         title = param.title,
         content = param.content;
     next({
-        $promise: ArticlesService.editArticle(id,title,content),
-        msg: '用户文章查询失败'
+        $promise: ArticlesService.editToDraftArticle(id,title,content),
+        msg: '用户文章编辑失败'
     });
 });
 //文章投稿
@@ -133,6 +144,15 @@ router.post('/islikearticle', (req, res, next)=> {
     next({
         $promise: ArticlesService.isLikeArticle(id, article_id),
         msg: '判断收藏是否失败'
+    });
+});
+//预览文章
+router.post('/preview', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id;
+    next({
+        $promise: ArticlesService.previewArticle(id),
+        msg: '阅读文章失败'
     });
 });
 //查看文章

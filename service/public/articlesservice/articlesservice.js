@@ -26,18 +26,19 @@ class ArticlesService {
     }
 
     /**
-     * 前端用户保存文章
+     * 微信添加文章
      * @param user_id
      * @param title
      * @param content
+     * @param isDraft
      * @returns {*}
      */
-    wetchatAddArticles(user_id, title, content) {
+    wetchatAddArticles(user_id, title, content,isDraft){
         if (!title || !content)return Articles.errorPromise('文章格式不正确');
         return Users.getArticleCount(user_id).then(count=> {
             if (count == 0) return Users.errorPromise('用户不存在');
             return Articles.transaction(t=> {
-                return Articles.insert(Articles.createModel(title, content, user_id, Articles.AUTHORTYPE.FRONT, Articles.DRAFT.YES, user_id, user_id), {
+                return Articles.insert(Articles.createModel(title, content, user_id, Articles.AUTHORTYPE.FRONT, isDraft, user_id, user_id), {
                     transaction: t
                 }).then(articles=> {
                     return Users.updateArticleNum(user_id, count + 1, t).then(()=> {
@@ -47,6 +48,28 @@ class ArticlesService {
             });
         });
     }
+    /**
+     * 前端用户保存文章至草稿箱
+     * @param user_id
+     * @param title
+     * @param content
+     * @returns {*}
+     */
+    wetchatAddDraftArticles(user_id, title, content) {
+        return this.wetchatAddArticles(user_id, title, content,Articles.DRAFT.YES);
+    }
+
+    /**
+     * 保存并发布文章
+     * @param user_id
+     * @param title
+     * @param content
+     * @returns {*}
+     */
+    wetchatAddReleaseArticles(user_id, title, content){
+        return this.wetchatAddArticles(user_id, title, content,Articles.DRAFT.NO);
+    }
+
 
     /**
      * 编辑文章
@@ -55,7 +78,7 @@ class ArticlesService {
      * @param content
      * @returns {*}
      */
-    editArticle(id,title,content){
+    editToDraftArticle(id,title,content){
         return Articles.findById(id).then(article=>{
             if(!article) return Articles.errorPromise("文章不存在");
             if(article.is_draft != Articles.DRAFT.YES) return Articles.errorPromise("文章不是可编辑的");
@@ -285,6 +308,17 @@ class ArticlesService {
                 article.user && Users.formatUser(article.user.dataValues);
             });
             return result;
+        });
+    }
+
+    /**
+     * 预览文章
+     * @param id
+     * @returns {*}
+     */
+    previewArticle(id){
+        return Articles.findById(id).then(article=>{
+            return Articles.formatArticle((article.dataValues));
         });
     }
 
