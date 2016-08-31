@@ -49,7 +49,7 @@ app.use((data, req, res, next)=> {
 
 // catch 404 and forward to error handler
 app.use((req, res, next)=> {
-    var err = new Error('资源没找到');
+    var err = new Error('资源没有找到');
     err.status = 404;
     next(err);
 });
