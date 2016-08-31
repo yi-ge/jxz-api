@@ -26,7 +26,7 @@ class ArticlesService {
     }
 
     /**
-     * 前端用户发布文章
+     * 前端用户保存文章
      * @param user_id
      * @param title
      * @param content
