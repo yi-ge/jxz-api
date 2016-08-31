@@ -505,42 +505,32 @@ class ArticlesService {
             SysDict.where(SysDict.col('houses.regions.name'), 'like', `%${text}%`),
             SysDict.where(SysDict.col('houses.regions.country_p.name'), 'like', `%${text}%`),
         ];
-        return Articles.count({
-            where: where,
+        let include = [{
+            model: Users.sequlize,
+            attributes: ['id', 'user_name', 'avatar', 'user_vip_id']
+        }, {
+            model: Houses.sequlize,
+            as: 'houses',
+            attributes: ['id', 'address'],
             include: [{
-                model: Houses.sequlize,
-                as: 'houses',
+                model: SysDict.sequlize,
+                as: 'regions',
+                attributes: [],
                 include: [{
                     model: SysDict.sequlize,
-                    as: 'regions',
-                    include: [{
-                        model: SysDict.sequlize,
-                        as: 'country_p',
-                    }]
+                    as: 'country_p',
+                    attributes: [],
                 }]
             }]
+        }];
+        return Articles.count({
+            where: where,
+            include: include
         }).then(count=> {
             return Articles.findPage({
                 where: where,
+                include: include,
                 attributes: {exclude: 'content houses_id'},
-                include: [{
-                    model: Users.sequlize,
-                    attributes: ['id', 'user_name', 'avatar', 'user_vip_id']
-                }, {
-                    model: Houses.sequlize,
-                    as: 'houses',
-                    attributes: ['id', 'address'],
-                    include: [{
-                        model: SysDict.sequlize,
-                        as: 'regions',
-                        attributes: [],
-                        include: [{
-                            model: SysDict.sequlize,
-                            as: 'country_p',
-                            attributes: [],
-                        }]
-                    }]
-                }]
             }, page, count);
         }).then(result=> {
             result.list.map(article=> {
