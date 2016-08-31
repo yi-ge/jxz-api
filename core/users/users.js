@@ -5,12 +5,29 @@ import users from './users.config';
 import Base from './../base';
 import Articles from './../articles/articles';
 
+const SEX={
+    SECRECY:{
+        STR:"保密",
+        VALUE:2
+    },
+    MAN:{
+        STR:"男",
+        VALUE:0
+    },
+    FEMALE:{
+        STR:"nv",
+        VALUE:1
+    },
+};
+
+
 import UserOauthOpenid from './../useroauthopenid';
 class Users extends Base {
     constructor() {
         super("users", users, {
             tableName: 'users'
         });
+        this.SEX= SEX;
     }
 
     createModel(user_name, sex, avatar, lastloginip) {
@@ -31,27 +48,19 @@ class Users extends Base {
     }
 
     getSexValue(str) {
-        let value = 2;
+        let value = SEX.SECRECY.VALUE;
         switch (str) {
-            case "男" :
-                value = 0;
-                break;
-            case "女" :
-                value = 1;
-                break;
+            case SEX.MAN.STR :value = SEX.MAN.VALUE;break;
+            case SEX.FEMALE.STR :value = SEX.FEMALE.VALUE;break;
         }
         return value;
     }
 
     getStrSex(num) {
-        let value = "保密";
+        let value = SEX.SECRECY.STR;
         switch (num) {
-            case 0 :
-                value = "男";
-                break;
-            case 1 :
-                value = "女";
-                break;
+            case SEX.MAN.VALUE :value = SEX.MAN.STR;break;
+            case SEX.FEMALE.VALUE :value = SEX.FEMALE.STR;break;
         }
         return value;
     }

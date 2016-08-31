@@ -1,11 +1,4 @@
 import {SysDict,SysUsers} from './../../../core';
-
-const config = {
-    type: 1,//区域
-    StateLevel: 1,//州 第一级
-    countryLevel: 2,//国 第二级
-    regionLevel: 3 //区域 第三级
-};
 class RegionService {
     /**
      * 新增大洲
@@ -14,7 +7,7 @@ class RegionService {
      */
     addState(name, creater) {
         return SysDict.transaction(t=> {
-            return SysDict.insert(SysDict.createModel(null, name, 1, null, null, 1, creater, creater), {transaction: t}).then(state=> {
+            return SysDict.insert(SysDict.createModel(null, name, SysDict.CONFIG.REGION, null, null, SysDict.STATE, creater, creater), {transaction: t}).then(state=> {
                 return SysDict.formatSysDict(state.dataValues);
             });
         });
@@ -29,7 +22,7 @@ class RegionService {
      */
     addCountry(name, state_id, creater) {
         return SysDict.transaction(t=> {
-            return SysDict.insert(SysDict.createModel(null, name, 1, null, state_id, 2, creater, creater), {transaction: t}).then(state=> {
+            return SysDict.insert(SysDict.createModel(null, name, SysDict.CONFIG.REGION, null, state_id, SysDict.COUNTRY, creater, creater), {transaction: t}).then(state=> {
                 return SysDict.formatSysDict(state.dataValues);
             });
         });
@@ -44,7 +37,7 @@ class RegionService {
      */
     addRegion(name, country_id, creater) {
         return SysDict.transaction(t=> {
-            return SysDict.insert(SysDict.createModel(null, name, 1, null, country_id, 3, creater, creater), {transaction: t}).then(state=> {
+            return SysDict.insert(SysDict.createModel(null, name,SysDict.CONFIG.REGION, null, country_id, SysDict.REGION, creater, creater), {transaction: t}).then(state=> {
                 return SysDict.formatSysDict(state.dataValues);
             });
         });
@@ -56,7 +49,7 @@ class RegionService {
      */
     findStateList() {
         return SysDict.findList({
-            where: {type: 1, level: 1},
+            where: {type: SysDict.CONFIG.REGION, level: SysDict.STATE},
             include: [{
                 model: SysUsers.sequlize,
                 attributes: ['account_name', 'user_name', 'id'],
@@ -81,7 +74,7 @@ class RegionService {
      * @returns {Promise.<T>}
      */
     findCountryList(page, pagesize) {
-        let where = {type: 1, level: 2};
+        let where = {type: SysDict.CONFIG.REGION, level: SysDict.COUNTRY};
         return SysDict.count({where: where}).then(count=> {
             return SysDict.findPage({
                 where: where,
@@ -113,7 +106,7 @@ class RegionService {
      * @returns {Promise.<T>}
      */
     findCountryToState(state_id) {
-        let where = {type: 1, level: 2, parent_id: state_id};
+        let where = {type: SysDict.CONFIG.REGION, level: SysDict.COUNTRY, parent_id: state_id};
         return SysDict.findList({
             where: where,
             attributes: ['id', 'name'],
@@ -131,7 +124,7 @@ class RegionService {
      * @returns {*|Promise.<T>}
      */
     findRegionToCountry(country_id){
-        let where = {type:1,level:3,parent_id:country_id};
+        let where = {type: SysDict.CONFIG.REGION, level: SysDict.REGION,parent_id:country_id};
         return SysDict.findList({
             where:where,
             attributes:['id','name'],
@@ -150,7 +143,7 @@ class RegionService {
      * @returns {Promise.<T>}
      */
     findRegionList(page, pagesize) {
-        let where = {type: 1, level: 3};
+        let where = {type: SysDict.CONFIG.REGION, level: SysDict.REGION};
         return SysDict.count({where: where}).then(count=> {
             return SysDict.findPage({
                 where: where,
@@ -191,7 +184,7 @@ class RegionService {
     editState(state_id, name, modifier) {
         return SysDict.transaction(t=> {
             return SysDict.update({name: name, modifier: modifier, updated_at: new Date()}, {
-                where: {id: state_id, type: 1, level: 1},
+                where: {id: state_id, type: SysDict.CONFIG.REGION, level: SysDict.STATE},
                 transaction: t,
                 lock: t.LOCK.UPDATE
             })
@@ -226,7 +219,7 @@ class RegionService {
     editCountry(country_id, name, state_id, modifier) {
         return SysDict.transaction(t=> {
             return SysDict.update({name: name, parent_id: state_id, modifier: modifier, updated_at: new Date()}, {
-                where: {id: country_id, type: 1, level: 2},
+                where: {id: country_id, type: SysDict.CONFIG.REGION, level: SysDict.COUNTRY},
                 transaction: t,
                 lock: t.LOCK.UPDATE
             });
@@ -262,7 +255,7 @@ class RegionService {
     editRegion(region_id, name, country_id, modifier) {
         return SysDict.transaction(t=> {
             return SysDict.update({name: name, parent_id: country_id, modifier: modifier, updated_at: new Date()}, {
-                where: {id: region_id, type: 1, level: 3},
+                where: {id: region_id, type: SysDict.CONFIG.REGION, level: SysDict.REGION},
                 transaction: t,
                 lock: t.LOCK.UPDATE
             });

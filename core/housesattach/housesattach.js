@@ -3,12 +3,16 @@
  */
 import housesattach from './housesattach.config';
 import Base from './../base';
-
+const TYPE={
+    PICTURE:1,
+    VIDEO:2
+};
 class HousesAttach extends Base {
     constructor() {
         super("houses_attach", housesattach, {
             tableName: 'houses_attach'
         });
+        this.TYPE = TYPE;
     }
 
     createModel(houses_id, type, title, links_url, creater, modifier, file_path) {

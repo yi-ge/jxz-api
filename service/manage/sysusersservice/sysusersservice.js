@@ -8,7 +8,7 @@ class SysUserService {
      */
     retister(accountname, password, username, email, rolesId) {
         return SysUsers.transaction((t)=> {
-            return Users.insert(Users.createModel(username, 2), {transaction: t}).then(user=> {
+            return Users.insert(Users.createModel(username, Users.SEX.SECRECY.VALUE), {transaction: t}).then(user=> {
                 return SysUsers.insert(SysUsers.createModel(accountname, password, username, email, user.id), {
                     transaction: t
                 });
@@ -70,7 +70,7 @@ class SysUserService {
                 }],
             }, page, count, 1, pagesize);
         }).then(result=> {
-            result.list.map((item, key)=> {
+            result.list.map((item)=> {
                 SysUsers.formaySysUser(item.dataValues);
             });
             return result;
@@ -106,7 +106,7 @@ class SysUserService {
                 transaction: t,
                 lock: t.LOCK.UPDATE,
             });
-        }).then(result=> {
+        }).then(()=> {
             return SysUsers.findById(id);
         }).then(result=> {
             return SysUsers.formaySysUser(result.dataValues);

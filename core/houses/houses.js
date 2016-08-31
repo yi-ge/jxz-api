@@ -5,11 +5,25 @@ import houses from './houses.config';
 import Base from './../base';
 import SysUsers from './../sysusers/sysusers';
 import HousesComment from './../housescomment/housescomment';
+
+const TYPE = {
+    HOTEL: 1 //酒店类别
+}, ISPUTAWAY = {
+    YES: 1, //上架
+    NO: 0 //未上架
+}, ISORDERS = {
+    YES: 1, //可预约
+    NO: 0 //不可预约
+};
+
 class Houses extends Base {
     constructor() {
         super("houses", houses, {
             tableName: 'houses'
         });
+        this.TYPE = TYPE;
+        this.ISPUTAWAY = ISPUTAWAY;
+        this.ISORDERS = ISORDERS;
     }
 
     /**
@@ -45,8 +59,8 @@ class Houses extends Base {
             houses_desc: houses_desc,
             created_at: new Date(),
             updated_at: new Date(),
-            is_putaway: 0,
-            is_orders: 0,
+            is_putaway: ISPUTAWAY.NO,
+            is_orders: ISORDERS.NO,
             comment_num: 0,
             article_num: 0,
         };

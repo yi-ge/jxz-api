@@ -8,7 +8,7 @@ class HousesAttachService {
      */
     addHousesAttachList(houses_id, attachs, creater) {
         return HousesAttach.transaction(t=> {
-            return HousesAttach.addHousesAttachList(houses_id, attachs, creater, 1, t);
+            return HousesAttach.addHousesAttachList(houses_id, attachs, creater, HousesAttach.TYPE.PICTURE, t);
         });
     }
 
@@ -23,7 +23,7 @@ class HousesAttachService {
      */
     addHousesAttach(houses_id, title, links_url, file_path, creater) {
         return HousesAttach.transaction(t=> {
-            return HousesAttach.insert(HousesAttach.createModel(houses_id, 1, title, links_url, creater, creater, file_path), {
+            return HousesAttach.insert(HousesAttach.createModel(houses_id, HousesAttach.TYPE.PICTURE, title, links_url, creater, creater, file_path), {
                 transaction: t
             });
         });

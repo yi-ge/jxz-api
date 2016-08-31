@@ -14,7 +14,7 @@ class HousesService {
      */
     addHouses(name, creater, region, address, traffic_around, spots_around, houses_desc, keywords) {
         return Houses.transaction(t=> {
-            return Houses.insert(Houses.createModel(1, name, creater, creater, region, address, traffic_around, spots_around, houses_desc), {
+            return Houses.insert(Houses.createModel(Houses.TYPE.HOTEL, name, creater, creater, region, address, traffic_around, spots_around, houses_desc), {
                 transaction: t
             }).then(house=> {
                 return HousesKeyword.addHousesKeywordList(house.id, keywords, creater, t).then(()=> {
@@ -40,7 +40,7 @@ class HousesService {
         if (!!startDate && !!endDate) where['created_at'] = {$between: [startDate, endDate]};
         else if (!!startDate) where['created_at'] = {$gte: startDate};
         else if (!!endDate) where['created_at'] = {$lte: endDate};
-        !!is_putaway && (is_putaway == 0 || is_putaway == 1) && (where['is_putaway'] = is_putaway);
+        !!is_putaway && (is_putaway == Houses.ISPUTAWAY.NO || is_putaway == Houses.ISPUTAWAY.YES) && (where['is_putaway'] = is_putaway);
         !!name && (where['name'] = {$like: `%${name}%`});
         !!sys_id && (where['creater'] = sys_id);
         return Houses.count({where: where}).then(count=> {
@@ -148,7 +148,7 @@ class HousesService {
      * @returns {Promise.<T>}
      */
     putaway(id, is_putaway, modifier) {
-        if (is_putaway != 0 && is_putaway != 1) return Houses.errorPromise("状态值不正确");
+        if (is_putaway != Houses.ISPUTAWAY.NO && is_putaway != Houses.ISPUTAWAY.NO) return Houses.errorPromise("状态值不正确");
         return Houses.transaction(t=> {
             return Houses.update({
                 is_putaway: is_putaway,
