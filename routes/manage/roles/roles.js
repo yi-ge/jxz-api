@@ -122,10 +122,17 @@ router.post('/findallroles', (req, res, next)=> {
         msg: '查询失败'
     });
 });
-//查询权限列表（所有）
+//查询菜单权限列表（所有）
 router.post('/findallresource', (req, res, next)=> {
     next({
         $promise:ResourceService.findAllResource(),
+        msg: '查询失败'
+    });
+});
+//查询菜单权限列表（所有）
+router.post('/findallmenuresource', (req, res, next)=> {
+    next({
+        $promise:ResourceService.findAllMenuResource(),
         msg: '查询失败'
     });
 });

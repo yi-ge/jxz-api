@@ -146,10 +146,18 @@ class ResourceService {
     }
 
     /**
+     * 查询所有权限
+     * @returns {*}
+     */
+    findAllResource(){
+        return SysResources.findList();
+    }
+
+    /**
      * 查询所有菜单权限
      * @returns {Promise.<T>}
      */
-    findAllResource() {
+    findAllMenuResource() {
         let where = {type:SysResources.TYPE.MENU};
         return SysResources.findList({
             where:where,
