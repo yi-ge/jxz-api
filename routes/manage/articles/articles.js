@@ -22,7 +22,7 @@ router.post('/finduserartilelist',(req,res,next)=>{
     let page = param.page,
         user_id = param.user_id;
     next({
-        $promise: ArticlesService.findUserArticleAll(user_id,page),
+        $promise: ArticlesService.findUserArticleNotDraft(user_id,page),
         msg: '用户文章查询失败'
     });
 });

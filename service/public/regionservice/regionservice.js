@@ -6,9 +6,14 @@ class RegionService {
      * @returns {*}
      */
     addState(name, creater) {
-        return SysDict.transaction(t=> {
-            return SysDict.insert(SysDict.createModel(null, name, SysDict.CONFIG.REGION, null, null, SysDict.STATE, creater, creater), {transaction: t}).then(state=> {
-                return SysDict.formatSysDict(state.dataValues);
+        return SysDict.count({where:{name:name,type:SysDict.CONFIG.REGION,level:SysDict.STATE}}).then(count=>{
+            if(count!=0) return SysDict.errorPromise("大洲已存在");
+            return count;
+        }).then(()=>{
+            return SysDict.transaction(t=> {
+                return SysDict.insert(SysDict.createModel(null, name, SysDict.CONFIG.REGION, null, null, SysDict.STATE, creater, creater), {transaction: t}).then(state=> {
+                    return SysDict.formatSysDict(state.dataValues);
+                });
             });
         });
     }

@@ -12,7 +12,8 @@ const AUTHORTYPE = {//作者类型
     PASS:1, //通过
     REJECT:2, //拒绝
     OFFLINE:3, //离线
-    HIGHLINE:4  //上线
+    HIGHLINE:4,  //上线
+    NOTLINE:5 //未上线
 },DRAFT={ // 是否是草稿
     YES:1,
     NO:2
@@ -109,7 +110,7 @@ class Articles extends Base {
 
     /**
      * 获取审核状态对象
-     * @param status 0未审核1通过2拒绝3离线4上线
+     * @param status 0未审核1通过2拒绝3离线4上线6未上线
      * @returns {{}}
      */
     getAuditStatusWhere(status){
@@ -118,8 +119,9 @@ class Articles extends Base {
             case AUDITING.NOAUDIT:whereAuditStatus['check_status'] = 0;break;
             case AUDITING.PASS:whereAuditStatus['check_status'] = 1;break;
             case AUDITING.REJECT:whereAuditStatus['check_status'] = 2;break;
-            case AUDITING.OFFLINE:whereAuditStatus['is_off'] = 0;break;
+            case AUDITING.OFFLINE:whereAuditStatus['is_off'] = 0;whereAuditStatus['check_status']=1;break;
             case AUDITING.HIGHLINE:whereAuditStatus['is_off'] = 1;whereAuditStatus['check_status']=1;break;
+            case AUDITING.NOTLINE:whereAuditStatus['is_off'] = 0;break;
             default: break;
         }
         return whereAuditStatus;

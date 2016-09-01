@@ -154,6 +154,7 @@ class UserService {
      * @returns {*}
      */
     atUsers(id, at_user_id) {
+        if(id == at_user_id) return UsersAt.errorPromise('不能关注自己');
         return UsersAt.count({
             where: {
                 user_id: id,
@@ -248,7 +249,8 @@ class UserService {
         user_name != void(0) && (update.user_name = user_name);
         sex != void(0) && (update.sex = Users.getSexValue(sex));
         personalized != void(0) && (update.personalized = personalized);
-        if(!id) return Users.errorPromise('参数格式不正确');
+        if(!id) return Users.errorPromise('用户id不能为空');
+        if(Object.keys(update).length == 0) return Users.errorPromise('参数格式不正确');
         return Users.transaction(t=>{
             return Users.update(update,{
                 where:{id:id},

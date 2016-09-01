@@ -16,9 +16,10 @@ router.post('/list', (req, res, next)=> {
 router.post('/userarticlelistonline', (req, res, next)=> {
     let param = req.body;
     let user_id = param.user_id,
+        pagesize = param.pagesize,
         page = param.page;
     next({
-        $promise: ArticlesService.findUserArticleHighline(user_id, page),
+        $promise: ArticlesService.findUserArticleHighline(user_id, page,pagesize),
         msg: '用户上线文章查询失败'
     });
 });
@@ -26,10 +27,22 @@ router.post('/userarticlelistonline', (req, res, next)=> {
 router.post('/userarticlelistoffline', (req, res, next)=> {
     let param = req.body;
     let user_id = param.user_id,
+        pagesize = param.pagesize,
         page = param.page;
     next({
-        $promise: ArticlesService.findUserArticleOffline(user_id, page),
+        $promise: ArticlesService.findUserArticleOffline(user_id, page,pagesize),
         msg: '用户未上线文章查询失败'
+    });
+});
+//查询酒店相关文章
+router.post('/housearticlelist', (req, res, next)=> {
+    let param = req.body;
+    let house_id = param.house_id,
+        pagesize = param.pagesize,
+        page = param.page;
+    next({
+        $promise: ArticlesService.findHousesArticle(house_id, page,pagesize),
+        msg: '酒店相关查询失败'
     });
 });
 //保存草稿文章

@@ -109,16 +109,12 @@ class ArticlesService {
      * @returns {*}
      */
     deleteWetchatArticle(id, user_id) {
-        return Articles.findById(id).then(article=>{
-            if(article.is_draft == Articles.DRAFT.NO) return Articles.errorPromise("不是草稿文章");
+        return Articles.findById(id).then(article=> {
+            if (article.is_draft == Articles.DRAFT.NO) return Articles.errorPromise("不是草稿文章");
             return article;
-        }).then(()=>{
+        }).then(()=> {
             return Articles.transaction(t=> {
-                return Articles.destroy({where: {id: id}, transaction: t}).then(()=> {
-                    return Users.getArticleCount(user_id);
-                }).then(count=> {
-                    return Users.updateArticleNum(user_id, count - 1, t); //投稿数+1
-                });
+                return Articles.destroy({where: {id: id}, transaction: t});
             });
         });
     }
@@ -374,14 +370,14 @@ class ArticlesService {
      * @returns {*}
      */
     findUsersArticle(user_id, page, pagesize, auditingStatus) {
-        if(!user_id) return Articles.errorPromise("作者id不正确");
+        if (!user_id) return Articles.errorPromise("作者id不正确");
         let where = Object.assign({author: user_id}, Articles.getAuditStatusWhere(auditingStatus));
         let include = [];
-        if(auditingStatus != Articles.AUDITING.OFFLINE) include.push({
+        if (auditingStatus != Articles.AUDITING.OFFLINE) include.push({
             model: Houses.sequlize,
             as: 'houses',
             attributes: ['id', 'address']
-        }) ;
+        });
         return Articles.count({where: where}).then(count=> {
             return Articles.findPage({
                 where: where,
@@ -397,7 +393,36 @@ class ArticlesService {
     }
 
     /**
-     * 查询用户上线文章列表
+     * 查询酒店相关文章 (微信)
+     * @param house_id
+     * @param page
+     * @param pagesize
+     */
+    findHousesArticle(house_id, page, pagesize) {
+        let where = Object.assign({houses_id: house_id}, Articles.getAuditStatusWhere(Articles.AUDITING.HIGHLINE));
+        return Articles.count({where: where}).then(count=> {
+            return Articles.findPage({
+                where: where,
+                include: [{
+                    model: Users.sequlize,
+                    attributes: ['id', 'user_name', 'avatar', 'user_vip_id']
+                }, {
+                    model: Houses.sequlize,
+                    as: 'houses',
+                    attributes: ['id', 'address']
+                }],
+                order: `created_at DESC`
+            }, page, count, 2, pagesize);
+        }).then(result=> {
+            result.list.map(article=> {
+                Articles.formatArticle(article.dataValues);
+            });
+            return result;
+        });
+    }
+
+    /**
+     * 查询用户上线文章列表（微信）
      * @param user_id
      * @param page
      * @returns {*}
@@ -407,17 +432,17 @@ class ArticlesService {
     }
 
     /**
-     * 查询用户未上线文章
+     * 查询用户未上线文章（微信）
      * @param user_id
      * @param page
      * @returns {*}
      */
     findUserArticleOffline(user_id, page, pagesize) {
-        return this.findUsersArticle(user_id, page, pagesize, Articles.AUDITING.OFFLINE);
+        return this.findUsersArticle(user_id, page, pagesize, Articles.AUDITING.NOTLINE);
     }
 
     /**
-     * 查询用户的所有文章列表(通过作者)
+     * 查询用户所有文章 （微信）
      * @param user_id
      * @param page
      * @param pagesize
@@ -428,6 +453,23 @@ class ArticlesService {
     }
 
     /**
+     * 查询用户投稿文章(后台)
+     * @param user_id
+     * @param page
+     * @param pagesize
+     * @returns {*}
+     */
+    findUserArticleNotDraft(user_id, page, pagesize) {
+        let where = {author: user_id, is_draft: Articles.DRAFT.NO};
+        return Articles.count({where: where}).then(count=> {
+            return Articles.findPage({
+                where: where,
+                order: `created_at DESC`
+            }, page, count, 2, pagesize);
+        });
+    }
+
+    /**
      * 收藏文章
      * @param user_id
      * @param favorite_source_id
@@ -435,8 +477,11 @@ class ArticlesService {
      */
     collectionArticle(user_id, favorite_source_id) {
         let classType = UsersFavorite.FAVORITECLASS.COLLECT;
-        return UsersFavorite.isCollection(user_id, favorite_source_id, classType).then(result=> {
-            if (result.iscollection) return UsersFavorite.errorPromise("已经收藏该文章");
+        return Articles.findById(favorite_source_id).then(article=> {
+            if (article.author == user_id) return Articles.errorPromise('不能收藏自己的文章');
+            return UsersFavorite.isCollection(user_id, favorite_source_id, classType);
+        }).then(result=> {
+            if (result.iscollection) return UsersFavorite.errorPromise("已经收藏该文章,不能重复收藏");
             return true;
         }).then(()=> {
             return UsersFavorite.transaction(t=> {
@@ -494,8 +539,11 @@ class ArticlesService {
      */
     likeArticle(user_id, favorite_source_id) {
         let PRAISE = UsersFavorite.FAVORITECLASS.PRAISE;
-        return UsersFavorite.isCollection(user_id, favorite_source_id, PRAISE).then(result=> {
-            if (result.iscollection) return UsersFavorite.errorPromise("已经点赞文章");
+        return Articles.findById(favorite_source_id).then(article=> {
+            if(article.author == user_id) return Articles.errorPromise("不能给自己文章点赞");
+            return UsersFavorite.isCollection(user_id, favorite_source_id, PRAISE);
+        }).then(result=> {
+            if (result.iscollection) return UsersFavorite.errorPromise("已经点赞文章,不能重复点赞");
             return true;
         }).then(()=> {
             return UsersFavorite.transaction(t=> {
