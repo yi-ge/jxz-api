@@ -178,6 +178,7 @@ class SysUserService {
                 through: {attributes: []},
                 include: [{
                     model: SysResources.sequlize,
+                    as:'resources',
                     through: {attributes: []},
                 }]
             }]
