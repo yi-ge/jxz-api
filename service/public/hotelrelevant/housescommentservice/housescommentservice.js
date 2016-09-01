@@ -70,14 +70,14 @@ class HousesCommentService {
         if (!!houses_id) return HousesComment.errorPromise("houses_id不能为空");
         return HousesComment.count({where: {houses_id: houses_id}}).then(count=> {
             return HousesComment.transaction(t=> {
-                return HousesComment.destroy({
-                    where: {id: id}
-                }, {
+                let returnResult;
+                return HousesComment.destroy({where: {id: id}}, {
                     transaction: t
                 }).then(result=> {
-                    return Houses.updateArticleNum(houses_id, count - 1, t).then(()=> {
-                        return result;
-                    });
+                    returnResult = result;
+                    return Houses.updateArticleNum(houses_id, count - 1, t)
+                }).then(()=> {
+                    return returnResult;
                 });
             });
         });
