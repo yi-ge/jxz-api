@@ -92,6 +92,7 @@ class VipService {
      * @param user_id
      */
     defaultLogin(id, user_id) {
+        if(typeof id != 'number') return Users.errorPromise("未绑定会员");
         return Users.findById(user_id).then(user=>{
             if(!user) return Users.errorPromise("精选者不存在");
             if(user.user_vip_id != id) return Users.errorPromise("精选着绑定会员与获取会员不相同");
