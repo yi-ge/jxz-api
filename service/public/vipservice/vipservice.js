@@ -23,7 +23,7 @@ class VipService {
 
 
     /**
-     * vip详情
+     * vip详情(后台)
      * @param id
      */
     vipDetails(id) {
@@ -34,7 +34,7 @@ class VipService {
     }
 
     /**
-     * 获取为绑定的vip用户
+     * 获取为绑定的vip用户（后台）
      * @param page
      * @param sortType
      * @param pagesize
@@ -87,7 +87,7 @@ class VipService {
     }
 
     /**
-     * 通过精选者获得会员信息
+     * 通过精选者获得会员信息 （微信）
      * @param id
      * @param user_id
      */
@@ -139,7 +139,7 @@ class VipService {
     }
 
     /**
-     * 修改vip的基本信息 前端
+     * 修改vip的基本信息 (微信)
      * @param user_name
      * @param email
      * @returns {*}
@@ -162,7 +162,7 @@ class VipService {
     }
 
     /**
-     * 重置密码 前端
+     * 重置密码 （微信）
      * @returns {*}
      */
     resizePassword(account_name, password) {

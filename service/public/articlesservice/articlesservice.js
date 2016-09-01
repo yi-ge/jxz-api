@@ -147,20 +147,20 @@ class ArticlesService {
 
     /**
      * 评论文章（微信端）
-     * @param articles_id
+     * @param id
      * @param comment_user_id
      * @param content
      * @param creater
      * @returns {*}
      */
-    wetchatCommentArticle(articles_id, comment_user_id, content) {
+    wetchatCommentArticle(id, comment_user_id, content) {
         if (!content) return ArticlesComment.errorPromise("评论不能为空");
         return ArticlesComment.transaction(t=> {
-            return ArticlesComment.insert(ArticlesComment.createModel(articles_id, comment_user_id, content, comment_user_id, comment_user_id), {
+            return ArticlesComment.insert(ArticlesComment.createModel(id, comment_user_id, content, comment_user_id, comment_user_id), {
                 transaction: t
             }).then(result=> {
                 return ArticlesComment.formatArticleComment(result.dataValues);
-            })
+            });
         });
     }
 
@@ -547,12 +547,12 @@ class ArticlesService {
 
     /**
      * 查询文章评论
-     * @param article_id
+     * @param id
      * @param page
      * @param pagesize
      */
-    findArticleCommentList(article_id, page, pagesize) {
-        let where = {articles_id: article_id};
+    findArticleCommentList(id, page, pagesize) {
+        let where = {articles_id: id};
         return ArticlesComment.count({where: where}).then(count=> {
             return ArticlesComment.findPage({
                 where: where,

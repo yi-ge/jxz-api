@@ -22,31 +22,6 @@ class UserService {
     }
 
     /**
-     * 修改精选者信息
-     * @param openid
-     * @returns {*}
-     */
-    updateJXZ(user_id, username, sex, avatar) {
-        return Users.transaction(t=> {
-            return Users.update({
-                    user_name: username,
-                    sex: sex,
-                    avatar: avatar,
-                    last_login_date: new Date(),
-                    updated_at: new Date(),
-                },
-                {
-                    where: {id: user_id},
-                    transaction: t,
-                    lock: t.LOCK.UPDATE,
-                }
-            ).then(users=> {
-                return users;
-            });
-        });
-    }
-
-    /**
      * 通过id 查询精选者
      * @param id
      * @returns {*|Promise.<T>}
@@ -178,16 +153,16 @@ class UserService {
      * @param at_user_id
      * @returns {*}
      */
-    atUsers(user_id, at_user_id) {
+    atUsers(id, at_user_id) {
         return UsersAt.count({
             where: {
-                user_id: user_id,
+                user_id: id,
                 at_user_id: at_user_id
             }
         }).then((count)=> {
             if (count != 0) return UsersAt.errorPromise('不能重复关注');
             return UsersAt.transaction(t=> {
-                return UsersAt.insert(UsersAt.createModel(user_id, at_user_id), {transaction: t}).then(result=> {
+                return UsersAt.insert(UsersAt.createModel(id, at_user_id), {transaction: t}).then(result=> {
                     return result;
                 })
             });
@@ -200,11 +175,11 @@ class UserService {
      * @param at_user_id
      * @returns {*}
      */
-    cancelAt(user_id,at_user_id){
+    cancelAt(id,at_user_id){
         return UsersAt.transaction(t=>{
             return UsersAt.destroy({
                 where:{
-                    user_id:user_id,
+                    user_id:id,
                     at_user_id:at_user_id
                 },
                 transaction:t
@@ -218,10 +193,10 @@ class UserService {
      * @param at_user_id
      * @returns {*|Promise.<T>}
      */
-    isAtUser(user_id, at_user_id) {
+    isAtUser(id, at_user_id) {
         return UsersAt.count({
             where: {
-                user_id: user_id,
+                user_id: id,
                 at_user_id: at_user_id
             }
         }).then(count=> {
@@ -254,9 +229,9 @@ class UserService {
      * @param content
      * @returns {*}
      */
-    sponsoredMsg(user_id,from_user_id,content){
+    sponsoredMsg(id,from_user_id,content){
         return UsersMsg.transaction(t=>{
-            return UsersMsg.insert(UsersMsg.createModel(user_id,from_user_id,content),{
+            return UsersMsg.insert(UsersMsg.createModel(id,from_user_id,content),{
                 transaction:t
             }).then(result=>{
                 return UsersMsg.formateUserMsg(result.dataValues);

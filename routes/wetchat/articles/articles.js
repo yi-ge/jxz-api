@@ -76,7 +76,7 @@ router.post('/contribute',(req,res,next)=>{
     });
 });
 //删除草稿文章
-router.post('/deletearticle',(req,res,next)=>{a
+router.post('/deletearticle',(req,res,next)=>{
     let param = req.body;
     let id = param.id,
         user_id = param.user_id;
@@ -88,11 +88,11 @@ router.post('/deletearticle',(req,res,next)=>{a
 //评论文章
 router.post('/commentarticle',(req,res,next)=>{
     let param = req.body;
-    let article_id = param.article_id,
+    let id = param.id,
         comment_user_id = param.comment_user_id,
         content = param.content;
     next({
-        $promise: ArticlesService.wetchatCommentArticle(article_id,comment_user_id,content),
+        $promise: ArticlesService.wetchatCommentArticle(id,comment_user_id,content),
         msg: '文章评论失败'
     });
 });

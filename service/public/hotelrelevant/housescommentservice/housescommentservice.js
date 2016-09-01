@@ -2,31 +2,31 @@ import {HousesComment,Houses,SysUsers,Users} from './../../../../core';
 class HousesCommentService {
     /**
      * 添加评论
-     * @param houses_id
+     * @param house_id
      * @param comment_source
      * @param content JXZ用户id
      * @param modifier
      * @returns {*}
      */
-    addManageComment(houses_id, comment_source, content, comment_date, creater) {
+    addManageComment(house_id, comment_source, content, comment_date, creater) {
         return SysUsers.getJXZUser(creater).then(user=> {
             return HousesComment.transaction(t=> {
-                return HousesComment.addComment(houses_id, comment_source, content, user.id, comment_date, t);
+                return HousesComment.addComment(house_id, comment_source, content, user.id, comment_date, t);
             });
         });
     }
 
     /**
      * 批量添加评论
-     * @param houses_id
+     * @param house_id
      * @param comments
      * @param creater
      * @returns {Promise.<T>}
      */
-    addManageCommentList(houses_id, comments, creater) {
+    addManageCommentList(house_id, comments, creater) {
         return SysUsers.getJXZUser(creater).then(user=> {
             return HousesComment.transaction(t=> {
-                return HousesComment.addCommentList(houses_id, comments, user.id, t);
+                return HousesComment.addCommentList(house_id, comments, user.id, t);
             });
         });
     }
@@ -63,7 +63,8 @@ class HousesCommentService {
     /**
      * 删除评论
      * @param id
-     * @returns {*}
+     * @param houses_id
+     * @returns {Promise}
      */
     destroyComment(id, houses_id) {
         if (!!houses_id) return HousesComment.errorPromise("houses_id不能为空");
@@ -84,7 +85,7 @@ class HousesCommentService {
 
     /**
      * 获取酒店评论
-     * @param id
+     * @param houses_id
      */
     findHouseComments(houses_id) {
         return HousesComment.findList({

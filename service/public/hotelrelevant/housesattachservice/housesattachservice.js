@@ -48,7 +48,7 @@ class HousesAttachService {
     }
 
     /**
-     * 删除酒店附件
+     * 删除附件
      * @param id
      * @returns {*}
      */
@@ -59,7 +59,7 @@ class HousesAttachService {
     }
 
     /**
-     * 查询酒店图片
+     * 查询酒店附件
      * @param houses_id
      * @returns {*}
      */
