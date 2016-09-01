@@ -31,7 +31,7 @@ app.use((obj, req, res, next)=> {
         next(result);
     }).catch(e=> {
         console.log(e);
-        res.json({code: 1000, message: typeof e == "string" ? e : obj.errormsg});
+        res.json({code: 1000, message: typeof e == "string" ? e : obj.msg});
     });
 });
 

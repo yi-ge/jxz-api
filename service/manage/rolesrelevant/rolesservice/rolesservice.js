@@ -48,19 +48,26 @@ class RolesService {
      */
     editRoles(id, name, role_desc, resources, set_type) {
         return SysRoles.transaction(t=> {
+            let returnResult;
             return SysRoles.update({name: name, role_desc: role_desc, set_type: set_type, updated_at: new Date()}, {
                 where: {id: id},
                 transaction: t,
                 lock: t.LOCK.UPDATE,
-            }).then(result=> {
+            }).then(result => {
+                returnResult = result;
+                return SysRoleResources.destroy({where:{role_id:id},transaction:t});
+            }).then(()=>{
                 if (Array.isArray(resources) && resources.length > 0)
-                    return this.destroyRolesResources(id, resources).then(()=> {
-                        return result;
-                    });
-                return result;
+                    return SysRoleResources.addRolesResources(id, resources,t);
+                return returnResult;
             });
         }).then(()=> {
-            return SysRoles.findById(id);
+            return SysRoles.findById(id,{
+                include:[{
+                    model:SysResources.sequlize,
+                    as:'resources',
+                }]
+            });
         }).then(result=> {
             return SysRoles.formatSysRoles(result.dataValues);
         });

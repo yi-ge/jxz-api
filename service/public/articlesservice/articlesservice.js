@@ -479,7 +479,9 @@ class ArticlesService {
      */
     collectionArticle(user_id, favorite_source_id) {
         let classType = UsersFavorite.FAVORITECLASS.COLLECT;
+        if(!user_id || !favorite_source_id) return Articles.errorPromise('参数不正确');
         return Articles.findById(favorite_source_id).then(article=> {
+            if(!article) return Articles.errorPromise('文章不存在');
             if (article.author == user_id) return Articles.errorPromise('不能收藏自己的文章');
             return UsersFavorite.isCollection(user_id, favorite_source_id, classType);
         }).then(result=> {
@@ -608,7 +610,6 @@ class ArticlesService {
             return ArticlesComment.findPage({
                 where: where,
                 order: `created_at DESC`,
-                attributes: {exclude: 'comment_user_id'},
                 include: [{
                     model: Users.sequlize,
                     as: 'comment_user',
@@ -662,7 +663,7 @@ class ArticlesService {
             return Articles.findPage({
                 where: where,
                 include: include,
-                attributes: {exclude: 'content houses_id'},
+                attributes: {exclude: 'content'},
             }, page, count,pagesize);
         }).then(result=> {
             result.list.map(article=> {
