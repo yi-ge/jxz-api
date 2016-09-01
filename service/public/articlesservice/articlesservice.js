@@ -38,13 +38,15 @@ class ArticlesService {
         return Users.getArticleCount(user_id).then(count=> {
             if (count == 0) return Users.errorPromise('用户不存在');
             return Articles.transaction(t=> {
+                let returnResult;
                 return Articles.insert(Articles.createModel(title, content, user_id, Articles.AUTHORTYPE.FRONT, isDraft, user_id, user_id), {
                     transaction: t
                 }).then(articles=> {
+                    returnResult = articles;
                     if (isDraft == Articles.DRAFT.YES) return articles; //不存草稿 文章数+1
-                    return Users.updateArticleNum(user_id, count + 1, t).then(()=> {
-                        return articles;
-                    });
+                    return Users.updateArticleNum(user_id, count + 1, t);
+                }).then(()=> {
+                    return returnResult;
                 });
             });
         });
@@ -88,7 +90,7 @@ class ArticlesService {
                 return Articles.update({
                     title: title,
                     content: content,
-                    updated_at: new Date()
+                    updated_at: new Date(),
                 }, {
                     where: {id: id},
                     transaction: t,
@@ -485,15 +487,15 @@ class ArticlesService {
             return true;
         }).then(()=> {
             return UsersFavorite.transaction(t=> {
-                return UsersFavorite.collection(user_id, favorite_source_id, classType, t)
-                    .then(result=> {
-                        return UsersFavorite.countSourceFavorite(favorite_source_id, classType)
-                            .then(count=> {
-                                return Articles.updateAtNum(favorite_source_id, count + 1, t);
-                            }).then(()=> {
-                                return result;
-                            });
-                    });
+                let returnResult;
+                return UsersFavorite.collection(user_id, favorite_source_id, classType, t).then(result=> {
+                    returnResult = result;
+                    return UsersFavorite.countSourceFavorite(favorite_source_id, classType)
+                }).then(count=> {
+                    return Articles.updateAtNum(favorite_source_id, count + 1, t);
+                }).then(()=> {
+                    return returnResult;
+                });
             });
         })
     }
@@ -508,15 +510,16 @@ class ArticlesService {
     cancelArticle(user_id, favorite_source_id) {
         let classType = UsersFavorite.FAVORITECLASS.COLLECT;
         return UsersFavorite.transaction(t=> {
+            let returnResult;
             return UsersFavorite.cancel(user_id, favorite_source_id, classType, t).then(result=> {
+                returnResult = result;
                 return UsersFavorite.countSourceFavorite(favorite_source_id, classType)
-                    .then(count=> {
-                        count > 0 ? count = count - 1 : 0;
-                        return Articles.updateAtNum(favorite_source_id, count, t);
-                    }).then(()=> {
-                        return result;
-                    });
-            })
+            }).then(count=> {
+                count > 0 ? count = count - 1 : 0;
+                return Articles.updateAtNum(favorite_source_id, count, t);
+            }).then(()=> {
+                return returnResult;
+            });
         });
     }
 
@@ -540,22 +543,22 @@ class ArticlesService {
     likeArticle(user_id, favorite_source_id) {
         let PRAISE = UsersFavorite.FAVORITECLASS.PRAISE;
         return Articles.findById(favorite_source_id).then(article=> {
-            if(article.author == user_id) return Articles.errorPromise("不能给自己文章点赞");
+            if (article.author == user_id) return Articles.errorPromise("不能给自己文章点赞");
             return UsersFavorite.isCollection(user_id, favorite_source_id, PRAISE);
         }).then(result=> {
             if (result.iscollection) return UsersFavorite.errorPromise("已经点赞文章,不能重复点赞");
             return true;
         }).then(()=> {
             return UsersFavorite.transaction(t=> {
-                return UsersFavorite.collection(user_id, favorite_source_id, PRAISE, t)
-                    .then(result=> {
-                        return UsersFavorite.countSourceFavorite(favorite_source_id, PRAISE)
-                            .then(count=> {
-                                return Articles.updateLikeNum(favorite_source_id, count + 1, t);
-                            }).then(()=> {
-                                return result;
-                            });
-                    });
+                let returnResult;
+                return UsersFavorite.collection(user_id, favorite_source_id, PRAISE, t).then(result=> {
+                    returnResult = result;
+                    return UsersFavorite.countSourceFavorite(favorite_source_id, PRAISE);
+                }).then(count=> {
+                    return Articles.updateLikeNum(favorite_source_id, count + 1, t);
+                }).then(()=> {
+                    return returnResult;
+                });
             });
         })
     }
@@ -569,16 +572,16 @@ class ArticlesService {
     cancelLikeArticle(user_id, favorite_source_id) {
         let PRAISE = UsersFavorite.FAVORITECLASS.PRAISE;
         return UsersFavorite.transaction(t=> {
-            return UsersFavorite.cancel(user_id, favorite_source_id, PRAISE, t)
-                .then(result=> {
-                    return UsersFavorite.countSourceFavorite(favorite_source_id, PRAISE)
-                        .then(count=> {
-                            count > 0 ? count = count - 1 : 0;
-                            return Articles.updateLikeNum(favorite_source_id, count, t);
-                        }).then(()=> {
-                            return result;
-                        });
-                })
+            let returnResult;
+            return UsersFavorite.cancel(user_id, favorite_source_id, PRAISE, t).then(result=> {
+                returnResult = result;
+                return UsersFavorite.countSourceFavorite(favorite_source_id, PRAISE);
+            }).then(count=> {
+                count > 0 ? count = count - 1 : 0;
+                return Articles.updateLikeNum(favorite_source_id, count, t);
+            }).then(()=> {
+                return returnResult;
+            })
         });
     }
 
