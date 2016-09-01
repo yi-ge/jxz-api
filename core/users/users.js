@@ -82,7 +82,7 @@ class Users extends Base {
      * @returns {*}
      */
     getArticleCount(id) {
-        return Articles.count({where: {author: id}});
+        return Articles.count({where: {author: id,is_draft:Articles.DRAFT.NO}});
     }
 
     /**
