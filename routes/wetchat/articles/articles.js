@@ -19,7 +19,7 @@ router.post('/userarticlelistonline', (req, res, next)=> {
         pagesize = param.pagesize,
         page = param.page;
     next({
-        $promise: ArticlesService.findUserArticleHighline(user_id, page,pagesize),
+        $promise: ArticlesService.findUserArticleHighline(user_id, page, pagesize),
         msg: '用户上线文章查询失败'
     });
 });
@@ -30,7 +30,7 @@ router.post('/userarticlelistoffline', (req, res, next)=> {
         pagesize = param.pagesize,
         page = param.page;
     next({
-        $promise: ArticlesService.findUserArticleOffline(user_id, page,pagesize),
+        $promise: ArticlesService.findUserArticleOffline(user_id, page, pagesize),
         msg: '用户未上线文章查询失败'
     });
 });
@@ -41,82 +41,82 @@ router.post('/housearticlelist', (req, res, next)=> {
         pagesize = param.pagesize,
         page = param.page;
     next({
-        $promise: ArticlesService.findHousesArticle(house_id, page,pagesize),
+        $promise: ArticlesService.findHousesArticle(house_id, page, pagesize),
         msg: '酒店相关查询失败'
     });
 });
 //保存草稿文章
-router.post('/addtodraft',(req,res,next)=>{
+router.post('/addtodraft', (req, res, next)=> {
     let param = req.body;
     let user_id = param.user_id,
         title = param.title,
         content = param.content;
     next({
-        $promise: ArticlesService.wetchatAddDraftArticles(user_id,title,content),
+        $promise: ArticlesService.wetchatAddDraftArticles(user_id, title, content),
         msg: '文章保存失败'
     });
 });
 //保存并发布文章
-router.post('/addtorelease',(req,res,next)=>{
+router.post('/addtorelease', (req, res, next)=> {
     let param = req.body;
     let user_id = param.user_id,
         title = param.title,
         content = param.content;
     next({
-        $promise: ArticlesService.wetchatAddReleaseArticles(user_id,title,content),
+        $promise: ArticlesService.wetchatAddReleaseArticles(user_id, title, content),
         msg: '文章发布失败'
     });
 });
 //编辑文章
-router.post('/edittodraft',(req,res,next)=>{
+router.post('/edittodraft', (req, res, next)=> {
     let param = req.body;
     let id = param.id,
         title = param.title,
         content = param.content;
     next({
-        $promise: ArticlesService.editToDraftArticle(id,title,content),
+        $promise: ArticlesService.editToDraftArticle(id, title, content),
         msg: '文章编辑失败'
     });
 });
 //文章投稿
-router.post('/contribute',(req,res,next)=>{
+router.post('/contribute', (req, res, next)=> {
     let param = req.body;
     let id = param.id,
         user_id = param.user_id;
     next({
-        $promise: ArticlesService.wetchatContributeArticle(id,user_id),
+        $promise: ArticlesService.wetchatContributeArticle(id, user_id),
         msg: '文章投稿失败'
     });
 });
 //删除草稿文章
-router.post('/deletearticle',(req,res,next)=>{
+router.post('/deletearticle', (req, res, next)=> {
     let param = req.body;
     let id = param.id,
         user_id = param.user_id;
     next({
-        $promise: ArticlesService.deleteWetchatArticle(id,user_id),
+        $promise: ArticlesService.deleteWetchatArticle(id, user_id),
         msg: '文章删除失败'
     });
 });
 //评论文章
-router.post('/commentarticle',(req,res,next)=>{
+router.post('/commentarticle', (req, res, next)=> {
     let param = req.body;
     let id = param.id,
         comment_user_id = param.comment_user_id,
         content = param.content;
     next({
-        $promise: ArticlesService.wetchatCommentArticle(id,comment_user_id,content),
+        $promise: ArticlesService.wetchatCommentArticle(id, comment_user_id, content),
         msg: '文章评论失败'
     });
 });
 //查看文章评论
-router.post('/findcomment',(req,res,next)=>{
+router.post('/findcomment', (req, res, next)=> {
     let param = req.body;
     let article_id = param.article_id,
         page = param.page,
         pagesize = param.pagesize;
     next({
-        $promise: ArticlesService.findArticleCommentList(article_id,page,pagesize),
+        $promise: ArticlesService.findArticleCommentList(article_id, page, pagesize),
         msg: '获取评论失败'
     });
 });
@@ -199,12 +199,13 @@ router.post('/view', (req, res, next)=> {
     });
 });
 //模糊查询文章
-router.post('/search',(req,res,next)=>{
+router.post('/search', (req, res, next)=> {
     let param = req.body;
     let text = param.text,
+        pagesize = param.pagesize,
         page = param.page;
     next({
-        $promise: ArticlesService.vagueSearchHouses(text, page),
+        $promise: ArticlesService.vagueSearchHouses(text, page, pagesize),
         msg: '文章查询失败'
     });
 });

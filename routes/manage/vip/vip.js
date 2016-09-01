@@ -19,11 +19,12 @@ router.post('/notbindlist', (req, res, next)=> {
     let param = req.body;
     let page = param.page,
         startDate = req.body.startDate,
+        pagesize = req.body.pagesize,
         endDate = req.body.endDate,
         user_status = req.body.user_status,
         account_name = req.body.account_name;
     next({
-        $promise:VipService.findNotBindVip(page, startDate, endDate,user_status, account_name),
+        $promise:VipService.findNotBindVip(page, startDate, endDate,user_status, account_name,pagesize),
         msg: '获取列表失败'
     });
 });

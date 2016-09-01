@@ -109,9 +109,11 @@ router.post("/configuserstoroles", (req, res, next)=> {
 });
 //查询角色列表(分页)
 router.post('/findroles', (req, res, next)=> {
-    let page = req.body.page;
+    let param = req.body;
+    let page = param.page,
+        pagesize = param.pagesize;
     next({
-        $promise:RolesService.findRoles(page),
+        $promise:RolesService.findRolesPage(page,pagesize),
         msg: '查询失败'
     });
 });

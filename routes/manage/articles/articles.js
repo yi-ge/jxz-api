@@ -10,9 +10,10 @@ router.post('/articlelist', (req, res, next)=> {
         endDate = param.endDate,
         status = param.status,
         house_name = param.house_name,
+        pagesize = param.pagesize,
         sortType = param.sortType;
     next({
-        $promise: ArticlesService.findPageList(page, title, startDate, endDate, status, house_name, sortType),
+        $promise: ArticlesService.findPageList(page, title, startDate, endDate, status, house_name, sortType,pagesize),
         msg: '查询失败'
     });
 });
@@ -20,9 +21,10 @@ router.post('/articlelist', (req, res, next)=> {
 router.post('/finduserartilelist',(req,res,next)=>{
     let param = req.body;
     let page = param.page,
+        pagesize = param.pagesize,
         user_id = param.user_id;
     next({
-        $promise: ArticlesService.findUserArticleNotDraft(user_id,page),
+        $promise: ArticlesService.findUserArticleNotDraft(user_id,page,pagesize),
         msg: '用户文章查询失败'
     });
 });

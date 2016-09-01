@@ -5,7 +5,7 @@ const router = express.Router();
 router.post('/register', (req, res, next)=> {
     let param = req.body;
     next({
-        $promise:SysUsersService.retister(param.account_name, param.password, param.user_name, param.email, param.roles_id),
+        $promise: SysUsersService.retister(param.account_name, param.password, param.user_name, param.email, param.roles_id),
         msg: '注册失败'
     });
 });
@@ -15,7 +15,7 @@ router.post('/login', (req, res, next)=> {
     let account_name = param.account_name,
         password = param.password;
     next({
-        $promise:SysUsersService.login(account_name, password),
+        $promise: SysUsersService.login(account_name, password),
         msg: '登陆失败'
     });
 });
@@ -23,7 +23,7 @@ router.post('/login', (req, res, next)=> {
 router.post('/updateuser', (req, res, next)=> {
     let id = req.body.id, status = req.body.status;
     next({
-        $promise:SysUsersService.updateSysUsersStatus(id, status),
+        $promise: SysUsersService.updateSysUsersStatus(id, status),
         msg: '状态更新失败'
     });
 });
@@ -34,27 +34,29 @@ router.post('/edituser', (req, res, next)=> {
         email = req.body.email,
         roles_id = req.body.roles_id;
     next({
-        $promise:SysUsersService.editSysUsers(id, user_name, email,roles_id),
+        $promise: SysUsersService.editSysUsers(id, user_name, email, roles_id),
         msg: '编辑失败'
     });
 });
 //查询用户列表
 router.post('/finduserlist', (req, res, next)=> {
-    let page = req.body.page;
+    let param = req.body;
+    let page = param.page,
+        pagesize = param.pagesize;
     next({
-        $promise:SysUsersService.findSysUsers(page),
+        $promise: SysUsersService.findSysUsers(page, pagesize),
         msg: '查询失败'
     });
 });
 //查询用户列表所有
 router.post('/finduserall', (req, res, next)=> {
     next({
-        $promise:SysUsersService.findSysUsersAll(),
+        $promise: SysUsersService.findSysUsersAll(),
         msg: '查询失败'
     });
 });
 //查询管理员的精选者
-router.post('/jxz',(req,res,next)=>{
+router.post('/jxz', (req, res, next)=> {
     let id = req.body.id;
     next({
         $promise: SysUsersService.findSysUsersIsJXZ(id),

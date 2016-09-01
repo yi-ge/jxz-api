@@ -1,4 +1,4 @@
-import {SysRoles,SysRoleResources} from './../../../../core';
+import {SysRoles,SysRoleResources,SysResources} from './../../../../core';
 class RolesService {
     /**
      * 添加角色
@@ -72,11 +72,16 @@ class RolesService {
      * @param pagesize
      * @returns {*}
      */
-    findRoles(page, pagesize) {
+    findRolesPage(page, pagesize) {
         return SysRoles.count().then(count=> {
             return count;
         }).then(count=> {
-            return SysRoles.findPage({}, page, count, 1, pagesize);
+            return SysRoles.findPage({
+                include:[{
+                    model:SysResources.sequlize,
+                    as:'resources',
+                }]
+            }, page, count, 1, pagesize);
         }).then(result=> {
             return result;
         });

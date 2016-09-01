@@ -7,7 +7,8 @@ import SysRoleResources from './../sysroleresources/sysroleresources';
 SysRoles.sequlize.belongsToMany(SysResources.sequlize, {
     through: SysRoleResources.sequlize,
     foreignKey: "role_id",
-    otherKey: 'resource_id'
+    otherKey: 'resource_id',
+    as:'resources'
 });
 
 //角色对应多个用户

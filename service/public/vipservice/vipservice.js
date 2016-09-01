@@ -39,7 +39,7 @@ class VipService {
      * @param sortType
      * @param pagesize
      */
-    findNotBindVip(page, startDate, endDate, user_status, account_name, pagesize = 20) {
+    findNotBindVip(page, startDate, endDate, user_status, account_name, pagesize) {
         let where = {};
         !!user_status && (where['user_status'] = user_status);
         !!account_name && (where['account_name'] = {$like: `%${account_name}%`});

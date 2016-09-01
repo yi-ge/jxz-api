@@ -5,9 +5,10 @@ const router = express.Router();
 router.post('/userlist', (req, res, next)=> {
     let page = req.body.page, sortType = req.body.sortType,
         user_name = req.body.user_name,
+        pagesize = req.body.pagesize,
         is_cover = req.body.is_cover;
     next({
-        $promise: UsersService.findJXZList(page, sortType, user_name, is_cover),
+        $promise: UsersService.findJXZList(page, sortType, user_name, is_cover,pagesize),
         msg: '用户查询失败'
     });
 });
@@ -15,13 +16,14 @@ router.post('/userlist', (req, res, next)=> {
 router.post('/userviplist', (req, res, next)=> {
     let param = req.body;
     let page = param.page, sortType = req.body.sortType,
+        pagesize = req.body.pagesize,
         startDate = req.body.startDate,
         endDate = req.body.endDate,
         user_status = req.body.user_status,
         vip_account_name = req.body.vip_account_name,
         is_cover = req.body.is_cover;
     next({
-        $promise:UsersService.findUserToVipList(page, sortType, startDate, endDate,user_status, vip_account_name,is_cover),
+        $promise:UsersService.findUserToVipList(page, sortType, startDate, endDate,user_status, vip_account_name,is_cover,pagesize),
         msg: '用户查询失败'
     });
 });

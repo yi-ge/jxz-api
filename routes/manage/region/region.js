@@ -36,24 +36,27 @@ router.post('/addregion', (req, res, next)=> {
 //查询洲
 router.post('/findstatelist', (req, res, next)=> {
     next({
-        $promise:RegionService.findStateList(),
+        $promise: RegionService.findStateList(),
         msg: '洲查询失败'
     });
 });
 //查询国家
 router.post('/findcountrylist', (req, res, next)=> {
     let param = req.body;
-    let page = param.page;
+    let page = param.page,
+        pagesize = param.pagesize;
     next({
-        $promise:RegionService.findCountryList(page),
+        $promise: RegionService.findCountryList(page, pagesize),
         msg: '国家查询失败'
     });
 });
 //查询区域列表
 router.post('/findregionlist', (req, res, next)=> {
-    let page = req.body.page;
+    let param = req.body;
+    let page = param.page,
+        pagesize = param.pagesize;
     next({
-        $promise:RegionService.findRegionList(page),
+        $promise: RegionService.findRegionList(page, pagesize),
         msg: '区域查询失败'
     });
 });
@@ -61,15 +64,15 @@ router.post('/findregionlist', (req, res, next)=> {
 router.post('/findcountrytostate', (req, res, next)=> {
     let state_id = req.body.state_id;
     next({
-        $promise:RegionService.findCountryToState(state_id),
+        $promise: RegionService.findCountryToState(state_id),
         msg: '国家查询失败'
     });
 });
 //通过国家查询区域
-router.post('/findregiontocountry',(req, res, next)=> {
+router.post('/findregiontocountry', (req, res, next)=> {
     let country_id = req.body.country_id;
     next({
-        $promise:RegionService.findRegionToCountry(country_id),
+        $promise: RegionService.findRegionToCountry(country_id),
         msg: '区域查询失败'
     });
 });
@@ -80,7 +83,7 @@ router.post('/editstate', (req, res, next)=> {
         name = param.name,
         modifier = param.modifier;
     next({
-        $promise:RegionService.editState(state_id, name, modifier),
+        $promise: RegionService.editState(state_id, name, modifier),
         msg: '编辑大洲失败'
     });
 });
@@ -93,19 +96,19 @@ router.post('/editcountry', (req, res, next)=> {
         state_id = param.state_id,
         modifier = param.modifier;
     next({
-        $promise:RegionService.editCountry(country_id,name,state_id,modifier),
+        $promise: RegionService.editCountry(country_id, name, state_id, modifier),
         msg: '编辑国家失败'
     });
 });
 //编辑区域
-router.post('/editregion',(req,res,next)=>{
+router.post('/editregion', (req, res, next)=> {
     let param = req.body;
     let region_id = param.region_id,
         name = param.name,
         country_id = param.country_id,
         modifier = param.modifier;
     next({
-        $promise:RegionService.editRegion(region_id,name,country_id,modifier),
+        $promise: RegionService.editRegion(region_id, name, country_id, modifier),
         msg: '编辑区域失败'
     });
 });

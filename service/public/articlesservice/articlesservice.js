@@ -305,7 +305,7 @@ class ArticlesService {
      * @param pagesize
      * @returns {Promise.<T>}
      */
-    findWetcharArticlesPageList(page, status, sortType = 2, pagesize = 20) {
+    findWetcharArticlesPageList(page, status, sortType = 2, pagesize) {
         let where = Articles.getAuditStatusWhere(Articles.AUDITING.HIGHLINE), order;
         switch (status) {
             case 0:
@@ -629,7 +629,7 @@ class ArticlesService {
      * @param page
      * @returns {*}
      */
-    vagueSearchHouses(text, page) {
+    vagueSearchHouses(text, page,pagesize) {
         if (!text) return Articles.errorPromise("输入格式有误");
         let where = {};
         where[`$or`] = [
@@ -663,7 +663,7 @@ class ArticlesService {
                 where: where,
                 include: include,
                 attributes: {exclude: 'content houses_id'},
-            }, page, count);
+            }, page, count,pagesize);
         }).then(result=> {
             result.list.map(article=> {
                 Articles.formatArticle(article.dataValues);

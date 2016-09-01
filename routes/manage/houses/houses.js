@@ -23,9 +23,10 @@ router.post('/findsyshousekeyword', (req, res, next)=> {
     let param = req.body;
     let page = param.page,
         startDate = param.startDate,
+        pagesize = param.pagesize,
         endDate = param.endDate;
     next({
-        $promise: SysHousesKeywordService.findSysHousesKeywordList(page, startDate, endDate),
+        $promise: SysHousesKeywordService.findSysHousesKeywordList(page, startDate, endDate,pagesize),
         msg: '系统酒店亮点查询失败'
     });
 });
@@ -150,9 +151,11 @@ router.post('/findhousecomments', (req, res, next)=> {
 //获取酒店评论 分页
 router.post('/findhousecommentpage', (req, res, next)=> {
     let param = req.body;
-    let id = param.id;
+    let id = param.id,
+        pagesize = param.pagesize,
+        page = param.page;
     next({
-        $promise: HousesCommentService.findHouseCommentsPage(id),
+        $promise: HousesCommentService.findHouseCommentsPage(id,page,pagesize),
         msg: '评论查询失败'
     });
 });
@@ -236,11 +239,12 @@ router.post('/findhouses', (req, res, next)=> {
     let name = param.name,
         sys_id = param.sys_id,
         page = param.page,
+        pagesize = param.pagesize,
         is_putaway = param.is_putaway,
         endDate = param.endDate,
         startDate = param.startDate;
     next({
-        $promise: HousesService.findHousesList(page, startDate, endDate, is_putaway, name, sys_id),
+        $promise: HousesService.findHousesList(page, startDate, endDate, is_putaway, name, sys_id,pagesize),
         msg: '酒店查询失败'
     });
 });
@@ -265,7 +269,7 @@ router.post('/putaway', (req, res, next)=> {
     });
 });
 //模糊查询酒店
-router.post('/vaguehouses',(req, res, next)=>{
+router.post('/vaguehouses', (req, res, next)=> {
     let param = req.body;
     let name = param.name;
     next({
@@ -274,7 +278,7 @@ router.post('/vaguehouses',(req, res, next)=>{
     });
 });
 //查询所有酒店
-router.post('/listall',(req,res,next)=>{
+router.post('/listall', (req, res, next)=> {
     next({
         $promise: HousesService.findAll(),
         msg: '查询失败'
