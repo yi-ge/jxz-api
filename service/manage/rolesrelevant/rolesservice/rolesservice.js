@@ -58,7 +58,7 @@ class RolesService {
                 return SysRoleResources.destroy({where:{role_id:id},transaction:t});
             }).then(()=>{
                 if (Array.isArray(resources) && resources.length > 0) return SysRoleResources.addRolesResources(id, resources,t);
-                else if(resources) return SysRoleResources.addRolesResources(id, [resources],t);
+                else if(resources) return SysRoleResources.addRolesToResource(id, resources,t);
                 return returnResult;
             });
         }).then(()=> {
