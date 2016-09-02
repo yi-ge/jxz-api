@@ -1,5 +1,5 @@
 import express from "express";
-import {UsersService,UsersAtService,UsersFavoriteService} from './../../../service/wetchat';
+import {UsersService,UsersAtService,UsersFavoriteService,SysInformService} from './../../../service/wetchat';
 const router = express.Router();
 
 //注册成为精选者
@@ -104,5 +104,24 @@ router.post('/sponsoredmsg', (req, res, next)=> {
         message: '私信发送失败'
     });
 });
-
+//是否有没有读取的系统通知
+router.post('/isreadynotice', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id;
+    next({
+        $promise: SysInformService.isNotReadNotice(id),
+        message: '存在没读取通知状态失败'
+    });
+});
+//获取通知列表
+router.post('/findnoticelist', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id,
+        page = param.page,
+        pagesize = param.pagesize;
+    next({
+        $promise: SysInformService.findUsersSysNotice(id,page,pagesize),
+        message: '系统通知查询失败'
+    });
+});
 export default router;
