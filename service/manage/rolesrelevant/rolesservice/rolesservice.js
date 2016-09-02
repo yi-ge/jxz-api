@@ -105,5 +105,19 @@ class RolesService {
             return result;
         });
     }
+
+    /**
+     * 查询所有为禁用角色
+     * @returns {*}
+     */
+    findNotDisableAllRoles(){
+        return SysRoles.findList({
+            where:{status:SysRoles.STATUS.ENABLE},
+            attributes: ['id', 'name']
+        }).then(result=> {
+            return result;
+        });
+    }
+
 }
 export default new RolesService();

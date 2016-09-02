@@ -120,7 +120,7 @@ router.post('/findroles', (req, res, next)=> {
 //查询角色列表(所有)
 router.post('/findallroles', (req, res, next)=> {
     next({
-        $promise:RolesService.findAllRoles(),
+        $promise:RolesService.findNotDisableAllRoles(),
         msg: '查询失败'
     });
 });

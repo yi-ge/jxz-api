@@ -9,6 +9,9 @@ class SysInformService {
             receive_user:user_id,
             type:SysInform.TYPE.NOTICE,
         };
+        return SysInform.count({where:where}).then(count=>{
+
+        });
     }
 }
 export default new SysInformService();

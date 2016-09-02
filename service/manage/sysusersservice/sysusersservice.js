@@ -107,7 +107,15 @@ class SysUserService {
                 lock: t.LOCK.UPDATE,
             });
         }).then(()=> {
-            return SysUsers.findById(id);
+            return SysUsers.findById(id,{
+                include: [{
+                    model: SysRoles.sequlize,
+                    through: {
+                        model: SysUserRoles.sequlize,
+                        attributes: []
+                    }
+                }]
+            });
         }).then(result=> {
             return SysUsers.formaySysUser(result.dataValues);
         });
