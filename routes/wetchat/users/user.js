@@ -14,7 +14,6 @@ router.post('/registerjxz', (req, res, next)=> {
         message: '注册失败'
     });
 });
-
 //获取精选者信息
 router.post('/getjxzinfo', (req, res, next)=> {
     let param = req.body, sex = param.sex == 1 ? "男" : param.sex == 2 ? "女" : "其他";
