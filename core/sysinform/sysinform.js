@@ -2,10 +2,8 @@
  * Created by NX on 2016/8/8.
  */
 import sysinform from './sysinform.config';
-
 import SysInfoTemplate from './../sysinfotemplate/sysinfotemplate';
 import Base from './../base';
-
 const TYPE = {
     NOTICE:1,//通知
     NEWS:2//消息
@@ -15,8 +13,6 @@ const TYPE = {
 },CLASSIFY = {
     ARTICLE:1 //文章
 };
-
-
 class SysInform extends Base {
     constructor() {
         super("sys_inform", sysinform, {
