@@ -5,7 +5,10 @@ class SysInformService {
      * @param user_id
      */
     findUsersSysNotice(user_id,page,pagesize){
-        let where = {};
+        let where = {
+            receive_user:user_id,
+            type:SysInform.TYPE.NOTICE,
+        };
     }
 }
 export default new SysInformService();

@@ -15,6 +15,4 @@ SysInform.sequlize.belongsTo(Users.sequlize,{
     targetKey:'id',
     as:'send'
 });
-
-
 export default SysInform;
