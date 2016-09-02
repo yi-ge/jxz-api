@@ -1,4 +1,4 @@
-import {Articles,Users,Houses,SysUsers,SysDict,UsersFavorite,ArticlesComment} from './../../../core';
+import {Articles,Users,Houses,SysUsers,SysDict,UsersFavorite,ArticlesComment,SysInform} from './../../../core';
 class ArticlesService {
     /**
      * 添加一篇文章
@@ -251,23 +251,31 @@ class ArticlesService {
      * @param status
      */
     updateAudit(id, status, modifier) {
-        return Articles.transaction(t=> {
-            return Articles.updateAuditStatus(id, status, modifier, t);
-        }).then(()=> {
-            return Articles.findById(id, {
-                include: [{
-                    model: Users.sequlize,
-                    attributes: ['id', 'user_name', 'avatar', 'user_vip_id']
-                }, {
-                    model: Houses.sequlize,
-                    as: 'houses',
-                    attributes: ['id', 'address']
-                }]
+        return Articles.findById(id, {
+            include: [{
+                model: Users.sequlize,
+                attributes: ['id', 'user_name', 'avatar', 'user_vip_id']
+            }, {
+                model: Houses.sequlize,
+                as: 'houses',
+                attributes: ['id', 'address']
+            }]
+        }).then(article=>{
+            let returnResult = article;
+            if(!article) return Articles.errorPromise("文章不存在");
+            return Articles.transaction(t=> {
+                return Articles.updateAuditStatus(id, status, modifier, t).then((result)=>{
+                    if(status == Articles.AUDITING.HIGHLINE) return SysInform.articleAuditPass(article.title,article.author,null,t);
+                    return result;
+                }).then(()=>{
+                    return returnResult;
+                });
+            }).then(article=> {
+                console.log(article);
+                article.user && Users.formatUser(article.user.dataValues);
+                return Articles.formatArticle(article.dataValues);
             });
-        }).then(article=> {
-            article.user && Users.formatUser(article.user.dataValues);
-            return Articles.formatArticle(article.dataValues);
-        });
+        })
     }
 
     /**

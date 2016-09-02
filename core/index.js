@@ -25,6 +25,8 @@ import UsersAt from './usersat';
 import ArticlesComment from './articlescomment';
 import UsersFavorite from './usersfavorite';
 import UsersMsg from './usersmsg';
+import SysInform from './sysinform';
+import SysInfoTemplate from './sysinfotemplate';
 
 export {
     Users, //会员
@@ -51,4 +53,6 @@ export {
     ActivitysLocation,
     UsersAt, //用户关注
     UsersMsg, //用户消息
+    SysInform,//消息 通知
+    SysInfoTemplate,//消息 模板
 }
