@@ -271,7 +271,6 @@ class ArticlesService {
                     return returnResult;
                 });
             }).then(article=> {
-                console.log(article);
                 article.user && Users.formatUser(article.user.dataValues);
                 return Articles.formatArticle(article.dataValues);
             });

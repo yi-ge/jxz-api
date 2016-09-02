@@ -1,0 +1,6 @@
+{
+	"name": "sysinformservice",
+	"version": "2.0.0",
+	"private": true,
+	"main": "./sysinformservice.js"
+}

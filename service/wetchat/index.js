@@ -6,7 +6,8 @@ import {
     UsersService,
     VipService,
     ArticlesService,
-    RegionService
+    RegionService,
+    SysInformService,
 } from './../public';
 
 import {UsersAtService,UsersFavoriteService} from './userslevant';
@@ -20,4 +21,5 @@ export {
     HousesKeywordService,
     HousesAttachService,
     ArticlesService,
+    SysInformService,
 }

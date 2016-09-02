@@ -91,10 +91,9 @@ class SysInform extends Base {
      * @returns {Promise.<Instance>}
      */
     articleAuditPass(article_title,receive_user,url,t){
-        console.log(SysInfoTemplate);
         return SysInfoTemplate.getTemplate(SysInfoTemplate.TEMPLATE.ARTICLE.AUDIO).then(template=>{
             if(!template) return SysInfoTemplate.errorPromise("审核模板不存在");
-            let content = template.content.replace("#体验稿标题#",article_title);
+            let content = template.content.replace("#体验稿标题#",`#${article_title}#`);
             return this.systemNnotification(CLASSIFY.ARTICLE,1,null,content,url,receive_user,t);
         });
     }

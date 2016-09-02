@@ -7,6 +7,7 @@ import HousesComment from './../housescomment/housescomment'; //评论酒店
 import UsersAt from './../usersat/usersat'; // 关注用户
 import UsersFavorite from './../usersfavorite/usersfavorite'; // 关注 点赞文章
 import ArticlesComment from './../articlescomment/articlescomment'; //文章评论
+import SysInform from './../sysinform/sysinform'; //文章评论
 import UsersMsg from './../usersmsg/usersmsg'; //用户私信
 //一个用户对应一个openid
 Users.sequlize.hasOne(UsersOpenid.sequlize, {
@@ -79,4 +80,11 @@ Users.sequlize.hasMany(UsersMsg.sequlize,{
     foreignKey:'user_id',
     as:'receive_msg'
 });
+//一个用户对于多个系统通知
+Users.sequlize.hasMany(SysInform.sequlize,{
+    foreignKey:!'receive_user',
+    as:'sys_notices'
+});
+
+
 export default Users;
