@@ -165,7 +165,7 @@ class ArticlesService {
                 }).then(result=> {
                     returnResult = result;
                     //评论文章时 添加一条消息发送给用户
-                    return SysInform.userToArticleMsg(SysInform.TYPE.COMMENT,comment_user_id,_article.author,null,content,id,t);
+                    return SysInform.userToArticleMsg(SysInform.TYPE.COMMENT,comment_user_id,_article.author,"评论",Articles.sysInformTemp(_article,content),id,t);
                 }).then(()=> {
                     return ArticlesComment.formatArticleComment(returnResult.dataValues);
                 });
@@ -520,7 +520,7 @@ class ArticlesService {
                     return Articles.updateAtNum(favorite_source_id, count + 1, t);
                 }).then(()=> {
                     //文章收藏消息存入数据库
-                    return SysInform.userToArticleMsg(SysInform.TYPE.COLLECT,user_id,_article.author,null,null,favorite_source_id,t);
+                    return SysInform.userToArticleMsg(SysInform.TYPE.COLLECT,user_id,_article.author,"收藏",Articles.sysInformTemp(_article),favorite_source_id,t);
                 }).then(()=> {
                     return returnResult;
                 });
@@ -592,7 +592,7 @@ class ArticlesService {
                     return Articles.updateLikeNum(favorite_source_id, count + 1, t);
                 }).then(()=>{
                     //点赞文章存入表中 用户动态时需要查询
-                    return SysInform.userToArticleMsg(SysInform.TYPE.PRAISE,user_id,_article.author,null,null,favorite_source_id,t);
+                    return SysInform.userToArticleMsg(SysInform.TYPE.PRAISE,user_id,_article.author,"点赞",Articles.sysInformTemp(_article),favorite_source_id,t);
                 }).then(()=> {
                     return returnResult;
                 });

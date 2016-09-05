@@ -2,6 +2,7 @@
  * Created by NX on 2016/8/8.
  */
 import articles from './articles.config';
+import SysInform from './../sysinform/sysinform';
 import Base from './../base';
 import UsersFavorite from './../usersfavorite/usersfavorite';
 const AUTHORTYPE = {//作者类型
@@ -69,6 +70,21 @@ class Articles extends Base {
         article.updated_at != void(0) && (article.updated_at = this.formatDate(article.updated_at, 'yyyy-MM-dd hh:mm:ss'));
         article.check_date != void(0) && (article.check_date = this.formatDate(article.check_date, 'yyyy-MM-dd hh:mm:ss'));
         return article;
+    }
+
+    /**
+     * 文章消息模板(收藏，点赞)
+     * @param article
+     */
+    sysInformTemp(article,content){
+        let contentJSON = Object({
+            article:{
+                title:article.title,
+                cover_picture:article.cover_picture
+            }
+        },content != void(0) ? {content:""}:{}),reduceLen = JSON.stringify(contentJSON).length;
+        content != void(0) && (contentJSON.content = SysInform.substrContent(content,reduceLen));
+        return JSON.stringify(contentJSON);
     }
 
     /**

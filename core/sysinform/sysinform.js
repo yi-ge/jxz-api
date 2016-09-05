@@ -3,6 +3,7 @@
  */
 import sysinform from './sysinform.config';
 import SysInfoTemplate from './../sysinfotemplate/sysinfotemplate';
+import Users from './../users/users';
 import Base from './../base';
 const TYPE = {
     NOTICE: 1, //系统通知,
@@ -17,7 +18,7 @@ const TYPE = {
 }, CLASSIFY = {
     ARTICLE: 1, //文章
     USER:2, //用户
-};
+},MAXMSGCONTENTLENGTH = 200;
 class SysInform extends Base {
     constructor() {
         super("sys_inform", sysinform, {
@@ -26,6 +27,7 @@ class SysInform extends Base {
         this.TYPE = TYPE;
         this.READSTATUS = READSTATUS;
         this.CLASSIFY = CLASSIFY;
+        this.MAXMSGCONTENTLENGTH = MAXMSGCONTENTLENGTH;
     }
 
     /**
@@ -50,7 +52,7 @@ class SysInform extends Base {
             classify: classify,
             info_level: info_level,
             title: title,
-            content: content,
+            content: this.substrContent(content),
             url: url,
             send_user: send_user,
             receive_user: receive_user,
@@ -63,6 +65,17 @@ class SysInform extends Base {
         this.READSTATUS = READSTATUS;
         this.CLASSIFY = CLASSIFY;
         return model;
+    }
+
+    /**
+     * 截取存入数据库内容长度
+     * @param content
+     * @param reduceLen
+     * @returns {*}
+     */
+    substrContent(content , reduceLen = 0){
+        if(content.length < MAXMSGCONTENTLENGTH - reduceLen) return content;
+        return content.substr(0,MAXMSGCONTENTLENGTH - reduceLen-1);
     }
 
     formatSysInform(inform) {
@@ -104,6 +117,9 @@ class SysInform extends Base {
         return this.count({where: where}).then(count=> {
             return this.findPage({
                 where: where,
+                include:[{
+                    model:Users.sequlize,
+                }],
                 order:`send_date DESC`
             }, page, count, 2, pagesize);
         }).then(result=> {

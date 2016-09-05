@@ -170,7 +170,7 @@ class UserService {
                     return result;
                 }).then(()=>{
                     //关注信息存入数据库 用户动态可查
-                    return SysInform.userToUserMsg(SysInform.TYPE.CONCERN,id,at_user_id,null,null,null,t);
+                    return SysInform.userToUserMsg(SysInform.TYPE.CONCERN,id,at_user_id,"关注",null,null,t);
                 }).then(()=>{
                     return returnResult;
                 });
