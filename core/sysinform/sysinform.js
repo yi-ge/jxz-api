@@ -52,7 +52,7 @@ class SysInform extends Base {
             classify: classify,
             info_level: info_level,
             title: title,
-            content: this.substrContent(content),
+            content: content != void(0) ? this.substrContent(content) : content,
             url: url,
             send_user: send_user,
             receive_user: receive_user,
@@ -123,9 +123,9 @@ class SysInform extends Base {
                 order:`send_date DESC`
             }, page, count, 2, pagesize);
         }).then(result=> {
-            return this.update({read_status: READSTATUS.YES}, {
+            return this.update({read_status: READSTATUS.YES,read_date:new Date()}, {
                 where: Object.assign({
-                    read_status: READSTATUS.NO
+                    read_status: READSTATUS.NO,
                 }, where),
                 transaction: t,
                 lock: t.LOCK.UPDATE,
@@ -134,7 +134,7 @@ class SysInform extends Base {
             });
         }).then(infos=> {
             infos.list.map(info=> {
-                this.formatSysInform(info);
+                this.formatSysInform(info.dataValues);
             });
             return infos;
         });

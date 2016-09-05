@@ -6,18 +6,18 @@ import SysInform from './../sysinform/sysinform';
 import Base from './../base';
 import UsersFavorite from './../usersfavorite/usersfavorite';
 const AUTHORTYPE = {//作者类型
-    FRONT:1,
-    BACKSTAGE:2
-},AUDITING = { //审核状态
-    NOAUDIT:0, //未审核
-    PASS:1, //通过
-    REJECT:2, //拒绝
-    OFFLINE:3, //离线
-    HIGHLINE:4,  //上线
-    NOTLINE:5 //未上线
-},DRAFT={ // 是否是草稿
-    YES:1,
-    NO:2
+    FRONT: 1,
+    BACKSTAGE: 2
+}, AUDITING = { //审核状态
+    NOAUDIT: 0, //未审核
+    PASS: 1, //通过
+    REJECT: 2, //拒绝
+    OFFLINE: 3, //离线
+    HIGHLINE: 4,  //上线
+    NOTLINE: 5 //未上线
+}, DRAFT = { // 是否是草稿
+    YES: 1,
+    NO: 2
 };
 
 class Articles extends Base {
@@ -43,7 +43,7 @@ class Articles extends Base {
      *        is_off  0离线1上线
      * @returns {{id: number, title: *, content: *, author: *, check_status: number, creater: *, modifier: *, author_type: *, created_at: Date, updated_at: Date, check_date: Date, is_off: number, read_num: number, at_num: number, like_num: number, is_draft: number}}
      */
-    createModel(title, content, author, author_type,is_draft=DRAFT.YES, creater, modifier) {
+    createModel(title, content, author, author_type, is_draft = DRAFT.YES, creater, modifier) {
         let model = {
             id: this.generateId(),
             title: title,
@@ -60,7 +60,7 @@ class Articles extends Base {
             read_num: 0,
             at_num: 0,
             like_num: 0,
-            is_draft:is_draft
+            is_draft: is_draft
         };
         return model;
     }
@@ -76,14 +76,15 @@ class Articles extends Base {
      * 文章消息模板(收藏，点赞)
      * @param article
      */
-    sysInformTemp(article,content){
+    sysInformTemp(article, content) {
         let contentJSON = Object({
-            article:{
-                title:article.title,
-                cover_picture:article.cover_picture
+            article: {
+                id: article.id,
+                title: article.title,
+                cover_picture: article.cover_picture
             }
-        },content != void(0) ? {content:""}:{}),reduceLen = JSON.stringify(contentJSON).length;
-        content != void(0) && (contentJSON.content = SysInform.substrContent(content,reduceLen));
+        }, content != void(0) ? {content: ""} : {}), reduceLen = JSON.stringify(contentJSON).length;
+        content != void(0) && (contentJSON.content = SysInform.substrContent(content, reduceLen));
         return JSON.stringify(contentJSON);
     }
 
@@ -112,11 +113,11 @@ class Articles extends Base {
      * @param t
      * @returns {*}
      */
-    updateCoverPicture(id, cover_picture,modifier, t) {
+    updateCoverPicture(id, cover_picture, modifier, t) {
         return this.update({
             cover_picture: cover_picture,
-            modifier:modifier,
-            updated_at:new Date()
+            modifier: modifier,
+            updated_at: new Date()
         }, {
             where: {id: id},
             transaction: t,
@@ -129,16 +130,31 @@ class Articles extends Base {
      * @param status 0未审核1通过2拒绝3离线4上线6未上线
      * @returns {{}}
      */
-    getAuditStatusWhere(status){
+    getAuditStatusWhere(status) {
         let whereAuditStatus = {};
-        if(status != void(0)) switch (parseInt(status)) {
-            case AUDITING.NOAUDIT:whereAuditStatus['check_status'] = 0;break;
-            case AUDITING.PASS:whereAuditStatus['check_status'] = 1;break;
-            case AUDITING.REJECT:whereAuditStatus['check_status'] = 2;break;
-            case AUDITING.OFFLINE:whereAuditStatus['is_off'] = 0;whereAuditStatus['check_status']=1;break;
-            case AUDITING.HIGHLINE:whereAuditStatus['is_off'] = 1;whereAuditStatus['check_status']=1;break;
-            case AUDITING.NOTLINE:whereAuditStatus['is_off'] = 0;break;
-            default: break;
+        if (status != void(0)) switch (parseInt(status)) {
+            case AUDITING.NOAUDIT:
+                whereAuditStatus['check_status'] = 0;
+                break;
+            case AUDITING.PASS:
+                whereAuditStatus['check_status'] = 1;
+                break;
+            case AUDITING.REJECT:
+                whereAuditStatus['check_status'] = 2;
+                break;
+            case AUDITING.OFFLINE:
+                whereAuditStatus['is_off'] = 0;
+                whereAuditStatus['check_status'] = 1;
+                break;
+            case AUDITING.HIGHLINE:
+                whereAuditStatus['is_off'] = 1;
+                whereAuditStatus['check_status'] = 1;
+                break;
+            case AUDITING.NOTLINE:
+                whereAuditStatus['is_off'] = 0;
+                break;
+            default:
+                break;
         }
         return whereAuditStatus;
     }
@@ -150,11 +166,14 @@ class Articles extends Base {
      * @param t
      * @returns {*}
      */
-    updateAuditStatus(id,status,modifier,t){
-        let updateOption = Object.assign({modifier:modifier,updated_at:new Date()},this.getAuditStatusWhere(status));
-        return this.update(updateOption,{
-            where:{id:id},
-            transaction:t,
+    updateAuditStatus(id, status, modifier, t) {
+        let updateOption = Object.assign({
+            modifier: modifier,
+            updated_at: new Date()
+        }, this.getAuditStatusWhere(status));
+        return this.update(updateOption, {
+            where: {id: id},
+            transaction: t,
             lock: t.LOCK.UPDATE
         });
     }
@@ -167,17 +186,18 @@ class Articles extends Base {
      * @param t
      * @returns {*}
      */
-    updateHousesId(id,houses_id,modifier,t){
+    updateHousesId(id, houses_id, modifier, t) {
         return this.update({
-            houses_id:houses_id,
-            updated_at:new Date(),
-            modifier:modifier,
-        },{
-            where:{id:id},
-            transaction:t,
+            houses_id: houses_id,
+            updated_at: new Date(),
+            modifier: modifier,
+        }, {
+            where: {id: id},
+            transaction: t,
             lock: t.LOCK.UPDATE
         });
     }
+
     /**
      * 修改文章阅读数量
      * @param id
@@ -185,12 +205,12 @@ class Articles extends Base {
      * @param t
      * @returns {*}
      */
-    updateReadNum(id,num,t){
+    updateReadNum(id, num, t) {
         return this.update({
-            read_num:num
-        },{
-            where:{id:id},
-            transaction:t,
+            read_num: num
+        }, {
+            where: {id: id},
+            transaction: t,
             lock: t.LOCK.UPDATE
         });
     }
@@ -202,12 +222,12 @@ class Articles extends Base {
      * @param t
      * @returns {*}
      */
-    updateLikeNum(id,num,t){
+    updateLikeNum(id, num, t) {
         return this.update({
-            like_num:num
-        },{
-            where:{id:id},
-            transaction:t,
+            like_num: num
+        }, {
+            where: {id: id},
+            transaction: t,
             lock: t.LOCK.UPDATE
         });
     }
@@ -218,13 +238,13 @@ class Articles extends Base {
      * @param t
      * @returns {*}
      */
-    contribute(id,t){
+    contribute(id, t) {
         return this.update({
-            is_draft:DRAFT.NO,
-            updated_at:new Date(),
-        },{
-            where:{id:id},
-            transaction:t,
+            is_draft: DRAFT.NO,
+            updated_at: new Date(),
+        }, {
+            where: {id: id},
+            transaction: t,
             lock: t.LOCK.UPDATE
         });
     }
