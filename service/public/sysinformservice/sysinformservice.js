@@ -5,16 +5,16 @@ class SysInformService {
      * @param user_id
      * @returns {*}
      */
-    isNotReadNotice(user_id){
+    isNotReadNotice(user_id) {
         let where = {
             receive_user: user_id,
             type: SysInform.TYPE.NOTICE,
-            read_status:SysInform.READSTATUS.NO
+            read_status: SysInform.READSTATUS.NO
         };
-        return SysInform.count({where:where}).then(count=>{
+        return SysInform.count({where: where}).then(count=> {
             let status = true;
-            if(count == 0) status = false;
-            return {isread:status};
+            if (count == 0) status = false;
+            return {isread: status};
         });
     }
 
@@ -27,25 +27,27 @@ class SysInformService {
             receive_user: user_id,
             type: SysInform.TYPE.NOTICE,
         };
-        return SysInform.transaction(t=> {
-            return SysInform.update({read_status: SysInform.READSTATUS.YES}, {
-                where: Object.assign(where, {
-                    read_status: SysInform.READSTATUS.NO
-                }),
-                transaction: t,
-                lock: t.LOCK.UPDATE,
+        return SysInform.count({where: where}).then(count=> {
+            return SysInform.findPage({
+                where: where
+            }, page, count, 1, pagesize);
+        }).then(result=> {
+            return SysInform.transaction(t=> {
+                return SysInform.update({read_status: SysInform.READSTATUS.YES}, {
+                    where: Object.assign({
+                        read_status: SysInform.READSTATUS.NO
+                    }, where),
+                    transaction: t,
+                    lock: t.LOCK.UPDATE,
+                });
             }).then(()=> {
-                return SysInform.count({where:where});
-            }).then(count=>{
-                return SysInform.findPage({
-                    where:where
-                },page,count,1,pagesize);
-            }).then(infos=>{
-                 infos.list.map(info=>{
-                     SysInform.formatSysInform(info);
-                 });
-                return infos;
+                return result;
             });
+        }).then(infos=> {
+            infos.list.map(info=> {
+                SysInform.formatSysInform(info);
+            });
+            return infos;
         });
     }
 }

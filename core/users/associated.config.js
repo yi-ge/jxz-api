@@ -82,9 +82,11 @@ Users.sequlize.hasMany(UsersMsg.sequlize,{
 });
 //一个用户对于多个系统通知
 Users.sequlize.hasMany(SysInform.sequlize,{
-    foreignKey:!'receive_user',
+    foreignKey:'receive_user',
     as:'sys_notices'
 });
-
-
+Users.sequlize.hasOne(SysInform.sequlize,{
+    foreignKey:'send_user',
+    as:'send_notices'
+});
 export default Users;

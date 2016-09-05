@@ -18,6 +18,9 @@ class SysInform extends Base {
         super("sys_inform", sysinform, {
             tableName: 'sys_inform'
         });
+        this.TYPE = TYPE;
+        this.READSTATUS = READSTATUS;
+        this.CLASSIFY = CLASSIFY;
     }
 
     /**

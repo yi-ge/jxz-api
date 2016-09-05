@@ -15,7 +15,7 @@ const SEX={
         VALUE:0
     },
     FEMALE:{
-        STR:"nv",
+        STR:"女",
         VALUE:1
     },
 };
@@ -48,6 +48,7 @@ class Users extends Base {
     }
 
     getSexValue(str) {
+        if(typeof str == 'number ') str = this.getSexValue(str);
         let value = SEX.SECRECY.VALUE;
         switch (str) {
             case SEX.MAN.STR :value = SEX.MAN.VALUE;break;
