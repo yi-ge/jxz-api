@@ -592,7 +592,7 @@ class ArticlesService {
                     return Articles.updateLikeNum(favorite_source_id, count + 1, t);
                 }).then(()=>{
                     //点赞文章存入表中 用户动态时需要查询
-                    return SysInform.userToArticleMsg(SysInform.CLASSIFY.PRAISE,user_id,_article.author,null,null,favorite_source_id,t);
+                    return SysInform.userToArticleMsg(SysInform.TYPE.PRAISE,user_id,_article.author,null,null,favorite_source_id,t);
                 }).then(()=> {
                     return returnResult;
                 });

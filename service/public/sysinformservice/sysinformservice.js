@@ -25,7 +25,7 @@ class SysInformService {
      */
     isNewDynamic(user_id) {
         return SysInform.isNewMsg(user_id, {
-            $between: [SysInform.TYPE.PRAISE, SysInform.TYPE.COLLECT, SysInform.TYPE.CONCERN],
+            $in: [SysInform.TYPE.PRAISE, SysInform.TYPE.COLLECT, SysInform.TYPE.CONCERN],
         });
     }
 
@@ -48,7 +48,7 @@ class SysInformService {
      * @param user_id
      */
     isNewComment(user_id) {
-        return SysInform.isNewMsg(user_id, SysInform.TYPE.PRAISE, SysInform.TYPE.COMMENT);
+        return SysInform.isNewMsg(user_id, SysInform.TYPE.COMMENT);
     }
 
     /**
