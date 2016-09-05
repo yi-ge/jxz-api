@@ -35,7 +35,7 @@ class ArticlesService {
      */
     wetchatAddArticles(user_id, title, content, isDraft) {
         if (!title || !content)return Articles.errorPromise('文章格式不正确');
-        return Users.getArticleCount(user_id).then(count=> {
+        return Users.count({id:user_id}).then(count=> {
             if (count == 0) return Users.errorPromise('用户不存在');
             return Articles.transaction(t=> {
                 let returnResult;
@@ -152,12 +152,23 @@ class ArticlesService {
      * @returns {*}
      */
     wetchatCommentArticle(id, comment_user_id, content) {
+        let _article;
         if (!content) return ArticlesComment.errorPromise("评论不能为空");
-        return ArticlesComment.transaction(t=> {
-            return ArticlesComment.insert(ArticlesComment.createModel(id, comment_user_id, content, comment_user_id, comment_user_id), {
-                transaction: t
-            }).then(result=> {
-                return ArticlesComment.formatArticleComment(result.dataValues);
+        return Articles.findById(id).then(article=>{
+            _article = article;
+            return article;
+        }).then(()=>{
+            return ArticlesComment.transaction(t=> {
+                let returnResult;
+                return ArticlesComment.insert(ArticlesComment.createModel(id, comment_user_id, content, comment_user_id, comment_user_id), {
+                    transaction: t
+                }).then(result=> {
+                    returnResult = result;
+                    //评论文章时 添加一条消息发送给用户
+                    return SysInform.userToArticleMsg(SysInform.TYPE.COMMENT,comment_user_id,_article.author,null,content,id,t);
+                }).then(()=> {
+                    return ArticlesComment.formatArticleComment(returnResult.dataValues);
+                });
             });
         });
     }
@@ -486,8 +497,10 @@ class ArticlesService {
      */
     collectionArticle(user_id, favorite_source_id) {
         let classType = UsersFavorite.FAVORITECLASS.COLLECT;
+        let _article;
         if(!user_id || !favorite_source_id) return Articles.errorPromise('参数不正确');
         return Articles.findById(favorite_source_id).then(article=> {
+            _article = article;
             if(!article) return Articles.errorPromise('文章不存在');
             if (article.author == user_id) return Articles.errorPromise('不能收藏自己的文章');
             return UsersFavorite.isCollection(user_id, favorite_source_id, classType);
@@ -497,11 +510,17 @@ class ArticlesService {
         }).then(()=> {
             return UsersFavorite.transaction(t=> {
                 let returnResult;
+                //添加文章收藏数据
                 return UsersFavorite.collection(user_id, favorite_source_id, classType, t).then(result=> {
                     returnResult = result;
+                    //统计文章收成数目
                     return UsersFavorite.countSourceFavorite(favorite_source_id, classType)
                 }).then(count=> {
+                    //修改文章收藏数目
                     return Articles.updateAtNum(favorite_source_id, count + 1, t);
+                }).then(()=> {
+                    //文章收藏消息存入数据库
+                    return SysInform.userToArticleMsg(SysInform.TYPE.COLLECT,user_id,_article.author,null,null,favorite_source_id,t);
                 }).then(()=> {
                     return returnResult;
                 });
@@ -551,7 +570,10 @@ class ArticlesService {
      */
     likeArticle(user_id, favorite_source_id) {
         let PRAISE = UsersFavorite.FAVORITECLASS.PRAISE;
+        let _article;
         return Articles.findById(favorite_source_id).then(article=> {
+            _article = article;
+            if(!article) return Articles.errorPromise('文章不存在');
             if (article.author == user_id) return Articles.errorPromise("不能给自己文章点赞");
             return UsersFavorite.isCollection(user_id, favorite_source_id, PRAISE);
         }).then(result=> {
@@ -560,11 +582,17 @@ class ArticlesService {
         }).then(()=> {
             return UsersFavorite.transaction(t=> {
                 let returnResult;
+                //点赞存入表中
                 return UsersFavorite.collection(user_id, favorite_source_id, PRAISE, t).then(result=> {
                     returnResult = result;
+                    //统计当前文章已得到点赞数
                     return UsersFavorite.countSourceFavorite(favorite_source_id, PRAISE);
                 }).then(count=> {
+                    //修改文章点赞数目
                     return Articles.updateLikeNum(favorite_source_id, count + 1, t);
+                }).then(()=>{
+                    //点赞文章存入表中 用户动态时需要查询
+                    return SysInform.userToArticleMsg(SysInform.CLASSIFY.PRAISE,user_id,_article.author,null,null,favorite_source_id,t);
                 }).then(()=> {
                     return returnResult;
                 });

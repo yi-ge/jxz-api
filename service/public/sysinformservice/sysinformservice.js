@@ -5,17 +5,8 @@ class SysInformService {
      * @param user_id
      * @returns {*}
      */
-    isNotReadNotice(user_id) {
-        let where = {
-            receive_user: user_id,
-            type: SysInform.TYPE.NOTICE,
-            read_status: SysInform.READSTATUS.NO
-        };
-        return SysInform.count({where: where}).then(count=> {
-            let status = true;
-            if (count == 0) status = false;
-            return {isread: status};
-        });
+    isNewNotice(user_id) {
+        return SysInform.isNewMsg(user_id, SysInform.TYPE.NOTICE);
     }
 
     /**
@@ -23,31 +14,52 @@ class SysInformService {
      * @param user_id
      */
     findUsersSysNotice(user_id, page, pagesize) {
-        let where = {
-            receive_user: user_id,
-            type: SysInform.TYPE.NOTICE,
-        };
-        return SysInform.count({where: where}).then(count=> {
-            return SysInform.findPage({
-                where: where
-            }, page, count, 1, pagesize);
-        }).then(result=> {
-            return SysInform.transaction(t=> {
-                return SysInform.update({read_status: SysInform.READSTATUS.YES}, {
-                    where: Object.assign({
-                        read_status: SysInform.READSTATUS.NO
-                    }, where),
-                    transaction: t,
-                    lock: t.LOCK.UPDATE,
-                });
-            }).then(()=> {
-                return result;
-            });
-        }).then(infos=> {
-            infos.list.map(info=> {
-                SysInform.formatSysInform(info);
-            });
-            return infos;
+        return SysInform.transaction(t=> {
+            return SysInform.findUserMsgList(user_id,SysInform.TYPE.NOTICE, page, pagesize,t);
+        });
+    }
+
+    /**
+     * 有新的动态
+     * @param user_id
+     */
+    isNewDynamic(user_id) {
+        return SysInform.isNewMsg(user_id, {
+            $between: [SysInform.TYPE.PRAISE, SysInform.TYPE.COLLECT, SysInform.TYPE.CONCERN],
+        });
+    }
+
+    /**
+     * 查询动态
+     * @param user_id
+     * @param page
+     * @param pagesize
+     */
+    findUserDynamic(user_id, page, pagesize) {
+        return SysInform.transaction(t=> {
+            return SysInform.findUserMsgList(user_id,{
+                $between: [SysInform.TYPE.PRAISE, SysInform.TYPE.COLLECT, SysInform.TYPE.CONCERN],
+            }, page, pagesize,t);
+        });
+    }
+
+    /**
+     * 有新的文章评论
+     * @param user_id
+     */
+    isNewComment(user_id) {
+        return SysInform.isNewMsg(user_id, SysInform.TYPE.PRAISE, SysInform.TYPE.COMMENT);
+    }
+
+    /**
+     * 查询评论
+     * @param user_id
+     * @param page
+     * @param pagesize
+     */
+    findUseComment(user_id, page, pagesize) {
+        return SysInform.transaction(t=> {
+            return SysInform.findUserMsgList(user_id,SysInform.TYPE.COMMENT, page, pagesize,t);
         });
     }
 }

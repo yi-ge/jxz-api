@@ -45,6 +45,7 @@ app.use((data, req, res, next)=> {
             data: data,
         });
     else next();
+    console.log('=========end=========')
 });
 
 // catch 404 and forward to error handler

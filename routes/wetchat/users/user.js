@@ -74,7 +74,6 @@ router.post('/countatnum', (req, res, next)=> {
 router.post('/getinfo', (req, res, next)=> {
     let param = req.body;
     let id = param.id;
-    console.log(param);
     next({
         $promise: UsersService.getInfo(id),
         message: '获取用户信息失败'
@@ -104,11 +103,11 @@ router.post('/sponsoredmsg', (req, res, next)=> {
     });
 });
 //是否有没有读取的系统通知
-router.post('/isreadynotice', (req, res, next)=> {
+router.post('/isnewnotice', (req, res, next)=> {
     let param = req.body;
     let id = param.id;
     next({
-        $promise: SysInformService.isNotReadNotice(id),
+        $promise: SysInformService.isNewNotice(id),
         message: '存在没读取通知状态失败'
     });
 });
@@ -120,6 +119,46 @@ router.post('/findnoticelist', (req, res, next)=> {
         pagesize = param.pagesize;
     next({
         $promise: SysInformService.findUsersSysNotice(id,page,pagesize),
+        message: '系统通知查询失败'
+    });
+});
+//有新的动态
+router.post('/isnewdynamic', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id;
+    next({
+        $promise: SysInformService.isNewDynamic(id),
+        message: '存在没读取通知状态失败'
+    });
+});
+//获取动态
+router.post('/finddynamiclist', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id,
+        page = param.page,
+        pagesize = param.pagesize;
+    next({
+        $promise: SysInformService.findUserDynamic(id,page,pagesize),
+        message: '系统通知查询失败'
+    });
+});
+//有新的评论
+router.post('/isnewcomment', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id;
+    next({
+        $promise: SysInformService.isNewComment(id),
+        message: '存在没读取通知状态失败'
+    });
+});
+//获取评论
+router.post('/findcommentlist', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id,
+        page = param.page,
+        pagesize = param.pagesize;
+    next({
+        $promise: SysInformService.findUseComment(id,page,pagesize),
         message: '系统通知查询失败'
     });
 });

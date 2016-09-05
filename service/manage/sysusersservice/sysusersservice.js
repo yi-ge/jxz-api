@@ -41,7 +41,19 @@ class SysUserService {
             },
         }).then(sysUser=> {
             if (!sysUser) return SysUsers.errorPromise("用户名或者密码错误！");
-            else return SysUsers.formaySysUser(sysUser.dataValues);
+            return SysUsers.transaction(t=>{
+                return SysUsers.update({
+                    last_login_date:new Date(),
+                },{
+                    where:{account_name: accountname,},
+                    transaction:t,
+                    lock: t.LOCK.UPDATE
+                });
+            }).then(()=>{
+                return sysUser;
+            });
+        }).then(sysUser=>{
+            return SysUsers.formaySysUser(sysUser.dataValues);
         });
     }
 

@@ -1,4 +1,4 @@
-import {Users,UsersOpenid,UsersAt,UsersVip,UsersMsg} from './../../../core';
+import {Users,UsersOpenid,UsersAt,UsersVip,UsersMsg,SysInform} from './../../../core';
 class UserService {
     /**
      * 通过微信openid注册＃选者
@@ -154,6 +154,7 @@ class UserService {
      * @returns {*}
      */
     atUsers(id, at_user_id) {
+        if(id == void(0) || at_user_id == void(0)) return UsersAt.errorPromise('参数不正确');
         if(id == at_user_id) return UsersAt.errorPromise('不能关注自己');
         return UsersAt.count({
             where: {
@@ -163,9 +164,16 @@ class UserService {
         }).then((count)=> {
             if (count != 0) return UsersAt.errorPromise('不能重复关注');
             return UsersAt.transaction(t=> {
+                let returnResult;
                 return UsersAt.insert(UsersAt.createModel(id, at_user_id), {transaction: t}).then(result=> {
+                    returnResult = result;
                     return result;
-                })
+                }).then(()=>{
+                    //关注信息存入数据库 用户动态可查
+                    return SysInform.userToUserMsg(SysInform.TYPE.CONCERN,id,at_user_id,null,null,null,t);
+                }).then(()=>{
+                    return returnResult;
+                });
             });
         });
     }
