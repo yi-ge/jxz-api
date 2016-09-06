@@ -1,6 +1,7 @@
 import express from "express";
 import {SysParameterService} from './../../../service/manage';
 const router = express.Router();
+//添加系统参数
 router.post('/add',(req,res,next)=>{
     let param = req.body;
     let param_key = param.param_key,
