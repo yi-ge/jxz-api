@@ -27,6 +27,7 @@ import UsersFavorite from './usersfavorite';
 import UsersMsg from './usersmsg';
 import SysInform from './sysinform';
 import SysInfoTemplate from './sysinfotemplate';
+import SysParameter from './sysparameter';
 
 export {
     Users, //会员
@@ -56,4 +57,5 @@ export {
     UsersMsg, //用户消息
     SysInform,//消息 通知
     SysInfoTemplate,//消息 模板
+    SysParameter,//系统参数
 }

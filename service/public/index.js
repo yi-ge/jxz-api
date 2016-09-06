@@ -4,6 +4,7 @@ import ArticlesService from './articlesservice';
 import RegionService from './regionservice';
 import SysInformService from './sysinformservice';
 import SysHotKeywordService from './syshotkeywordservice';
+import SysParameterService from './sysparameterservice';
 import {HousesService,HousesKeywordService,HousesAttachService,HousesCommentService} from './../public/hotelrelevant';
 
 export {
@@ -17,4 +18,5 @@ export {
     HousesCommentService,
     SysInformService,
     SysHotKeywordService,
+    SysParameterService,
 }

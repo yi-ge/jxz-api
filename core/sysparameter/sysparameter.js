@@ -1,0 +1,38 @@
+/**
+ * Created by NX on 2016/8/8.
+ */
+import sysparameter from './sysparameter.config';
+import Base from './../base';
+
+class SysParameter extends Base {
+    constructor() {
+        super("sys_parameter", sysparameter, {
+            tableName: 'sys_parameter'
+        });
+    }
+    createModel(param_key,param_value,creater,modifier){
+        let model = {
+            param_key:param_key,
+            param_value:param_value,
+            creater:creater,
+            modifier:modifier,
+            created_at:new Date(),
+            updated_at:new Date()
+        };
+        return model;
+    }
+
+    insert(model, option){
+        return this.count({
+            param_key:model.param_key
+        }).then(count=>{
+            if(count != 0) return this.errorPromise("参数已存在");
+            return true;
+        }).then(()=>{
+            return super.insert(model,option);
+        });
+    }
+
+}
+
+export default new SysParameter();

@@ -21,6 +21,7 @@ import {
     ArticlesService,
     RegionService,
     SysHotKeywordService,
+    SysParameterService
 } from './../public';
 
 
@@ -32,6 +33,7 @@ export {
     RoleResourcesService,//角色权限中间表
     SysHousesKeywordService,
     SysHotKeywordService,//系统热词
+    SysParameterService,//系统参数
     UsersService,
     VipService,
     ArticlesService,
