@@ -119,6 +119,7 @@ class SysInform extends Base {
                 where: where,
                 include:[{
                     model:Users.sequlize,
+                    attributes:['user_name','id','account_name'],
                 }],
                 order:`send_date DESC`
             }, page, count, 2, pagesize);
@@ -170,7 +171,7 @@ class SysInform extends Base {
         return SysInfoTemplate.getTemplate(SysInfoTemplate.TEMPLATE.ARTICLE.AUDIO).then(template=> {
             if (!template) return SysInfoTemplate.errorPromise("审核模板不存在");
             let content = template.content.replace("#体验稿标题#", `#${article_title}#`);
-            return this.systemNnotification(CLASSIFY.ARTICLE, 1, null, content, url, receive_user, t);
+            return this.systemNnotification(CLASSIFY.ARTICLE, 1, "系统通知", content, url, receive_user, t);
         });
     }
 

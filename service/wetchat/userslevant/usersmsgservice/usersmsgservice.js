@@ -60,7 +60,7 @@ class UsersMsgService {
             }, page, count, 2, pagesize);
         }).then(msglist=> {
             msglist.list.map(msg=> {
-                UsersMsg.formateUserMsg(msg);
+                UsersMsg.formateUserMsg(msg.dataValues);
             });
             return msglist;
         });

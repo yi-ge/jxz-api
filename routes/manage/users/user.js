@@ -35,7 +35,7 @@ router.post('/updatecover', (req, res, next)=> {
         msg: '状态切换失败'
     });
 });
-//切换封面写手
+//获取精选者
 router.post('/getinfo', (req, res, next)=> {
     let id = req.body.id;
     next({
