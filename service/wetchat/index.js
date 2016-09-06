@@ -10,10 +10,11 @@ import {
     SysInformService,
 } from './../public';
 
-import {UsersAtService,UsersFavoriteService} from './userslevant';
+import {UsersAtService,UsersFavoriteService,UsersMsgService} from './userslevant';
 export {
     UsersService, //精选者
     UsersFavoriteService, //收藏文章
+    UsersMsgService,//用户私信
     VipService,
     UsersAtService,
     HousesService,

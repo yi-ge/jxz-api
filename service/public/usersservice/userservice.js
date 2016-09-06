@@ -1,4 +1,4 @@
-import {Users,UsersOpenid,UsersAt,UsersVip,UsersMsg,SysInform} from './../../../core';
+import {Users,UsersOpenid,UsersAt,UsersVip,SysInform} from './../../../core';
 class UserService {
     /**
      * 通过微信openid注册＃选者
@@ -231,22 +231,6 @@ class UserService {
         return UsersAt.count({where:{at_user_id:id}});
     }
 
-    /**
-     * 给别人发私信
-     * @param user_id
-     * @param from_user_id
-     * @param content
-     * @returns {*}
-     */
-    sponsoredMsg(id,from_user_id,content){
-        return UsersMsg.transaction(t=>{
-            return UsersMsg.insert(UsersMsg.createModel(id,from_user_id,content),{
-                transaction:t
-            }).then(result=>{
-                return UsersMsg.formateUserMsg(result.dataValues);
-            })
-        });
-    }
 
     /**
      * 编辑精选者资料

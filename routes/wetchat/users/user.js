@@ -1,5 +1,5 @@
 import express from "express";
-import {UsersService,UsersAtService,UsersFavoriteService,SysInformService} from './../../../service/wetchat';
+import {UsersService,UsersAtService,UsersFavoriteService,SysInformService,UsersMsgService} from './../../../service/wetchat';
 const router = express.Router();
 
 //注册成为精选者
@@ -98,7 +98,7 @@ router.post('/sponsoredmsg', (req, res, next)=> {
         from_user_id = param.from_user_id,
         content = param.content;
     next({
-        $promise: UsersService.sponsoredMsg(id, from_user_id, content),
+        $promise: UsersMsgService.sponsoredMsg(id, from_user_id, content),
         message: '私信发送失败'
     });
 });

@@ -1,0 +1,6 @@
+{
+	"name": "usersmsgservice",
+	"version": "2.0.0",
+	"private": true,
+	"main": "./usersmsgservice.js"
+}
