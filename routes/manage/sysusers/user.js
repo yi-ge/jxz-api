@@ -21,10 +21,10 @@ router.post('/login', (req, res, next)=> {
 });
 //修改密码
 router.post('/updatepassword', (req, res, next)=> {
-    let id = req.body.id, password = req.body.password;
+    let account_name = req.body.account_name, password = req.body.password,oldpassword = req.body.oldpassword;
     next({
-        $promise: SysUsersService.updatePassword(id, password),
-        msg: '状态更新失败'
+        $promise: SysUsersService.updatePassword(account_name, password,oldpassword),
+        msg: '密码修改失败'
     });
 });
 //更新管理员状态

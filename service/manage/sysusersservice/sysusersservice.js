@@ -41,18 +41,18 @@ class SysUserService {
             },
         }).then(sysUser=> {
             if (!sysUser) return SysUsers.errorPromise("用户名或者密码错误！");
-            return SysUsers.transaction(t=>{
+            return SysUsers.transaction(t=> {
                 return SysUsers.update({
-                    last_login_date:new Date(),
-                },{
-                    where:{account_name: accountname,},
-                    transaction:t,
+                    last_login_date: new Date(),
+                }, {
+                    where: {account_name: accountname,},
+                    transaction: t,
                     lock: t.LOCK.UPDATE
                 });
-            }).then(()=>{
+            }).then(()=> {
                 return sysUser;
             });
-        }).then(sysUser=>{
+        }).then(sysUser=> {
             return SysUsers.formaySysUser(sysUser.dataValues);
         });
     }
@@ -63,13 +63,21 @@ class SysUserService {
      * @param password
      * @returns {*}
      */
-    updatePassword(id,password){
-        return SysUsers.transaction(t=>{
-            return SysUsers.updatePasswd(id,password,t);
-        }).then(()=>{
-            return SysUsers.findById(id);
-        }).then(sysuser=>{
-            return SysUsers.formaySysUser(sysuser.dataValues);
+    updatePassword(account_name, password, oldpassword) {
+        let returnResult;
+        return SysUsers.findOnlyOne({
+            account_name: account_name,
+            passwd: SysUsers.encrypMD5(oldpassword)
+        }).then(sysuser=> {
+            returnResult = sysuser;
+            if (!sysuser) return SysUsers.errorPromise("旧密码不正确");
+            return sysuser;
+        }).then(()=> {
+            return SysUsers.transaction(t=> {
+                return SysUsers.updatePasswd(account_name, password, t);
+            });
+        }).then(()=> {
+            return SysUsers.formaySysUser(returnResult.dataValues);
         });
     }
 
@@ -125,10 +133,10 @@ class SysUserService {
      * 查询管理员详情
      * @param id
      */
-    findDetails(id){
-        return SysUsers.findById(id,{
-            attributes:{exclude:'passwd'}
-        }).then(sysuser=>{
+    findDetails(id) {
+        return SysUsers.findById(id, {
+            attributes: {exclude: 'passwd'}
+        }).then(sysuser=> {
             return SysUsers.formaySysUser(sysuser);
         });
     }
@@ -147,7 +155,7 @@ class SysUserService {
                 lock: t.LOCK.UPDATE,
             });
         }).then(()=> {
-            return SysUsers.findById(id,{
+            return SysUsers.findById(id, {
                 include: [{
                     model: SysRoles.sequlize,
                     through: {
@@ -204,7 +212,7 @@ class SysUserService {
     findUsersRoles(id) {
         return SysUsers.findList({
             where: {id: id},
-            attributes:[],
+            attributes: [],
             include: {
                 model: SysRoles.sequlize
             }
@@ -227,7 +235,7 @@ class SysUserService {
                 through: {attributes: []},
                 include: [{
                     model: SysResources.sequlize,
-                    as:'resources',
+                    as: 'resources',
                     through: {attributes: []},
                 }]
             }]

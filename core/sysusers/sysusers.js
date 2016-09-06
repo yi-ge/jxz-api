@@ -67,12 +67,12 @@ class SysUsers extends Base {
      * @param t
      * @returns {*}
      */
-    updatePasswd(id,password,t){
+    updatePasswd(account_name,password,t){
         return this.update({
             passwd:this.encrypMD5(password),
             updated_at:new Date(),
         },{
-            where:{id:id},
+            where:{account_name:account_name},
             transaction:t,
             lock: t.LOCK.UPDATE,
         });
