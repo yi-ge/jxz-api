@@ -38,7 +38,6 @@ class UsersMsgService {
             return UsersMsg.findUserMsgList(user_id, page, pagesize, t);
         });
     }
-
     /**
      * 仿实时聊天
      * @param user_id
