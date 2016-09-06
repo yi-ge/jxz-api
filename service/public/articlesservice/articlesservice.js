@@ -699,7 +699,7 @@ class ArticlesService {
                 where: where,
                 include: include,
                 attributes: {exclude: 'content'},
-            }, page, count,pagesize);
+            }, page, count,null,pagesize);
         }).then(result=> {
             result.list.map(article=> {
                 Articles.formatArticle(article.dataValues);
