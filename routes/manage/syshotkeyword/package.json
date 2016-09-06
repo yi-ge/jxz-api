@@ -1,0 +1,6 @@
+{
+	"name": "syshotkeyword",
+	"version": "2.0.0",
+	"private": true,
+	"main": "./syshotkeyword.js"
+}

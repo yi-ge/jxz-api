@@ -102,6 +102,38 @@ router.post('/sponsoredmsg', (req, res, next)=> {
         message: '私信发送失败'
     });
 });
+//仿聊天查询私信
+router.post('/imitatechat', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id,
+        from_user_id = param.from_user_id,
+        page = param.page,
+        pagesize = param.pagesize;
+    next({
+        $promise: UsersMsgService.imitateChat(id, from_user_id, page,pagesize),
+        message: '私信发送失败'
+    });
+});
+//没读私信
+router.post('/isnewmsg', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id;
+    next({
+        $promise: UsersMsgService.isNewMsg(id),
+        message: '私信发送失败'
+    });
+});
+//查询用户私信
+router.post('/findmsglist', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id,
+        page = param.page,
+        pagesize = param.pagesize;
+    next({
+        $promise: UsersMsgService.findUsersMsg(id, page,pagesize),
+        message: '私信发送失败'
+    });
+});
 //是否有没有读取的系统通知
 router.post('/isnewnotice', (req, res, next)=> {
     let param = req.body;

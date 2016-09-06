@@ -16,20 +16,20 @@ Users.sequlize.hasOne(UsersOpenid.sequlize, {
 //一个用户对应多篇文章
 Users.sequlize.hasMany(Articles.sequlize, {foreignKey: 'author'});
 //房屋评论创建人
-Users.sequlize.hasMany(HousesComment.sequlize,{
-    foreignKey:'creater'
+Users.sequlize.hasMany(HousesComment.sequlize, {
+    foreignKey: 'creater'
 });
 //文章创建者
-Users.sequlize.hasMany(Articles.sequlize,{
-   foreignKey:'creater'
+Users.sequlize.hasMany(Articles.sequlize, {
+    foreignKey: 'creater'
 });
 //文章修改者
-Users.sequlize.hasMany(Articles.sequlize,{
-    foreignKey:'modifier'
+Users.sequlize.hasMany(Articles.sequlize, {
+    foreignKey: 'modifier'
 });
 //房屋评论修改人
-Users.sequlize.hasMany(HousesComment.sequlize,{
-    foreignKey:'modifier'
+Users.sequlize.hasMany(HousesComment.sequlize, {
+    foreignKey: 'modifier'
 });
 //一个用户在sys_users表中存在一个外键
 Users.sequlize.hasOne(SysUsers.sequlize, {
@@ -39,54 +39,55 @@ Users.sequlize.hasOne(SysUsers.sequlize, {
 Users.sequlize.belongsTo(UsersVip.sequlize, {foreignKey: 'user_vip_id', targetKey: 'id'});
 
 //关注别人
-Users.sequlize.belongsToMany(Users.sequlize,{
-    through:UsersAt.sequlize,
-    foreignKey:'users_id',
-    otherKey:'at_user_id',
-    as:'at_user'
+Users.sequlize.belongsToMany(Users.sequlize, {
+    through: UsersAt.sequlize,
+    foreignKey: 'users_id',
+    otherKey: 'at_user_id',
+    as: 'at_user'
 });
 //被别人关注
-Users.sequlize.belongsToMany(Users.sequlize,{
-    through:UsersAt.sequlize,
-    foreignKey:'at_user_id',
-    otherKey:'users_id',
-    as:'users_at'
+Users.sequlize.belongsToMany(Users.sequlize, {
+    through: UsersAt.sequlize,
+    foreignKey: 'at_user_id',
+    otherKey: 'users_id',
+    as: 'users_at'
 });
 //收藏文章
-Users.sequlize.belongsToMany(Articles.sequlize,{
-    through:UsersFavorite.sequlize,
-    foreignKey:'user_id',
-    otherKey:'favorite_source_id',
-    as:'favorite_article',
+Users.sequlize.belongsToMany(Articles.sequlize, {
+    through: UsersFavorite.sequlize,
+    foreignKey: 'user_id',
+    otherKey: 'favorite_source_id',
+    as: 'favorite_article',
 });
 //点赞文章
-Users.sequlize.belongsToMany(Articles.sequlize,{
-    through:UsersFavorite.sequlize,
-    foreignKey:'user_id',
-    otherKey:'favorite_source_id',
-    as:'like_article',
+Users.sequlize.belongsToMany(Articles.sequlize, {
+    through: UsersFavorite.sequlize,
+    foreignKey: 'user_id',
+    otherKey: 'favorite_source_id',
+    as: 'like_article',
 });
 //用户关联多个文章评论
-Users.sequlize.hasMany(ArticlesComment.sequlize,{
-    foreignKey:'comment_user_id',
+Users.sequlize.hasMany(ArticlesComment.sequlize, {
+    foreignKey: 'comment_user_id',
 });
 //给其他人发私信
-Users.sequlize.hasMany(UsersMsg.sequlize,{
-   foreignKey:'user_id',
-    as:'sponsored_msg'
+Users.sequlize.hasMany(UsersMsg.sequlize, {
+    foreignKey: 'user_id',
+    as: 'sponsored_msg'
 });
 //接收其他人私信
-Users.sequlize.hasMany(UsersMsg.sequlize,{
-    foreignKey:'user_id',
-    as:'receive_msg'
+Users.sequlize.hasMany(UsersMsg.sequlize, {
+    foreignKey: 'user_id',
+    as: 'receive_msg'
 });
-//一个用户对于多个系统通知
-Users.sequlize.hasMany(SysInform.sequlize,{
-    foreignKey:'receive_user',
-    as:'sys_notices'
+//一个用户接收多个系统通知
+Users.sequlize.hasMany(SysInform.sequlize, {
+    foreignKey: 'receive_user',
+    as: 'sys_notices'
 });
-Users.sequlize.hasOne(SysInform.sequlize,{
-    foreignKey:'send_user',
-    as:'send_notices'
+//用户发送多条消息
+Users.sequlize.hasMany(SysInform.sequlize, {
+    foreignKey: 'send_user',
+    as: 'send_notices'
 });
 export default Users;

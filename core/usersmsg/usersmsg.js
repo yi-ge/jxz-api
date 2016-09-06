@@ -3,12 +3,16 @@
  */
 import usersmsg from './usersmsg.config';
 import Base from './../base';
-
+const STATUS = {
+    READ_YES:1, //已读
+    READ_NO:0 // 未读
+};
 class UsersMsg extends Base {
     constructor() {
         super("users_msg", usersmsg, {
             tableName: 'users_msg'
         });
+        this.STATUS = STATUS;
     }
     /**
      *
@@ -34,7 +38,23 @@ class UsersMsg extends Base {
     }
 
     formateUserMsg(msg){
+        msg.created_at != void(0) && (msg.created_at = this.formatDate(msg.created_at, "yyyy-MM-dd hh:mm:ss"));
+        msg.updated_at != void(0) && (msg.updated_at = this.formatDate(msg.updated_at, "yyyy-MM-dd hh:mm:ss"));
         return msg;
+    }
+
+    /**
+     * 获取阅读状态
+     * @returns {{status: number}}
+     */
+    getWhereReadStatus(value){
+        let where = {};
+        switch (value){
+            case STATUS.READ_NO:where.status = STATUS.READ_NO;break;
+            case STATUS.READ_YES:where.status = STATUS.READ_YES;break;
+            default:break;
+        }
+        return where;
     }
 }
 

@@ -3,7 +3,6 @@
  */
 import UsersMsg from './usersmsg';
 import Users from './../users/users';
-
 //发私信的人
 UsersMsg.sequlize.belongsTo(Users.sequlize,{
     foreignKey:'user_id',

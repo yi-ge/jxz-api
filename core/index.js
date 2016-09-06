@@ -48,6 +48,7 @@ export {
     SysHousesKeyword, //系统酒店亮点
     HousesAttach, //酒店附件
     HousesComment, //酒店评论
+    SysHotKeyword, //系统热词
     Activitys,
     ActivitysApply,
     ActivitysLocation,

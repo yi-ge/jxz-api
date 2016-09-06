@@ -19,7 +19,8 @@ import {
     UsersService,
     VipService,
     ArticlesService,
-    RegionService
+    RegionService,
+    SysHotKeywordService,
 } from './../public';
 
 
@@ -30,6 +31,7 @@ export {
     UserRolesService,//用户角色中间表
     RoleResourcesService,//角色权限中间表
     SysHousesKeywordService,
+    SysHotKeywordService,//系统热词
     UsersService,
     VipService,
     ArticlesService,

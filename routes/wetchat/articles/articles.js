@@ -1,5 +1,5 @@
 import express from "express";
-import {ArticlesService,UsersService} from './../../../service/wetchat';
+import {ArticlesService,UsersService,SysHotKeywordService} from './../../../service/wetchat';
 const router = express.Router();
 //文章列表
 router.post('/list', (req, res, next)=> {
@@ -207,6 +207,14 @@ router.post('/search', (req, res, next)=> {
     next({
         $promise: ArticlesService.vagueSearchHouses(text, page, pagesize),
         msg: '文章查询失败'
+    });
+});
+//文章搜索热词
+router.post('/searchhotkeyword', (req, res, next)=> {
+    let param = req.body;
+    next({
+        $promise: SysHotKeywordService.searchArticleHotKeyWord(),
+        msg: '热词查询失败'
     });
 });
 export default router;

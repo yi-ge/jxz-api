@@ -8,6 +8,7 @@ import {
     ArticlesService,
     RegionService,
     SysInformService,
+    SysHotKeywordService,
 } from './../public';
 
 import {UsersAtService,UsersFavoriteService,UsersMsgService} from './userslevant';
@@ -23,4 +24,5 @@ export {
     HousesAttachService,
     ArticlesService,
     SysInformService,
+    SysHotKeywordService,
 }
