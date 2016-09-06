@@ -82,10 +82,9 @@ class SysHotKeywordService {
      * 文章搜索热词
      */
     searchArticleHotKeyWord(){
-        return SysHotKeyword.findList().then(keywordList=>{
-            keywordList.list.map(keyword=>{
-                SysHotKeyword.formatSysHotKeyword(keyword.dataValues);
-            });
+        return SysHotKeyword.findList({
+            attributes:['name']
+        }).then(keywordList=>{
             return keywordList;
         });
     }

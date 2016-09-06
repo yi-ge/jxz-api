@@ -55,6 +55,14 @@ router.post('/finduserall', (req, res, next)=> {
         msg: '查询失败'
     });
 });
+//查询管理员详情
+router.post('/details', (req, res, next)=> {
+    let id = req.body.id;
+    next({
+        $promise: SysUsersService.findDetails(id),
+        msg: '精选者查询失败'
+    });
+});
 //查询管理员的精选者
 router.post('/jxz', (req, res, next)=> {
     let id = req.body.id;

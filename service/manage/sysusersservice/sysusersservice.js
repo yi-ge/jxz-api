@@ -106,6 +106,18 @@ class SysUserService {
     }
 
     /**
+     * 查询管理员详情
+     * @param id
+     */
+    findDetails(id){
+        return SysUsers.findById(id,{
+            attributes:{exclude:'passwd'}
+        }).then(sysuser=>{
+            return SysUsers.formaySysUser(sysuser);
+        });
+    }
+
+    /**
      * 修改管理员状态
      * @param id
      * @param status
