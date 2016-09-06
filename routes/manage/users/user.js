@@ -43,4 +43,18 @@ router.post('/getinfo', (req, res, next)=> {
         msg: '获取精选者详情失败'
     });
 });
+//编辑精选者
+router.post('/editinfo', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id,
+        user_name = param.user_name,
+        sex = param.sex,
+        personalized = param.personalized,
+        avatar = param.avatar;
+    next({
+        $promise: UsersService.editInfo(id,user_name,sex,personalized,avatar),
+        msg: '精选者编辑失败'
+    });
+});
+
 export default router;

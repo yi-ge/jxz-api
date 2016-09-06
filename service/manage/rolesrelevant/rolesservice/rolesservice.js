@@ -107,7 +107,7 @@ class RolesService {
     }
 
     /**
-     * 查询所有为禁用角色
+     * 查询所有未禁用角色
      * @returns {*}
      */
     findNotDisableAllRoles(){

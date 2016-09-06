@@ -55,7 +55,7 @@ class UsersMsgService {
         return UsersMsg.count({where: where}).then(count=> {
             return UsersMsg.findPage({
                 where: where,
-                attributes: ['content', 'read_date', 'id','created_at'],
+                attributes: ['content', 'read_date', 'id','created_at','user_id','from_user_id'],
                 order: `created_at DESC`
             }, page, count, 2, pagesize);
         }).then(msglist=> {

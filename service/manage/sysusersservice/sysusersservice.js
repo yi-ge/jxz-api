@@ -58,6 +58,22 @@ class SysUserService {
     }
 
     /**
+     * 修改密码
+     * @param id
+     * @param password
+     * @returns {*}
+     */
+    updatePassword(id,password){
+        return SysUsers.transaction(t=>{
+            return SysUsers.updatePasswd(id,password,t);
+        }).then(()=>{
+            return SysUsers.findById(id);
+        }).then(sysuser=>{
+            return SysUsers.formaySysUser(sysuser.dataValues);
+        });
+    }
+
+    /**
      * 获取管理员员精选者
      * @param id
      */
@@ -188,6 +204,7 @@ class SysUserService {
     findUsersRoles(id) {
         return SysUsers.findList({
             where: {id: id},
+            attributes:[],
             include: {
                 model: SysRoles.sequlize
             }

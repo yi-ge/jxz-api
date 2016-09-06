@@ -19,6 +19,14 @@ router.post('/login', (req, res, next)=> {
         msg: '登陆失败'
     });
 });
+//修改密码
+router.post('/updatepassword', (req, res, next)=> {
+    let id = req.body.id, password = req.body.password;
+    next({
+        $promise: SysUsersService.updatePassword(id, password),
+        msg: '状态更新失败'
+    });
+});
 //更新管理员状态
 router.post('/updateuser', (req, res, next)=> {
     let id = req.body.id, status = req.body.status;

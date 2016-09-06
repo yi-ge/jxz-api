@@ -48,6 +48,35 @@ class SysUsers extends Base {
         delete sysUser.passwd;
         return sysUser;
     }
+
+    /**
+     * 查询指定数据
+     * @param id
+     * @param option
+     * @returns {*}
+     */
+    findById(id,option){
+        return super.findById(id,Object.assign({
+            attributer:{exclude:'passwd'}
+        },option));
+    }
+    /**
+     * 修改密码
+     * @param id
+     * @param password
+     * @param t
+     * @returns {*}
+     */
+    updatePasswd(id,password,t){
+        return this.update({
+            passwd:this.encrypMD5(password),
+            updated_at:new Date(),
+        },{
+            where:{id:id},
+            transaction:t,
+            lock: t.LOCK.UPDATE,
+        });
+    }
 }
 
 export default  new SysUsers();

@@ -236,11 +236,12 @@ class UserService {
      * 编辑精选者资料
      * @returns {*}
      */
-    editInfo(id,user_name,sex,personalized){
+    editInfo(id,user_name,sex,personalized,avatar){
         let update = {};
         user_name != void(0) && (update.user_name = user_name);
         sex != void(0) && (update.sex = Users.getSexValue(sex));
         personalized != void(0) && (update.personalized = personalized);
+        avatar != void(0) && (update.avatar = avatar);
         if(!id) return Users.errorPromise('用户id不能为空');
         if(Object.keys(update).length == 0) return Users.errorPromise('参数格式不正确');
         return Users.transaction(t=>{
@@ -249,6 +250,10 @@ class UserService {
                 transaction:t,
                 lock: t.LOCK.UPDATE
             });
+        }).then(()=>{
+            return Users.findById(id);
+        }).then(user=>{
+            return Users.formatUser(user.dataValues);
         });
     }
 }
