@@ -38,7 +38,7 @@ class SysInformService {
     findUserDynamic(user_id, page, pagesize) {
         return SysInform.transaction(t=> {
             return SysInform.findUserMsgList(user_id,{
-                $between: [SysInform.TYPE.PRAISE, SysInform.TYPE.COLLECT, SysInform.TYPE.CONCERN],
+                $in: [SysInform.TYPE.PRAISE, SysInform.TYPE.COLLECT, SysInform.TYPE.CONCERN],
             }, page, pagesize,t);
         });
     }
