@@ -29,6 +29,8 @@ import SysInform from './sysinform';
 import SysInfoTemplate from './sysinfotemplate';
 import SysParameter from './sysparameter';
 import SysCoin from './syscoin';
+import UsersCoinLog from './userscoinlog';
+import UsersPayType from './userspaytype';
 
 export {
     Users, //会员
@@ -60,4 +62,6 @@ export {
     SysInfoTemplate,//消息 模板
     SysParameter,//系统参数
     SysCoin,//数据字典-精选币
+    UsersCoinLog,//精选币-日志
+    UsersPayType,//用户-支付类型
 }

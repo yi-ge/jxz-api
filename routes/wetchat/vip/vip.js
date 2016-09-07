@@ -5,9 +5,8 @@ const router = express.Router();
 router.post('/register', (req, res, next)=> {
     let param = req.body;
     let account_name = param.account_name,
-        users_id = param.users_id,
-        password = param.password,
-        openid = param.openid;
+        users_id = param.user_id,
+        password = param.password;
     next({
         $promise: VipService.registerVip(account_name, users_id, password),
         msg: '用户注册失败'
@@ -17,7 +16,7 @@ router.post('/register', (req, res, next)=> {
 router.post('/defaultlogin', (req, res, next)=> {
     let param = req.body;
     let id = param.id,
-        users_id = param.users_id;
+        users_id = param.user_id;
     next({
         $promise: VipService.defaultLogin(id, users_id),
         msg: '会员信息获取失败'
@@ -27,9 +26,8 @@ router.post('/defaultlogin', (req, res, next)=> {
 router.post('/login', (req, res, next)=> {
     let param = req.body;
     let account_name = param.account_name,
-        users_id = param.users_id,
-        password = param.password,
-        openid = param.openid;
+        users_id = param.user_id,
+        password = param.password;
     next({
         $promise: VipService.loginVip(account_name, users_id, password),
         msg: '用户名或者密码错误'
@@ -54,6 +52,16 @@ router.post('/resizepassword', (req, res, next)=> {
     next({
         $promise: VipService.resizePassword(account_name,password),
         msg: '用户名或者密码错误'
+    });
+});
+//会员充值
+router.post('/recharge', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id,
+        coin = param.coin;
+    next({
+        $promise: VipService.rechargeCoin(id,coin),
+        msg: '充值失败'
     });
 });
 export default router;

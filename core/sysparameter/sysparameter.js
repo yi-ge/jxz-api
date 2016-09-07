@@ -23,9 +23,8 @@ class SysParameter extends Base {
     }
 
     insert(model, option){
-        return this.count({
-            param_key:model.param_key
-        }).then(count=>{
+        console.log(model);
+        return this.count({where: {param_key: model.param_key}}).then(count=>{
             if(count != 0) return this.errorPromise("参数已存在");
             return true;
         }).then(()=>{

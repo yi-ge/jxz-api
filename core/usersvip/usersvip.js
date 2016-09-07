@@ -70,6 +70,7 @@ class UsersVip extends Base {
             last_login_date: new Date(),
             user_status: user_status,
             is_cover: 0,
+            coin:0
         };
         return model;
     }
@@ -106,6 +107,31 @@ class UsersVip extends Base {
             transaction:t,
             lock: t.LOCK.UPDATE
         })
+    }
+
+    /**
+     * 会员充值
+     * @param id
+     * @param coin_money
+     * @param t
+     * @returns {*}
+     */
+    rechargeCoin(id,coin_money,t){
+        let returnVip;
+        return this.findById(id).then(vip=>{
+            if(!vip) return this.errorPromise("会员不存在");
+            returnVip = vip;
+            return vip.coin;
+        }).then(coin=>{
+            coin = coin + coin_money;
+            return this.update({
+                coin:coin
+            },{
+                where:{id:id},
+                transaction:t,
+                lock: t.LOCK.UPDATE,
+            });
+        });
     }
 
 }

@@ -1,0 +1,6 @@
+{
+	"name": "coinlogservice",
+	"version": "2.0.0",
+	"private": true,
+	"main": "./coinlogservice.js"
+}

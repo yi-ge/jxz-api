@@ -9,6 +9,7 @@ class SysParameterService {
      */
     addSysParameter(param_key,param_value,creater){
         return SysParameter.transaction(t=>{
+            console.log(param_key);
             return SysParameter.insert(SysParameter.createModel(param_key,param_value,creater,creater),{
                 transaction:t
             });
@@ -24,8 +25,8 @@ class SysParameterService {
      */
     editSysParameter(param_key,param_value,modifier){
         return SysParameter.transaction(t=>{
-            return SysParameter.findOnlyOne({where:{param_key:param_key}}).then((param)=>{
-                if(!param) return this.addSysParameter(param_key,param_value,modifier);
+            return SysParameter.count({where:{param_key:param_key}}).then(count=>{
+                if(count == 0) return this.addSysParameter(param_key,param_value,modifier);
                 else return SysParameter.update({
                     param_value:param_value,
                     modifier:modifier,

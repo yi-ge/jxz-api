@@ -1,4 +1,4 @@
-import {UsersVip,Users} from './../../../core';
+import {UsersVip,Users,UsersCoinLog} from './../../../../core';
 class VipService {
     /**
      * 录入vip用户（后台）
@@ -66,7 +66,6 @@ class VipService {
      * @returns {*}
      */
     registerVip(account_name, users_id, password) {
-        console.log(users_id);
         if (!users_id) return UsersVip.errorPromise("精选者id格式不正确");
         return Users.findById(users_id).then(user=> {
             if (user.user_vip_id) return Users.errorPromise("已经有会员账号,不能重复注册");
@@ -179,6 +178,21 @@ class VipService {
                     transaction: t,
                     lock: t.LOCK.UPDATE
                 });
+            });
+        });
+    }
+
+    /**
+     * 会员充值
+     * @param id
+     * @param coin
+     * @returns {*}
+     */
+    rechargeCoin(id,coin){
+        return UsersVip.transaction(t=>{
+            return UsersVip.rechargeCoin(id,coin,t).then(result=>{
+                console.log(result);
+                return UsersCoinLog.rechargeLog(id,coin,t);
             });
         });
     }
