@@ -21,5 +21,14 @@ router.post('/edit',(req,res,next)=>{
         $promise: SysParameterService.editSysParameter(key,value,modifier),
         msg:"参数添加失败"
     });
-})
+});
+
+router.post('/find',(req,res,next)=>{
+    let param = req.body;
+    let key = param.key;
+    next({
+        $promise: SysParameterService.findKey(key),
+        msg:"参数添加失败"
+    });
+});
 export default router;
