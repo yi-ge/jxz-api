@@ -12,7 +12,7 @@ import region from './region';
 router.use('/user',user);
 router.use('/vip',vip);
 router.use('/houses',houses);
-router.use('/region',houses);
+router.use('/region',region);
 router.use('/articles',articles);
 
 export default router;

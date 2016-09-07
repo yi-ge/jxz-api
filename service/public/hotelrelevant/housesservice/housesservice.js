@@ -129,14 +129,11 @@ class HousesService {
         return Houses.findById(id, {
             include: [{
                 model: HousesAttach.sequlize,
-                attributes: ['id', 'houses_id', 'links_url']
+                attributes: ['id','links_url']
             }]
         }).then(result=> {
             if (!result) return Houses.errorPromise('酒店不存在!');
             Houses.formatHouse(result.dataValues);
-            result.houses_attaches.map(attach=> {
-                HousesAttach.formatHousesAttach(attach.dataValues);
-            });
             return result;
         });
     }
@@ -190,6 +187,50 @@ class HousesService {
     findAll() {
         return Houses.findList({
             attributes: ['id', 'name', 'is_orders']
+        });
+    }
+
+    /**
+     * 通过区域查询酒店
+     * @param state
+     * @param country
+     * @param region
+     * @param page
+     * @param pagesize
+     */
+    findRegionToHouseList(state,country,region,page,pagesize){
+        let where = {$and:[]},
+            include=[{
+                model:SysDict.sequlize,
+                attributes:['id','parent_id','name'],
+                as:'regions',
+                include:[{
+                    model:SysDict.sequlize,
+                    attributes:['id','parent_id','name'],
+                    as:'country_p',
+                    include:[{
+                        model:SysDict.sequlize,
+                        attributes:['id','parent_id','name'],
+                        as:'state'
+                    }]
+                }]
+            }];
+        state != void(0) && (where.$and.push(SysDict.where(SysDict.col('state.name')),'=',state));
+        country != void(0) && (where.$and.push(SysDict.where(SysDict.col('country_p.name')),'=',country));
+        region != void(0) && (where.$and.push(SysDict.where(SysDict.col('regions.name')),'=',region));
+        return Houses.count({
+            where:where,
+            include:include,
+        }).then(count=>{
+            return Houses.findPage({
+                where:where,
+                include:include,
+            },page,count,null,pagesize);
+        }).then(houseslist=>{
+            houseslist.list.map(house=>{
+                Houses.formatHouse(house);
+            });
+            return houseslist;
         });
     }
 }

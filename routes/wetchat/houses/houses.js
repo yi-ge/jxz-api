@@ -34,7 +34,6 @@ router.post('/commentlist', (req, res, next)=> {
         msg: '评论查询失败'
     });
 });
-
 //查询酒店亮点
 router.post('/keyword', (req, res, next)=> {
     let param = req.body;
@@ -53,6 +52,17 @@ router.post('/attachhouselist', (req, res, next)=> {
         msg: '酒店亮点查询失败'
     });
 });
-
-
+//通过区域查询酒店
+router.post('/regiontohouseslist', (req, res, next)=> {
+    let param = req.body;
+    let state = param.state,
+        country = param.country,
+        region = param.region,
+        page = param.page,
+        pagesize = param.pagesize;
+    next({
+        $promise: HousesAttachService.findRegionToHouseList(state,country,region,page,pagesize),
+        msg: '酒店亮点查询失败'
+    });
+});
 export default router;

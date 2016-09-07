@@ -25,7 +25,6 @@ class SysParameterService {
     editSysParameter(param_key,param_value,modifier){
         return SysParameter.transaction(t=>{
             return SysParameter.findOnlyOne({where:{param_key:param_key}}).then((param)=>{
-                returnParam = param;
                 if(!param) return this.addSysParameter(param_key,param_value,modifier);
                 else return SysParameter.update({
                     param_value:param_value
