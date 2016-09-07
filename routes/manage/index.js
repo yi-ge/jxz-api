@@ -10,8 +10,10 @@ import region from './region';
 import houses from './houses';
 import syshotkeyword from './syshotkeyword';
 import sysparameter from './sysparameter';
+import syscoin from './syscoin';
 
 router.use('/sysuser', sysuser);//管理端 系统用户模块
+router.use('/syscoin', syscoin);//精选币配置
 router.use('/user', user); //精选者
 router.use('/vip', vip);//vip用户
 router.use('/roles', roles);//权限管理

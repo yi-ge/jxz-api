@@ -28,6 +28,7 @@ import UsersMsg from './usersmsg';
 import SysInform from './sysinform';
 import SysInfoTemplate from './sysinfotemplate';
 import SysParameter from './sysparameter';
+import SysCoin from './syscoin';
 
 export {
     Users, //会员
@@ -58,4 +59,5 @@ export {
     SysInform,//消息 通知
     SysInfoTemplate,//消息 模板
     SysParameter,//系统参数
+    SysCoin,//数据字典-精选币
 }
