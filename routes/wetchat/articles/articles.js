@@ -225,7 +225,7 @@ router.post('/usercollectionlist', (req, res, next)=> {
         pagesize = param.pagesize;
     next({
         $promise: ArticlesService.findUserCollectionArticle(user_id,page,pagesize),
-        msg: '热词查询失败'
+        msg: '文章查询失败'
     });
 });
 export default router;

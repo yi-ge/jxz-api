@@ -215,9 +215,9 @@ class HousesService {
                     }]
                 }]
             }];
-        state != void(0) && (where.$and.push(SysDict.where(SysDict.col('state.name')),'=',state));
-        country != void(0) && (where.$and.push(SysDict.where(SysDict.col('country_p.name')),'=',country));
-        region != void(0) && (where.$and.push(SysDict.where(SysDict.col('regions.name')),'=',region));
+        state != void(0) && (where.$and.push(SysDict.where(SysDict.col('regions.country_p.state.name'),'=',state)));
+        country != void(0) && (where.$and.push(SysDict.where(SysDict.col('regions.country_p.name'),'=',country)));
+        region != void(0) && (where.$and.push(SysDict.where(SysDict.col('regions.name'),'=',region)));
         return Houses.count({
             where:where,
             include:include,
@@ -228,7 +228,8 @@ class HousesService {
             },page,count,null,pagesize);
         }).then(houseslist=>{
             houseslist.list.map(house=>{
-                Houses.formatHouse(house);
+                Houses.formatHouse(house.dataValues);
+                delete house.dataValues.regions;
             });
             return houseslist;
         });

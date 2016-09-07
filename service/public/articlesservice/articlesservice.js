@@ -667,25 +667,34 @@ class ArticlesService {
      * @returns {*}
      */
     findUserCollectionArticle(user_id,page,pagesize) {
-        let where = Object.assign({user_id: user_id}, UsersFavorite.getFavoriteTypeWhere(UsersFavorite.FAVORITECLASS.COLLECTARTICLE)),
+        let where ={},
             include = [{
-                model: Users.sequelize,
-                attributes: [],
-                as: 'favorite_user'
-            }];
-        where.$and = Articles.where(Users.col('favorite_user.id'), '=', user_id);
+            model: Users.sequlize,
+            through:{attributes:[]},
+            attributes:['id'],
+            as:'favorite_user'
+        }];
+        where.$and = Users.where(Users.col('favorite_user.id'), '=', user_id);
         return Articles.count({
             where: where,
-            include: include
+            include:include
         }).then(count=>{
-            return Articles.findPage({
+            return Articles.findList({
                 where: where,
-                include: include,
+                include: include.concat([{
+                    model:Users.sequlize,
+                    attributes: ['id', 'user_name', 'avatar', 'user_vip_id']
+                },{
+                    model: Houses.sequlize,
+                    as: 'houses',
+                    attributes: ['id', 'address'],
+                }]),
                 order:`read_num DESC`
-            },page,count,2,page,pagesize);
+            },page,5,count,page,pagesize);
         }).then(articlelist=>{
             articlelist.list.map(article=>{
                 Articles.formatArticle(article.dataValues);
+                delete article.dataValues.favorite_user;
             });
             return articlelist;
         });

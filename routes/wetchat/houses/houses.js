@@ -61,8 +61,8 @@ router.post('/regiontohouseslist', (req, res, next)=> {
         page = param.page,
         pagesize = param.pagesize;
     next({
-        $promise: HousesAttachService.findRegionToHouseList(state,country,region,page,pagesize),
-        msg: '酒店亮点查询失败'
+        $promise: HousesService.findRegionToHouseList(state,country,region,page,pagesize),
+        msg: '酒店列表查询失败'
     });
 });
 export default router;

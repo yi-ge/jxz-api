@@ -30,16 +30,16 @@ Articles.sequlize.belongsTo(Houses.sequlize, {
 //文章被收藏
 Articles.sequlize.belongsToMany(Users.sequlize,{
     through:UsersFavorite.sequlize,
-    as:'favorite_user',
     foreignKey:'favorite_source_id',
-    otherKey:'user_id'
+    otherKey:'user_id',
+    as:'favorite_user'
 });
 //文章被点赞
 Articles.sequlize.belongsToMany(Users.sequlize,{
     through:UsersFavorite.sequlize,
-    as:'like_user',
     foreignKey:'favorite_source_id',
-    otherKey:'user_id'
+    otherKey:'user_id',
+    as:'like_user'
 });
 //文章对应多个评论
 Articles.sequlize.hasMany(ArticlesComment.sequlize,{
