@@ -39,10 +39,19 @@ router.post('/updateuser', (req, res, next)=> {
 router.post('/edituser', (req, res, next)=> {
     let id = req.body.id,
         user_name = req.body.user_name,
-        email = req.body.email,
+        phone = req.body.phone,
+        email = req.body.email;
+    next({
+        $promise: SysUsersService.editSysUsers(id, user_name, email,phone),
+        msg: '编辑失败'
+    });
+});
+//修改管理员角色
+router.post('/updateuserroles', (req, res, next)=> {
+    let id = req.body.id,
         roles_id = req.body.roles_id;
     next({
-        $promise: SysUsersService.editSysUsers(id, user_name, email, roles_id),
+        $promise: SysUsersService.updateUserRoles(id, roles_id),
         msg: '编辑失败'
     });
 });

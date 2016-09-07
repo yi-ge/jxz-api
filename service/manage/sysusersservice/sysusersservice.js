@@ -170,23 +170,41 @@ class SysUserService {
     }
 
     /**
+     * 修改管理员角色
+     * @param id
+     * @param role_id
+     * @returns {*}
+     */
+    updateUserRoles(id, role_id) {
+        if (!role_id)return SysUserRoles.errorPromise("角色id不正确");
+        return SysUserRoles.transaction(t=> {
+            return SysUserRoles.destroy({
+                where: {user_id: id},
+                transaction: t
+            }).then(()=> {
+                return SysUserRoles.insert(SysUserRoles.createModel(id, role_id), {transaction: t});
+            });
+        });
+    }
+
+    /**
      * 编辑管理员
      * @param id
      * @param user_name
      * @param email
      * @param role_id
      */
-    editSysUsers(id, user_name, email, role_id) {
+    editSysUsers(id, user_name, email, phone) {
+        let updateObj = {};
+        user_name != void(0) && (updateObj.user_name = user_name);
+        email != void(0) && (updateObj.email = email);
+        phone != void(0) && (updateObj.phone = phone);
+        if (Object.keys(updateObj).length == 0) return SysUsers.errorPromise("参数不正确");
         return SysUsers.transaction(t=> {
-            return SysUsers.update({user_name: user_name, email: email, updated_at: new Date()}, {
+            return SysUsers.update(Object.assign(updateObj, {updated_at: new Date()}), {
                 where: {id: id},
                 transaction: t,
                 lock: t.LOCK.UPDATE,
-            }).then(()=> {
-                return SysUserRoles.destroy({where: {user_id: id}, transaction: t});
-            }).then(()=> {
-                if (!!role_id) return SysUserRoles.insert(SysUserRoles.createModel(id, role_id), {transaction: t});
-                return null;
             });
         }).then(()=> {
             return SysUsers.findById(id, {
