@@ -35,7 +35,7 @@ class ArticlesService {
      */
     wetchatAddArticles(user_id, title, content, isDraft) {
         if (!title || !content)return Articles.errorPromise('文章格式不正确');
-        return Users.count({id:user_id}).then(count=> {
+        return Users.count({id: user_id}).then(count=> {
             if (count == 0) return Users.errorPromise('用户不存在');
             return Articles.transaction(t=> {
                 let returnResult;
@@ -154,10 +154,10 @@ class ArticlesService {
     wetchatCommentArticle(id, comment_user_id, content) {
         let _article;
         if (!content) return ArticlesComment.errorPromise("评论不能为空");
-        return Articles.findById(id).then(article=>{
+        return Articles.findById(id).then(article=> {
             _article = article;
             return article;
-        }).then(()=>{
+        }).then(()=> {
             return ArticlesComment.transaction(t=> {
                 let returnResult;
                 return ArticlesComment.insert(ArticlesComment.createModel(id, comment_user_id, content, comment_user_id, comment_user_id), {
@@ -165,7 +165,7 @@ class ArticlesService {
                 }).then(result=> {
                     returnResult = result;
                     //评论文章时 添加一条消息发送给用户
-                    return SysInform.userToArticleMsg(SysInform.TYPE.COMMENT,comment_user_id,_article.author,"评论",Articles.sysInformTemp(_article,content),id,t);
+                    return SysInform.userToArticleMsg(SysInform.TYPE.COMMENT, comment_user_id, _article.author, "评论", Articles.sysInformTemp(_article, content), id, t);
                 }).then(()=> {
                     return ArticlesComment.formatArticleComment(returnResult.dataValues);
                 });
@@ -271,14 +271,14 @@ class ArticlesService {
                 as: 'houses',
                 attributes: ['id', 'address']
             }]
-        }).then(article=>{
+        }).then(article=> {
             let returnResult = article;
-            if(!article) return Articles.errorPromise("文章不存在");
+            if (!article) return Articles.errorPromise("文章不存在");
             return Articles.transaction(t=> {
-                return Articles.updateAuditStatus(id, status, modifier, t).then((result)=>{
-                    if(status == Articles.AUDITING.HIGHLINE) return SysInform.articleAuditPass(article.title,article.author,null,t);
+                return Articles.updateAuditStatus(id, status, modifier, t).then((result)=> {
+                    if (status == Articles.AUDITING.HIGHLINE) return SysInform.articleAuditPass(article.title, article.author, null, t);
                     return result;
-                }).then(()=>{
+                }).then(()=> {
                     return returnResult;
                 });
             }).then(article=> {
@@ -496,12 +496,12 @@ class ArticlesService {
      * @returns {*}
      */
     collectionArticle(user_id, favorite_source_id) {
-        let classType = UsersFavorite.FAVORITECLASS.COLLECT;
+        let classType = UsersFavorite.FAVORITECLASS.COLLECTARTICLE;
         let _article;
-        if(!user_id || !favorite_source_id) return Articles.errorPromise('参数不正确');
+        if (!user_id || !favorite_source_id) return Articles.errorPromise('参数不正确');
         return Articles.findById(favorite_source_id).then(article=> {
             _article = article;
-            if(!article) return Articles.errorPromise('文章不存在');
+            if (!article) return Articles.errorPromise('文章不存在');
             if (article.author == user_id) return Articles.errorPromise('不能收藏自己的文章');
             return UsersFavorite.isCollection(user_id, favorite_source_id, classType);
         }).then(result=> {
@@ -520,7 +520,7 @@ class ArticlesService {
                     return Articles.updateAtNum(favorite_source_id, count + 1, t);
                 }).then(()=> {
                     //文章收藏消息存入数据库
-                    return SysInform.userToArticleMsg(SysInform.TYPE.COLLECT,user_id,_article.author,"收藏",Articles.sysInformTemp(_article),favorite_source_id,t);
+                    return SysInform.userToArticleMsg(SysInform.TYPE.COLLECT, user_id, _article.author, "收藏", Articles.sysInformTemp(_article), favorite_source_id, t);
                 }).then(()=> {
                     return returnResult;
                 });
@@ -536,7 +536,7 @@ class ArticlesService {
      * @returns {*}
      */
     cancelArticle(user_id, favorite_source_id) {
-        let classType = UsersFavorite.FAVORITECLASS.COLLECT;
+        let classType = UsersFavorite.FAVORITECLASS.COLLECTARTICLE;
         return UsersFavorite.transaction(t=> {
             let returnResult;
             return UsersFavorite.cancel(user_id, favorite_source_id, classType, t).then(result=> {
@@ -558,7 +558,7 @@ class ArticlesService {
      * @returns {*}
      */
     isCollectionArticle(user_id, favorite_source_id) {
-        let classType = UsersFavorite.FAVORITECLASS.COLLECT;
+        let classType = UsersFavorite.FAVORITECLASS.COLLECTARTICLE;
         return UsersFavorite.isCollection(user_id, favorite_source_id, classType);
     }
 
@@ -569,11 +569,11 @@ class ArticlesService {
      * @returns {*}
      */
     likeArticle(user_id, favorite_source_id) {
-        let PRAISE = UsersFavorite.FAVORITECLASS.PRAISE;
+        let PRAISE = UsersFavorite.FAVORITECLASS.PRAISEARTICLE;
         let _article;
         return Articles.findById(favorite_source_id).then(article=> {
             _article = article;
-            if(!article) return Articles.errorPromise('文章不存在');
+            if (!article) return Articles.errorPromise('文章不存在');
             if (article.author == user_id) return Articles.errorPromise("不能给自己文章点赞");
             return UsersFavorite.isCollection(user_id, favorite_source_id, PRAISE);
         }).then(result=> {
@@ -590,9 +590,9 @@ class ArticlesService {
                 }).then(count=> {
                     //修改文章点赞数目
                     return Articles.updateLikeNum(favorite_source_id, count + 1, t);
-                }).then(()=>{
+                }).then(()=> {
                     //点赞文章存入表中 用户动态时需要查询
-                    return SysInform.userToArticleMsg(SysInform.TYPE.PRAISE,user_id,_article.author,"点赞",Articles.sysInformTemp(_article),favorite_source_id,t);
+                    return SysInform.userToArticleMsg(SysInform.TYPE.PRAISE, user_id, _article.author, "点赞", Articles.sysInformTemp(_article), favorite_source_id, t);
                 }).then(()=> {
                     return returnResult;
                 });
@@ -607,7 +607,7 @@ class ArticlesService {
      * @returns {*}
      */
     cancelLikeArticle(user_id, favorite_source_id) {
-        let PRAISE = UsersFavorite.FAVORITECLASS.PRAISE;
+        let PRAISE = UsersFavorite.FAVORITECLASS.PRAISEARTICLE;
         return UsersFavorite.transaction(t=> {
             let returnResult;
             return UsersFavorite.cancel(user_id, favorite_source_id, PRAISE, t).then(result=> {
@@ -629,7 +629,7 @@ class ArticlesService {
      * @returns {*}
      */
     isLikeArticle(user_id, favorite_source_id) {
-        let PRAISE = UsersFavorite.FAVORITECLASS.PRAISE;
+        let PRAISE = UsersFavorite.FAVORITECLASS.PRAISEARTICLE;
         return UsersFavorite.isCollection(user_id, favorite_source_id, PRAISE);
     }
 
@@ -660,12 +660,44 @@ class ArticlesService {
     }
 
     /**
+     * 指定用户收藏的文章
+     * @param user_id
+     * @param page
+     * @param pagesize
+     * @returns {*}
+     */
+    findUserCollectionArticle(user_id,page,pagesize) {
+        let where = Object.assign({user_id: user_id}, UsersFavorite.getFavoriteTypeWhere(UsersFavorite.FAVORITECLASS.COLLECTARTICLE)),
+            include = [{
+                model: Users.sequelize,
+                attributes: [],
+                as: 'favorite_user'
+            }];
+        where.$and = Articles.where(Users.col('favorite_user.id'), '=', user_id);
+        return Articles.count({
+            where: where,
+            include: include
+        }).then(count=>{
+            return Articles.findPage({
+                where: where,
+                include: include,
+                order:`read_num DESC`
+            },page,count,2,page,pagesize);
+        }).then(articlelist=>{
+            articlelist.list.map(article=>{
+                Articles.formatArticle(article.dataValues);
+            });
+            return articlelist;
+        });
+    }
+
+    /**
      * 模糊搜索文章
      * @param text
      * @param page
      * @returns {*}
      */
-    vagueSearchHouses(text, page,pagesize) {
+    vagueSearchHouses(text, page, pagesize) {
         if (!text) return Articles.errorPromise("输入格式有误");
         let where = {};
         where[`$or`] = [
@@ -699,8 +731,8 @@ class ArticlesService {
                 where: where,
                 include: include,
                 attributes: {exclude: 'content'},
-                order:`read_num DESC`,
-            }, page, count,2,pagesize);
+                order: `read_num DESC`,
+            }, page, count, 2, pagesize);
         }).then(result=> {
             result.list.map(article=> {
                 Articles.formatArticle(article.dataValues);

@@ -217,4 +217,15 @@ router.post('/searchhotkeyword', (req, res, next)=> {
         msg: '热词查询失败'
     });
 });
+//指定用户收藏文章
+router.post('/usercollectionlist', (req, res, next)=> {
+    let param = req.body;
+    let user_id = param.user_id,
+        page = param.page,
+        pagesize = param.pagesize;
+    next({
+        $promise: ArticlesService.findUserCollectionArticle(user_id,page,pagesize),
+        msg: '热词查询失败'
+    });
+});
 export default router;

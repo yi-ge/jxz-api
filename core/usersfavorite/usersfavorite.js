@@ -5,8 +5,8 @@ import usersfavorite from './usersfavorite.config';
 import Base from './../base';
 //1是收藏 2是点赞
 const FAVORITECLASS = {
-    COLLECT: 1,
-    PRAISE: 2
+    COLLECTARTICLE: 1, //收藏文章
+    PRAISEARTICLE: 2 //点赞文章
 };
 
 
@@ -34,6 +34,10 @@ class UsersFavorite extends Base {
         favorite.created_at != void(0) && (favorite.created_at = this.formatDate(favorite.created_at, "yyyy-MM-dd hh:mm:ss"));
         favorite.updated_at != void(0) && (favorite.updated_at = this.formatDate(favorite.updated_at, "yyyy-MM-dd hh:mm:ss"));
         return favorite;
+    }
+
+    getFavoriteTypeWhere(value){
+        return {favorite_type:value};
     }
 
     /**
