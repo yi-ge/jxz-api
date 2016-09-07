@@ -124,6 +124,23 @@ class RegionService {
     }
 
     /**
+     * 查询洲 和它下面的国家
+     * @returns {*}
+     */
+    findStateAndCountry(){
+        let where = {type:SysDict.CONFIG.REGION,level:SysDict.STATE};
+        return SysDict.findList({
+            where:where,
+            attributes: ['id', 'name'],
+            include:[{
+                model:SysDict.sequlize,
+                as:'country',
+                attributes: ['id', 'name'],
+            }]
+        });
+    }
+
+    /**
      * 通过国家查询区域
      * @param country_id
      * @returns {*|Promise.<T>}

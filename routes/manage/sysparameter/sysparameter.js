@@ -12,4 +12,14 @@ router.post('/add',(req,res,next)=>{
         msg:"参数添加失败"
     });
 });
+router.post('/edit',(req,res,next)=>{
+    let param = req.body;
+    let key = param.key,
+        value = param.value,
+        modifier = param.modifier;
+    next({
+        $promise: SysParameterService.editSysParameter(key,value,modifier),
+        msg:"参数添加失败"
+    });
+})
 export default router;

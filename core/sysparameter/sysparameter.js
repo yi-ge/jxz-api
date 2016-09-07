@@ -33,6 +33,12 @@ class SysParameter extends Base {
         });
     }
 
+    formatSysParameter(param){
+        param.created_at != void(0) && (param.created_at = this.formatDate(param.created_at, "yyyy-MM-dd hh:mm:ss"));
+        param.updated_at != void(0) && (param.updated_at = this.formatDate(param.updated_at, "yyyy-MM-dd hh:mm:ss"));
+        return param;
+    }
+
 }
 
 export default new SysParameter();

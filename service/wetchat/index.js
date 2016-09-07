@@ -16,6 +16,7 @@ export {
     UsersService, //精选者
     UsersFavoriteService, //收藏文章
     UsersMsgService,//用户私信
+    RegionService,//区域
     VipService,
     UsersAtService,
     HousesService,
