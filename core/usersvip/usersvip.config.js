@@ -81,5 +81,9 @@ export default {
     is_cover: {
         type: DataTypes.INTEGER(4),
         allowNull: true
+    },
+    coin: {
+        type: DataTypes.DECIMAL,
+        allowNull: true
     }
 };

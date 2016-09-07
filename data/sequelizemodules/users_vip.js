@@ -83,6 +83,10 @@ module.exports = function(sequelize, DataTypes) {
     is_cover: {
       type: DataTypes.INTEGER(4),
       allowNull: true
+    },
+    coin: {
+      type: DataTypes.DECIMAL,
+      allowNull: true
     }
   }, {
     tableName: 'users_vip'
