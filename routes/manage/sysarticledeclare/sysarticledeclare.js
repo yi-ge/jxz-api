@@ -14,7 +14,7 @@ router.post('/edit', (req, res, next)=> {
     });
 });
 //更具type查询对应条款
-router.post('/edit', (req, res, next)=> {
+router.post('/findtype', (req, res, next)=> {
     let param = req.body;
     let type = param.type;
     next({
@@ -23,7 +23,7 @@ router.post('/edit', (req, res, next)=> {
     });
 });
 //更具type删除对应条款
-router.post('/edit', (req, res, next)=> {
+router.post('/destroy', (req, res, next)=> {
     let param = req.body;
     let type = param.type;
     next({
