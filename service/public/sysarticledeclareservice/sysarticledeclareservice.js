@@ -37,5 +37,30 @@ class SysArticleDeclareService {
             return SysArticleDeclare.formatSysArticleDeclare(result.dataValues);
         });
     }
+
+    /**
+     * 根据type查询对应条款
+     * @param type
+     */
+    findDeclareType(type){
+        return SysArticleDeclare.findOnlyOne({
+            where:{type:type}
+        }).then(result=>{
+            return SysArticleDeclare.formatSysArticleDeclare(result.dataValues);
+        });
+    }
+
+    /**
+     * 删除条款
+     * @param type
+     * @returns {*}
+     */
+    destroy(type){
+        return SysArticleDeclare.transaction(t=>{
+            return SysArticleDeclare.destroy({
+                where:{type:type}
+            });
+        })
+    }
 }
 export default new SysArticleDeclareService();
