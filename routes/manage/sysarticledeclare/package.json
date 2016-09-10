@@ -1,0 +1,6 @@
+{
+	"name": "sysarticledeclare",
+	"version": "2.0.0",
+	"private": true,
+	"main": "./sysarticledeclare.js"
+}

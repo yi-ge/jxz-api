@@ -22,7 +22,8 @@ import {
     RegionService,
     SysHotKeywordService,
     SysParameterService,
-    SysCoinService
+    SysCoinService,
+    SysArticleDeclareService
 } from './../public';
 
 
@@ -44,4 +45,5 @@ export {
     HousesAttachService,
     HousesCommentService,
     SysCoinService,
+    SysArticleDeclareService,
 }
