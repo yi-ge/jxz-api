@@ -19,7 +19,7 @@ router.post('/findtype', (req, res, next)=> {
     let type = param.type;
     next({
         $promise: SysArticleDeclareService.findDeclareType(type),
-        msg: '查询'
+        msg: '查询失败'
     });
 });
 //更具type删除对应条款
