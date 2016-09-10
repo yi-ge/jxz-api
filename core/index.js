@@ -32,6 +32,8 @@ import SysCoin from './syscoin';
 import UsersCoinLog from './userscoinlog';
 import UsersPayType from './userspaytype';
 import SysArticleDeclare from './sysarticledeclare';
+import Orders from './orders';
+import HousesCombo from './housescombo';
 
 export {
     Users, //会员
@@ -66,4 +68,6 @@ export {
     UsersCoinLog,//精选币-日志
     UsersPayType,//用户-支付类型
     SysArticleDeclare,//系统-条款声明
+    Orders,//订单
+    HousesCombo,//套餐
 }

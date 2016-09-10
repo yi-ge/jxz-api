@@ -5,6 +5,7 @@ import HousesAttach from './../housesattach/housesattach';
 import SysUsers from './../sysusers/sysusers';
 import HousesComment from './../housescomment/housescomment';
 import SysDict from './../sysdict/sysdict';
+import HousesCombo from './../housescombo/housescombo';
 //一个酒店对应多篇文章
 Houses.sequlize.hasMany(Articles.sequlize, {
     foreignKey: 'houses_id',
@@ -39,4 +40,9 @@ Houses.sequlize.belongsTo(SysDict.sequlize,{
     targetKey:'id',
     as:'regions'
 });
+//酒店对应多个套餐
+Houses.sequlize.hasMany(HousesCombo.sequlize,{
+    foreignKey:'houses_id'
+});
+
 export default Houses;

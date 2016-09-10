@@ -9,6 +9,7 @@ import UsersFavorite from './../usersfavorite/usersfavorite'; // 关注 点赞�
 import ArticlesComment from './../articlescomment/articlescomment'; //文章评论
 import SysInform from './../sysinform/sysinform'; //文章评论
 import UsersMsg from './../usersmsg/usersmsg'; //用户私信
+import Orders from './../orders/orders';
 //一个用户对应一个openid
 Users.sequlize.hasOne(UsersOpenid.sequlize, {
     foreignKey: "user_id"
@@ -89,5 +90,9 @@ Users.sequlize.hasMany(SysInform.sequlize, {
 Users.sequlize.hasMany(SysInform.sequlize, {
     foreignKey: 'send_user',
     as: 'send_notices'
+});
+//用户存在多个订单
+Users.sequlize.hasMany(Orders.sequlize,{
+    foreignKey:'order_user_id'
 });
 export default Users;

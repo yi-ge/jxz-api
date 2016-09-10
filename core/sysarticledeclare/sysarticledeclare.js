@@ -43,7 +43,7 @@ class SysArticleDeclare extends Base {
         let where = {
             type:model.type
         };
-        if(!type || typeof type != 'number') return this.errorPromise("参数不正确");
+        if(!model.type || typeof model.type != 'number') return this.errorPromise("参数不正确");
         return this.count({
             where:where
         }).then(count=>{
