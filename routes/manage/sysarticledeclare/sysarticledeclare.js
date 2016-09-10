@@ -10,7 +10,7 @@ router.post('/edit', (req, res, next)=> {
         modifier = param.modifier;
     next({
         $promise: SysArticleDeclareService.editDeclare(type,title,content,modifier),
-        msg: '查询失败'
+        msg: '编辑失败'
     });
 });
 export default router;
