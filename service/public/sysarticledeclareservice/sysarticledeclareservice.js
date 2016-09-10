@@ -30,9 +30,12 @@ class SysArticleDeclareService {
             if(count == 0) return this.addDeclare(type,title,content,modifier);
             return SysArticleDeclare.transaction(t=>{
                 return SysArticleDeclare.edit(type,title,content,modifier,t);
-            })
+            });
         }).then(()=>{
-            return SysArticleDeclare.findOnlyOne({where:where});
+            return SysArticleDeclare.findOnlyOne({
+                where:where,
+                attributes:['type','title','content']
+            });
         }).then(result=>{
             return SysArticleDeclare.formatSysArticleDeclare(result.dataValues);
         });
@@ -44,8 +47,10 @@ class SysArticleDeclareService {
      */
     findDeclareType(type){
         return SysArticleDeclare.findOnlyOne({
-            where:{type:type}
+            where:{type:type},
+            attributes:['type','title','content']
         }).then(result=>{
+            if(!result) return SysArticleDeclare.errorPromise("没有改类型的服务条款");
             return SysArticleDeclare.formatSysArticleDeclare(result.dataValues);
         });
     }
@@ -58,7 +63,8 @@ class SysArticleDeclareService {
     destroy(type){
         return SysArticleDeclare.transaction(t=>{
             return SysArticleDeclare.destroy({
-                where:{type:type}
+                where:{type:type},
+                transaction:t,
             });
         })
     }
