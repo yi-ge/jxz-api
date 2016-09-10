@@ -31,6 +31,7 @@ import SysParameter from './sysparameter';
 import SysCoin from './syscoin';
 import UsersCoinLog from './userscoinlog';
 import UsersPayType from './userspaytype';
+import SysArticleDeclare from './sysarticledeclare';
 
 export {
     Users, //会员
@@ -64,4 +65,5 @@ export {
     SysCoin,//数据字典-精选币
     UsersCoinLog,//精选币-日志
     UsersPayType,//用户-支付类型
+    SysArticleDeclare,//系统-条款声明
 }

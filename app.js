@@ -19,6 +19,7 @@ import {
 
 app.use((req, res, next)=> {
     console.log("urlpath======>", req.path);
+    console.log("param========>",req.body);
     next();
 });
 //路由

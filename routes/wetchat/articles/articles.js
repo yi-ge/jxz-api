@@ -102,7 +102,7 @@ router.post('/deletearticle', (req, res, next)=> {
 router.post('/commentarticle', (req, res, next)=> {
     let param = req.body;
     let id = param.id,
-        comment_user_id = param.comment_user_id,
+        comment_user_id = param.user_id,
         content = param.content;
     next({
         $promise: ArticlesService.wetchatCommentArticle(id, comment_user_id, content),
@@ -123,60 +123,60 @@ router.post('/findcomment', (req, res, next)=> {
 //收藏文章
 router.post('/collectionarticle', (req, res, next)=> {
     let param = req.body;
-    let id = param.id,
-        article_id = param.article_id;
+    let user_id = param.user_id,
+        id = param.article_id;
     next({
-        $promise: ArticlesService.collectionArticle(id, article_id),
+        $promise: ArticlesService.collectionArticle(user_id, id),
         msg: '文章收藏失败'
     });
 });
 //取消收藏
 router.post('/cancelarticle', (req, res, next)=> {
     let param = req.body;
-    let id = param.id,
-        article_id = param.article_id;
+    let user_id = param.user_id,
+        id = param.article_id;
     next({
-        $promise: ArticlesService.cancelArticle(id, article_id),
+        $promise: ArticlesService.cancelArticle(user_id, id),
         msg: '取消收藏失败'
     });
 });
 //是否收藏
 router.post('/iscollectionarticle', (req, res, next)=> {
     let param = req.body;
-    let id = param.id,
-        article_id = param.article_id;
+    let user_id = param.user_id,
+        id = param.article_id;
     next({
-        $promise: ArticlesService.isCollectionArticle(id, article_id),
+        $promise: ArticlesService.isCollectionArticle(user_id, id),
         msg: '判断收藏是否失败'
     });
 });
 //点赞文章
 router.post('/likearticle', (req, res, next)=> {
     let param = req.body;
-    let id = param.id,
-        article_id = param.article_id;
+    let user_id = param.user_id,
+        id = param.article_id;
     next({
-        $promise: ArticlesService.likeArticle(id, article_id),
+        $promise: ArticlesService.likeArticle(user_id, id),
         msg: '点赞失败'
     });
 });
 //取消点赞
 router.post('/cancellikearticle', (req, res, next)=> {
     let param = req.body;
-    let id = param.id,
-        article_id = param.article_id;
+    let user_id = param.user_id,
+        id = param.article_id;
     next({
-        $promise: ArticlesService.cancelLikeArticle(id, article_id),
+        $promise: ArticlesService.cancelLikeArticle(user_id, id),
         msg: '取消点赞失败'
     });
 });
 //是否点赞
 router.post('/islikearticle', (req, res, next)=> {
     let param = req.body;
-    let id = param.id,
-        article_id = param.article_id;
+    let user_id = param.user_id,
+        id = param.article_id;
     next({
-        $promise: ArticlesService.isLikeArticle(id, article_id),
+        $promise: ArticlesService.isLikeArticle(user_id, id),
         msg: '判断是否点赞失败'
     });
 });

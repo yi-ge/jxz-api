@@ -79,7 +79,6 @@ class VipService {
                     return UsersVip.insert(UsersVip.createModel(account_name, null, null, 2, password, UsersVip.NORECHARGE, UsersVip.BINDING), {
                         transaction: t,
                     }).then(vip=> {
-                        console.log(users_id,vip.id);
                         return Users.relationVip(users_id, vip.id, t); //绑定vip
                     });
                 });
@@ -191,7 +190,6 @@ class VipService {
     rechargeCoin(id,coin){
         return UsersVip.transaction(t=>{
             return UsersVip.rechargeCoin(id,coin,t).then(result=>{
-                console.log(result);
                 return UsersCoinLog.rechargeLog(id,coin,t);
             });
         });
