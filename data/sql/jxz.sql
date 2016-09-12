@@ -360,6 +360,7 @@ CREATE TABLE `houses_solar_terms` (
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '修改时间',
   `status` tinyint(4) DEFAULT '1' COMMENT '状态1正常0删除2未启动',
+  `is_set_price` tinyint(4) DEFAULT NULL COMMENT '是否设置了价格1设置了价格0暂无价格',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='房屋-节气';
 

@@ -12,6 +12,9 @@ const STATUS = {
     SLACK:1, //淡季
     BUSY:2, //旺季
     PEAK:3 //高峰
+},ISSETPRICE = {
+    YES:1,
+    NO:0
 };
 
 class HousesSolarTerms extends Base {
@@ -35,7 +38,7 @@ class HousesSolarTerms extends Base {
      * @param status
      * @returns {{id: number, houses_id: *, season: *, name: *, solar_terms_begin_date: *, solar_terms_end_date: *, creater: *, modifier: *, status: (*|number), created_at: Date, updated_at: Date}}
      */
-    createModel(houses_id,season,name,solar_terms_begin_date,solar_terms_end_date,creater,modifier,status){
+    createModel(houses_id,season,name,solar_terms_begin_date,solar_terms_end_date,creater,modifier,status,is_set_price){
         let model = {
             id:this.generateId(),
             houses_id:houses_id,
@@ -46,6 +49,7 @@ class HousesSolarTerms extends Base {
             creater:creater,
             modifier:modifier,
             status:status || STATUS.NORMAL,
+            is_set_price:is_set_price || ISSETPRICE.YES,
             created_at:new Date(),
             updated_at:new Date(),
         };
