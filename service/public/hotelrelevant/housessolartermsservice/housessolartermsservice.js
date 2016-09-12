@@ -10,10 +10,10 @@ class HousesSolarTermsService {
      * @param creater
      * @returns {*}
      */
-    addHousesSolarTerms(house_id,season,name,solar_terms_begin_date,solar_terms_end_date,creater){
-        return HousesSolarTerms.transaction(t=>{
-            return HousesSolarTerms.insert(HousesSolarTerms.createModel(house_id,season,name,solar_terms_begin_date,solar_terms_end_date,creater,creater),{
-                transaction:t
+    addHousesSolarTerms(house_id, season, name, solar_terms_begin_date, solar_terms_end_date, is_set_price, creater) {
+        return HousesSolarTerms.transaction(t=> {
+            return HousesSolarTerms.insert(HousesSolarTerms.createModel(house_id, season, name, solar_terms_begin_date, solar_terms_end_date, creater, creater, null, is_set_price), {
+                transaction: t
             });
         });
     }
@@ -26,26 +26,26 @@ class HousesSolarTermsService {
      * @param modifier
      * @returns {*}
      */
-    editHousesSolarTerms(id,solar_terms_begin_date,solar_terms_end_date,is_set_price,modifier){
+    editHousesSolarTerms(id, solar_terms_begin_date, solar_terms_end_date, is_set_price, modifier) {
         let updateObj = {};
         solar_terms_begin_date != void(0) && (updateObj.solar_terms_begin_date = solar_terms_begin_date);
         solar_terms_end_date != void(0) && (updateObj.solar_terms_end_date = solar_terms_end_date);
-        is_set_price != void(0) && (updateObj.is_set_price = HousesSolarTerms.getIsSetPriceWhere(is_set_price));
-        if(!id || Object.keys(updateObj).length == 0 )return HousesSolarTerms.errorPromise("参数不正确");
-        return HousesSolarTerms.transaction(t=>{
+        is_set_price != void(0) && (Object.assign(updateObj, HousesSolarTerms.getIsSetPriceWhere(is_set_price)));
+        if (!id || Object.keys(updateObj).length == 0)return HousesSolarTerms.errorPromise("参数不正确");
+        return HousesSolarTerms.transaction(t=> {
             return HousesSolarTerms.update({
-                solar_terms_begin_date:solar_terms_begin_date,
-                solar_terms_end_date:solar_terms_end_date,
-                modifier:modifier,
-                updated_at:new Date(),
-            },{
-                where:{id:id},
-                transaction:t,
+                solar_terms_begin_date: solar_terms_begin_date,
+                solar_terms_end_date: solar_terms_end_date,
+                modifier: modifier,
+                updated_at: new Date(),
+            }, {
+                where: {id: id},
+                transaction: t,
                 lock: t.LOCK.UPDATE
             });
-        }).then(result=>{
+        }).then(result=> {
             return HousesSolarTerms.findById(id);
-        }).then(term=>{
+        }).then(term=> {
             return HousesSolarTerms.formatHousesSolarTerms(term);
         });
     }
@@ -55,9 +55,9 @@ class HousesSolarTermsService {
      * @param id
      * @returns {*}
      */
-    destroyHousesSolarTerms(id){
-        return HousesSolarTerms.transaction(t=>{
-           return HousesSolarTerms.destroy({where:{id:id}});
+    destroyHousesSolarTerms(id) {
+        return HousesSolarTerms.transaction(t=> {
+            return HousesSolarTerms.destroy({where: {id: id}});
         });
     }
 
@@ -66,11 +66,11 @@ class HousesSolarTermsService {
      * @param house_id
      * @returns {*}
      */
-    findHousesSolarTermsList(house_id){
+    findHousesSolarTermsList(house_id) {
         return HousesSolarTerms.findList({
-            where:{houses_id:house_id}
-        }).then(list=>{
-            list.list.map(term=>{
+            where: {houses_id: house_id}
+        }).then(list=> {
+            list.list.map(term=> {
                 HousesSolarTerms.formatHousesSolarTerms(term);
             });
             return list;

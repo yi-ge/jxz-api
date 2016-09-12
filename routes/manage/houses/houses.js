@@ -210,9 +210,10 @@ router.post('/addterm', (req, res, next)=> {
         solar_terms_begin_date = param.start_date,
         solar_terms_end_date = param.end_date,
         creater = param.creater,
+        is_set_price = param.is_set_price,
         name = param.name;
     next({
-        $promise: HousesSolarTermsService.addHousesSolarTerms(houses_id,season,name,solar_terms_begin_date,solar_terms_end_date,creater),
+        $promise: HousesSolarTermsService.addHousesSolarTerms(houses_id,season,name,solar_terms_begin_date,solar_terms_end_date,is_set_price,creater),
         msg: '节气添加失败'
     });
 });
