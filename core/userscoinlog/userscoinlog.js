@@ -46,7 +46,7 @@ class UsersCoinLog extends Base {
      * @param modifier 修改人
      * @returns {{id: number, user_id: *, coin_money: *, event_type: *, event_name: *, event_id: *, event_mode: *, creater: *, modifier: *, created_at: Date, updated_at: Date, status: number}}
      */
-    createModel(user_id, coin_money, event_type, event_name, event_id, event_mode, status, creater, modifier) {
+    createModel(user_id, coin_money, event_type, event_name, event_id, event_mode, status, coin_rule, creater, modifier) {
         let model = {
             id: this.generateId(),
             user_id: user_id,
@@ -59,6 +59,7 @@ class UsersCoinLog extends Base {
             modifier: modifier,
             created_at: new Date(),
             updated_at: new Date(),
+            coin_rule: coin_rule,
             status: status || STATUS.LOCKUP
         };
         return model;
@@ -74,13 +75,13 @@ class UsersCoinLog extends Base {
      * 会员充值日志
      * @param user_id
      * @param coin_money
-     * @param sys_coin_id 充值档次
+     * @param sys_coin_id 充值档次引用
      * @param t
      * @returns {Promise.<Instance>}
      */
-    rechargeLog(vip_id, coin_money,sys_coin_id, t) {
+    rechargeLog(vip_id, sys_coin_id, coin_money, t) {
         let RECHARGE = EVENT.TYPE.RECHARGE;
-        return this.insert(this.createModel(vip_id,coin_money,RECHARGE.VALUE,RECHARGE.TEMPLATE,null,sys_coin_id,STATUS.LOCKUP,vip_id,vip_id), {
+        return this.insert(this.createModel(vip_id, coin_money, RECHARGE.VALUE, RECHARGE.TEMPLATE, null, null, STATUS.LOCKUP, sys_coin_id, vip_id, vip_id), {
             transaction: t
         });
     }

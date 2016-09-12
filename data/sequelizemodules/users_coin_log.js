@@ -53,6 +53,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER(4),
       allowNull: true,
       defaultValue: '1'
+    },
+    coin_rule: {
+      type: DataTypes.BIGINT,
+      allowNull: true
     }
   }, {
     tableName: 'users_coin_log'

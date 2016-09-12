@@ -51,5 +51,9 @@ export default {
         type: DataTypes.INTEGER(4),
         allowNull: true,
         defaultValue: '1'
+    },
+    coin_rule: {
+        type: DataTypes.BIGINT,
+        allowNull: true
     }
 };

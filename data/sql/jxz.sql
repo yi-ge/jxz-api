@@ -867,6 +867,7 @@ CREATE TABLE `users_coin_log` (
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '修改时间',
   `status` tinyint(4) DEFAULT '1' COMMENT '状态1正常0删除2锁住',
+  `coin_rule` bigint(20) DEFAULT NULL COMMENT '币规则,引用系统币',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户-币日志';
 
