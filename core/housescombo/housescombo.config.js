@@ -49,5 +49,9 @@ export default {
     creater: {
         type: DataTypes.BIGINT,
         allowNull: true
+    },
+    price: {
+        type: DataTypes.DECIMAL,
+        allowNull: true
     }
 };

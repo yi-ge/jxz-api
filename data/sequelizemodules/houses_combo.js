@@ -51,6 +51,10 @@ module.exports = function(sequelize, DataTypes) {
     creater: {
       type: DataTypes.BIGINT,
       allowNull: true
+    },
+    price: {
+      type: DataTypes.DECIMAL,
+      allowNull: true
     }
   }, {
     tableName: 'houses_combo'
