@@ -34,6 +34,9 @@ import UsersPayType from './userspaytype';
 import SysArticleDeclare from './sysarticledeclare';
 import Orders from './orders';
 import HousesCombo from './housescombo';
+import HousesSolarTerms from './housessolarterms';
+import HousesRoom from './housesroom';
+import HousesRoomPrice from './housesroomprice';
 
 export {
     Users, //会员
@@ -70,4 +73,7 @@ export {
     SysArticleDeclare,//系统-条款声明
     Orders,//订单
     HousesCombo,//套餐
+    HousesSolarTerms,//节气
+    HousesRoom,//酒店房型
+    HousesRoomPrice,//酒店房型价格
 }

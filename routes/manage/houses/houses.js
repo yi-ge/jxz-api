@@ -5,6 +5,7 @@ import {
     HousesAttachService,
     SysHousesKeywordService,
     HousesCommentService,
+    HousesSolarTermsService,
 } from './../../../service/manage';
 const router = express.Router();
 //添加系统酒店亮点
@@ -199,6 +200,50 @@ router.post('/destroyhouseattach', (req, res, next)=> {
     next({
         $promise: HousesAttachService.destroyHouseAttach(id),
         msg: '附件删除失败'
+    });
+});
+//添加节气
+router.post('/addterm', (req, res, next)=> {
+    let param = req.body;
+    let houses_id = param.houses_id,
+        season = param.season,
+        solar_terms_begin_date = param.start_date,
+        solar_terms_end_date = param.end_date,
+        creater = param.creater,
+        name = param.name;
+    next({
+        $promise: HousesSolarTermsService.addHousesSolarTerms(houses_id,season,name,solar_terms_begin_date,solar_terms_end_date,creater),
+        msg: '节气添加失败'
+    });
+});
+//查询节气列表
+router.post('/findtermlist', (req, res, next)=> {
+    let param = req.body;
+    let houses_id = param.houses_id;
+    next({
+        $promise: HousesSolarTermsService.findHousesSolarTermsList(houses_id),
+        msg: '节气查询失败'
+    });
+});
+//编辑节气
+router.post('/editterm', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id,
+        solar_terms_begin_date = param.start_date,
+        solar_terms_end_date = param.end_date,
+        modifier = param.modifier;
+    next({
+        $promise: HousesSolarTermsService.editHousesSolarTerms(id,solar_terms_begin_date,solar_terms_end_date,modifier),
+        msg: '编辑失败'
+    });
+});
+//删除节气
+router.post('/destroyterm', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id;
+    next({
+        $promise: HousesSolarTermsService.destroyHousesSolarTerms(id),
+        msg: '删除失败'
     });
 });
 //添加酒店

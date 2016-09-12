@@ -23,7 +23,8 @@ import {
     SysHotKeywordService,
     SysParameterService,
     SysCoinService,
-    SysArticleDeclareService
+    SysArticleDeclareService,
+    HousesSolarTermsService,
 } from './../public';
 
 
@@ -46,4 +47,5 @@ export {
     HousesCommentService,
     SysCoinService,
     SysArticleDeclareService,
+    HousesSolarTermsService,
 }

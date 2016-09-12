@@ -81,7 +81,6 @@ class HousesSolarTerms extends Base {
         let house_id = model.houses_id,
             stratDate = model.solar_terms_begin_date,
             endDate = model.solar_terms_end_date;
-
         return this.findList({
             where:{houses_id:house_id}
         }).then(list=>{

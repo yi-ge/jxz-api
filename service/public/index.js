@@ -6,7 +6,7 @@ import SysHotKeywordService from './syshotkeywordservice';
 import SysParameterService from './sysparameterservice';
 import SysCoinService from './syscoinservice';
 import SysArticleDeclareService from './sysarticledeclareservice';
-import {HousesService,HousesKeywordService,HousesAttachService,HousesCommentService} from './hotelrelevant';
+import {HousesService,HousesKeywordService,HousesAttachService,HousesCommentService,HousesSolarTermsService} from './hotelrelevant';
 import {VipService,CoinLogService} from './viprelevant';
 
 export {
@@ -24,4 +24,5 @@ export {
     SysCoinService,
     SysArticleDeclareService,
     CoinLogService,
+    HousesSolarTermsService,
 }
