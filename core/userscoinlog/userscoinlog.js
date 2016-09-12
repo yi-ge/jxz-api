@@ -74,12 +74,13 @@ class UsersCoinLog extends Base {
      * 会员充值日志
      * @param user_id
      * @param coin_money
+     * @param sys_coin_id 充值档次
      * @param t
      * @returns {Promise.<Instance>}
      */
-    rechargeLog(vip_id, coin_money, t) {
+    rechargeLog(vip_id, coin_money,sys_coin_id, t) {
         let RECHARGE = EVENT.TYPE.RECHARGE;
-        return this.insert(this.createModel(vip_id,coin_money,RECHARGE.VALUE,RECHARGE.TEMPLATE,null,null,STATUS.LOCKUP,vip_id,vip_id), {
+        return this.insert(this.createModel(vip_id,coin_money,RECHARGE.VALUE,RECHARGE.TEMPLATE,null,sys_coin_id,STATUS.LOCKUP,vip_id,vip_id), {
             transaction: t
         });
     }
