@@ -32,7 +32,7 @@ class HousesRoomPrice extends Base {
      * @param status 状态1正常0删除2未启动
      * @returns {{id: number, houses_id: *, houses_room_id: *, season: *, price: *, price_desc: *, creater: *, modifier: *, status: (*|number), created_at: Date, updated_at: Date}}
      */
-    createHousesRoomPrice(houses_id,houses_room_id,season,price,price_desc,creater,modifier,status){
+    createModel(houses_id,houses_room_id,season,price,price_desc,creater,modifier,status){
         let model = {
             id:this.generateId(),
             houses_id:houses_id,
