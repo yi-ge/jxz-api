@@ -1,5 +1,5 @@
 import express from "express";
-import {VipService} from './../../../service/wetchat';
+import {VipService,CoinLogService} from './../../../service/wetchat';
 const router = express.Router();
 //会员注册
 router.post('/register', (req, res, next)=> {
@@ -52,6 +52,16 @@ router.post('/resizepassword', (req, res, next)=> {
     next({
         $promise: VipService.resizePassword(account_name,password),
         msg: '用户名或者密码错误'
+    });
+});
+//创建充值记录
+router.post('/addRechargeLog',(req,res,next)=>{
+    let param = req.body;
+    let id = param.id,
+        coin = param.coin;
+    next({
+        $promise: CoinLogService.beforeRechargeLog(id,coin),
+        msg: '充值失败'
     });
 });
 //会员充值

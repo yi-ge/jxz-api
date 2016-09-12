@@ -4,6 +4,7 @@
 import syscoin from './syscoin.config';
 import Base from './../base';
 const STATUS={
+    DELETE:0, //删除
     NORMAL:1, //启用
     DISABLE:2 //禁用
 };
@@ -64,6 +65,18 @@ class SysCoin extends Base {
             where:{id:id},
             transaction:t,
             lock: t.LOCK.UPDATE
+        });
+    }
+
+    /**
+     * 获取所有启用的币配置
+     * @returns {*}
+     */
+    findNormalList(){
+        let where = {status:STATUS.NORMAL};
+        return this.findList({
+            where:where,
+            attribute:['id','name','rule_money','get_coin']
         });
     }
 }

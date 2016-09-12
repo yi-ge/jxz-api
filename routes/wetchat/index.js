@@ -5,6 +5,7 @@ import vip from './vip';
 import houses from './houses';
 import articles from './articles';
 import region from './region';
+import syscoin from './syscoin';
 
 /**
  * 微信端 用户模块
@@ -14,5 +15,6 @@ router.use('/vip',vip);
 router.use('/houses',houses);
 router.use('/region',region);
 router.use('/articles',articles);
+router.use('/syscoin',syscoin);
 
 export default router;

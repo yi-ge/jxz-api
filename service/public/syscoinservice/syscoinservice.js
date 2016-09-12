@@ -33,6 +33,18 @@ class SysCoinService {
     }
 
     /**
+     * 获取状态正常的列表
+     */
+    findNormalList(){
+        return SysCoin.findNormalList().then(list=>{
+            list.list.map(coin=>{
+                SysCoin.formatSysCoin(coin);
+            });
+            return list;
+        });
+    }
+
+    /**
      * 改变数据状态
      * @param id
      * @param status

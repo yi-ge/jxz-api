@@ -10,6 +10,7 @@ import {
     SysInformService,
     SysHotKeywordService,
     SysCoinService,
+    CoinLogService,
 } from './../public';
 
 import {UsersAtService,UsersFavoriteService,UsersMsgService} from './userslevant';
@@ -28,4 +29,5 @@ export {
     SysInformService,
     SysHotKeywordService,
     SysCoinService,
+    CoinLogService,
 }

@@ -187,10 +187,10 @@ class VipService {
      * @param coin
      * @returns {*}
      */
-    rechargeCoin(id,coin){
+    rechargeCoin(id,order_id,coin){
         return UsersVip.transaction(t=>{
             return UsersVip.rechargeCoin(id,coin,t).then(result=>{
-                return UsersCoinLog.rechargeLog(id,coin,t);
+                return UsersCoinLog.rechargeLogSuccess(order_id,t);
             });
         });
     }

@@ -7,7 +7,7 @@ import SysParameterService from './sysparameterservice';
 import SysCoinService from './syscoinservice';
 import SysArticleDeclareService from './sysarticledeclareservice';
 import {HousesService,HousesKeywordService,HousesAttachService,HousesCommentService} from './hotelrelevant';
-import {VipService} from './viprelevant';
+import {VipService,CoinLogService} from './viprelevant';
 
 export {
     UsersService,
@@ -23,4 +23,5 @@ export {
     SysParameterService,
     SysCoinService,
     SysArticleDeclareService,
+    CoinLogService,
 }
