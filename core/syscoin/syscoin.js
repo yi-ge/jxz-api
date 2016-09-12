@@ -76,7 +76,7 @@ class SysCoin extends Base {
         let where = {status:STATUS.NORMAL};
         return this.findList({
             where:where,
-            attribute:['id','name','rule_money','get_coin']
+            attributes:['id','name','rule_money','get_coin']
         });
     }
 }
