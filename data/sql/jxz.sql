@@ -313,9 +313,6 @@ CREATE TABLE `houses_room` (
   `id` bigint(20) NOT NULL COMMENT '主键ID，由程序生成',
   `houses_id` bigint(20) DEFAULT NULL COMMENT '房屋ID',
   `houses_type` varchar(30) COLLATE utf8_bin DEFAULT NULL COMMENT '房型',
-  `season` tinyint(4) DEFAULT NULL COMMENT '季节1淡季2旺季3高峰',
-  `price` decimal(10,2) DEFAULT NULL COMMENT '价格',
-  `price_desc` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '价格描述',
   `creater` bigint(20) DEFAULT NULL COMMENT '创建人',
   `modifier` bigint(20) DEFAULT NULL COMMENT '修改人',
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
@@ -325,6 +322,27 @@ CREATE TABLE `houses_room` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='房屋-房间';
 
 /*Data for the table `houses_room` */
+
+/*Table structure for table `houses_room_price` */
+
+DROP TABLE IF EXISTS `houses_room_price`;
+
+CREATE TABLE `houses_room_price` (
+  `id` bigint(20) NOT NULL COMMENT '主键ID，由程序生成',
+  `houses_id` bigint(20) DEFAULT NULL COMMENT '房屋ID',
+  `houses_room_id` bigint(20) DEFAULT NULL COMMENT '房屋房间ID',
+  `season` tinyint(4) DEFAULT NULL COMMENT '季节1淡季2旺季3高峰',
+  `price` decimal(10,2) DEFAULT NULL COMMENT '价格',
+  `price_desc` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '价格描述',
+  `creater` bigint(20) DEFAULT NULL COMMENT '创建人',
+  `modifier` bigint(20) DEFAULT NULL COMMENT '修改人',
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '修改时间',
+  `status` tinyint(4) DEFAULT '1' COMMENT '状态1正常0删除2未启动',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='房屋-房间价格';
+
+/*Data for the table `houses_room_price` */
 
 /*Table structure for table `houses_solar_terms` */
 
