@@ -1,0 +1,6 @@
+{
+	"name": "housesroomservice",
+	"version": "2.0.0",
+	"private": true,
+	"main": "./housesroomservice.js"
+}

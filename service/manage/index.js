@@ -25,6 +25,8 @@ import {
     SysCoinService,
     SysArticleDeclareService,
     HousesSolarTermsService,
+    HousesRoomService,
+    HousesRoomPriceService,
 } from './../public';
 
 
@@ -48,4 +50,6 @@ export {
     SysCoinService,
     SysArticleDeclareService,
     HousesSolarTermsService,
+    HousesRoomService,
+    HousesRoomPriceService,
 }
