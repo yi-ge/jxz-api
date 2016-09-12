@@ -58,19 +58,21 @@ router.post('/resizepassword', (req, res, next)=> {
 router.post('/addRechargeLog',(req,res,next)=>{
     let param = req.body;
     let id = param.id,
+        sys_coin_id = param.sys_coin_id,
         coin = param.coin;
     next({
-        $promise: CoinLogService.beforeRechargeLog(id,coin),
+        $promise: CoinLogService.beforeRechargeLog(id,sys_coin_id,coin),
         msg: '充值失败'
     });
 });
 //会员充值
-router.post('/recharge', (req, res, next)=> {
+router.post('/wechatpay', (req, res, next)=> {
     let param = req.body;
     let id = param.id,
+        sys_coin_id = param.sys_coin_id,
         coin = param.coin;
     next({
-        $promise: VipService.rechargeCoin(id,coin),
+        $promise: VipService.rechargeCoin(id,sys_coin_id,coin),
         msg: '充值失败'
     });
 });

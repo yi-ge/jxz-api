@@ -79,9 +79,9 @@ class UsersCoinLog extends Base {
      * @param t
      * @returns {Promise.<Instance>}
      */
-    rechargeLog(vip_id, sys_coin_id, coin_money, t) {
+    rechargeLog(vip_id, sys_coin_id, coin_money,event_id, t) {
         let RECHARGE = EVENT.TYPE.RECHARGE;
-        return this.insert(this.createModel(vip_id, coin_money, RECHARGE.VALUE, RECHARGE.TEMPLATE, null, null, STATUS.LOCKUP, sys_coin_id, vip_id, vip_id), {
+        return this.insert(this.createModel(vip_id, coin_money, RECHARGE.VALUE, RECHARGE.TEMPLATE, event_id, null, STATUS.LOCKUP, sys_coin_id, vip_id, vip_id), {
             transaction: t
         });
     }
