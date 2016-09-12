@@ -49,5 +49,9 @@ export default {
         type: DataTypes.INTEGER(4),
         allowNull: true,
         defaultValue: '1'
+    },
+    is_set_price: {
+        type: DataTypes.INTEGER(4),
+        allowNull: true
     }
 };
