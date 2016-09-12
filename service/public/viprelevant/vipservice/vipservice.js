@@ -74,7 +74,7 @@ class VipService {
             return UsersVip.findAccountName(account_name).then(vip=> {
                 if (!!vip) return UsersVip.errorPromise('用户已存在');
                 return vip;
-            }).then(() =>{
+            }).then(() => {
                 return UsersVip.transaction(t=> {
                     return UsersVip.insert(UsersVip.createModel(account_name, null, null, 2, password, UsersVip.NORECHARGE, UsersVip.BINDING), {
                         transaction: t,
@@ -92,16 +92,16 @@ class VipService {
      * @param user_id
      */
     defaultLogin(id, user_id) {
-        if(typeof id != 'number') return Users.errorPromise("未绑定会员");
-        return Users.findById(user_id).then(user=>{
-            if(!user) return Users.errorPromise("精选者不存在");
-            if(user.user_vip_id != id) return Users.errorPromise("精选着绑定会员与获取会员不相同");
+        if (typeof id != 'number') return Users.errorPromise("未绑定会员");
+        return Users.findById(user_id).then(user=> {
+            if (!user) return Users.errorPromise("精选者不存在");
+            if (user.user_vip_id != id) return Users.errorPromise("精选着绑定会员与获取会员不相同");
             return user;
-        }).then(()=>{
-            return UsersVip.findById(id,{
-                attribute:{exclude:"passwd"}
+        }).then(()=> {
+            return UsersVip.findById(id, {
+                attribute: {exclude: "passwd"}
             });
-        }).then(vip=>{
+        }).then(vip=> {
             return UsersVip.formatUserVip(vip.dataValues);
         });
     }
@@ -187,10 +187,14 @@ class VipService {
      * @param coin
      * @returns {*}
      */
-    rechargeCoin(id,order_id,coin){
-        return UsersVip.transaction(t=>{
-            return UsersVip.rechargeCoin(id,coin,t).then(result=>{
-                return UsersCoinLog.rechargeLogSuccess(order_id,t);
+    rechargeCoin(id, order_id, coin, status) {
+        return UsersVip.transaction(t=> {
+            if (status)
+                return UsersCoinLog.rechargeLogFail(order_id, t).then(()=> {
+                    return UsersVip.errorPromise("充值失败");
+                });
+            return UsersVip.rechargeCoin(id, coin, t).then(result=> {
+                return UsersCoinLog.rechargeLogSuccess(order_id, t);
             });
         });
     }

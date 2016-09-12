@@ -217,6 +217,16 @@ router.post('/addterm', (req, res, next)=> {
         msg: '节气添加失败'
     });
 });
+//添加节气
+router.post('/addtermlist', (req, res, next)=> {
+    let param = req.body;
+    let houses_id = param.houses_id,
+        creater = param.creater;
+    next({
+        $promise: HousesSolarTermsService.addListHousesSolarTerms(houses_id,termslist,creater),
+        msg: '节气添加失败'
+    });
+});
 //查询节气列表
 router.post('/findtermlist', (req, res, next)=> {
     let param = req.body;

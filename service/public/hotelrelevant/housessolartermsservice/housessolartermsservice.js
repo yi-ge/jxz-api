@@ -7,13 +7,51 @@ class HousesSolarTermsService {
      * @param name
      * @param solar_terms_begin_date
      * @param solar_terms_end_date
+     * @param is_set_price
      * @param creater
      * @returns {*}
      */
+
     addHousesSolarTerms(house_id, season, name, solar_terms_begin_date, solar_terms_end_date, is_set_price, creater) {
         return HousesSolarTerms.transaction(t=> {
             return HousesSolarTerms.insert(HousesSolarTerms.createModel(house_id, season, name, solar_terms_begin_date, solar_terms_end_date, creater, creater, null, is_set_price), {
                 transaction: t
+            });
+        });
+    }
+
+    /**
+     * 批量添加节气
+     * @param house_id
+     * @param termslist [season,name,solar_terms_begin_date,solar_terms_end_date,is_set_price]
+     * @param creater
+     * @returns {*}
+     */
+    addListHousesSolarTerms(house_id,termslist,creater){
+        let list = [],term,status = false;
+        for(let j = 0, l = termslist.length ; j < l;j++){
+            term = termslist[j];
+            let model = HousesSolarTerms.createModel(house_id, term.season, term.name, term.start_date, term.end_date, creater, creater, null, term.is_set_price);
+            let stratDate = model.solar_terms_begin_date,
+                endDate = model.solar_terms_end_date;
+            for(let i = 0, len = list.list.length ; i < len ; i++){
+                term = list.list[i];
+                if(!(term.solar_terms_begin_date > endDate || term.solar_terms_end_date < stratDate)){
+                    status = true;
+                    break;
+                }
+            }
+            if(!status) list.push(model);
+            else return HousesSolarTerms.errorPromise("节气时间重复");
+        }
+        return HousesSolarTerms.transaction(t=>{
+            return HousesSolarTerms.destroy({
+                where:{houses_id:house_id}
+            }).then((result)=>{
+                console.log(result);
+                return HousesSolarTerms.bulkCreate(list,{
+                    transaction:t,
+                });
             });
         });
     }

@@ -55,7 +55,7 @@ router.post('/resizepassword', (req, res, next)=> {
     });
 });
 //创建充值记录
-router.post('/addRechargeLog',(req,res,next)=>{
+router.post('/addrechargelog',(req,res,next)=>{
     let param = req.body;
     let id = param.id,
         sys_coin_id = param.sys_coin_id,
@@ -69,10 +69,11 @@ router.post('/addRechargeLog',(req,res,next)=>{
 router.post('/wechatpay', (req, res, next)=> {
     let param = req.body;
     let id = param.id,
-        sys_coin_id = param.sys_coin_id,
+        order_id = param.order_id,
+        status = param.status,
         coin = param.coin;
     next({
-        $promise: VipService.rechargeCoin(id,sys_coin_id,coin),
+        $promise: VipService.rechargeCoin(id,order_id,coin,status),
         msg: '充值失败'
     });
 });

@@ -20,9 +20,9 @@ const EVENT = {
         }
     }
 }, STATUS = {
-    DELETE: 0,
-    NORMAL: 1,
-    LOCKUP: 2,
+    DELETE: 0,//删除
+    NORMAL: 1,//正常
+    LOCKUP: 2,//锁定
 };
 
 class UsersCoinLog extends Base {
