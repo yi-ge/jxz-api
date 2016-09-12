@@ -17,6 +17,7 @@ class HousesService {
             return Houses.insert(Houses.createModel(Houses.TYPE.HOTEL, name, creater, creater, region, address, traffic_around, spots_around, houses_desc), {
                 transaction: t
             }).then(house=> {
+                if(!keywords) return house;
                 return HousesKeyword.addHousesKeywordList(house.id, keywords, creater, t).then(()=> {
                     return house;
                 });
