@@ -6,6 +6,7 @@ import SysUsers from './../sysusers/sysusers';
 import HousesComment from './../housescomment/housescomment';
 import SysDict from './../sysdict/sysdict';
 import HousesCombo from './../housescombo/housescombo';
+import HousesSolarTerms from './../housessolarterms/housessolarterms';
 //一个酒店对应多篇文章
 Houses.sequlize.hasMany(Articles.sequlize, {
     foreignKey: 'houses_id',
@@ -44,5 +45,8 @@ Houses.sequlize.belongsTo(SysDict.sequlize,{
 Houses.sequlize.hasMany(HousesCombo.sequlize,{
     foreignKey:'houses_id'
 });
-
+//酒店节气
+Houses.sequlize.hasMany(HousesSolarTerms.sequlize,{
+    foreignKey:'houses_id'
+});
 export default Houses;
