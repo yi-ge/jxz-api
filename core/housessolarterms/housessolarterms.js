@@ -75,6 +75,16 @@ class HousesSolarTerms extends Base {
         return where;
     }
 
+    getIsSetPriceWhere(is_set_price){
+        let where = {};
+        switch (is_set_price){
+            case ISSETPRICE.YES: where.is_set_price = ISSETPRICE.YES;break;
+            case ISSETPRICE.NO: where.is_set_price = ISSETPRICE.NO;break;
+            default:where.is_set_price = ISSETPRICE.YES;break;
+        }
+        return where;
+    }
+
     /**
      * 插入节气数据
      * @param model

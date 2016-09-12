@@ -26,10 +26,11 @@ class HousesSolarTermsService {
      * @param modifier
      * @returns {*}
      */
-    editHousesSolarTerms(id,solar_terms_begin_date,solar_terms_end_date,modifier){
+    editHousesSolarTerms(id,solar_terms_begin_date,solar_terms_end_date,is_set_price,modifier){
         let updateObj = {};
         solar_terms_begin_date != void(0) && (updateObj.solar_terms_begin_date = solar_terms_begin_date);
         solar_terms_end_date != void(0) && (updateObj.solar_terms_end_date = solar_terms_end_date);
+        is_set_price != void(0) && (updateObj.is_set_price = HousesSolarTerms.getIsSetPriceWhere(is_set_price));
         if(!id || Object.keys(updateObj).length == 0 )return HousesSolarTerms.errorPromise("参数不正确");
         return HousesSolarTerms.transaction(t=>{
             return HousesSolarTerms.update({
