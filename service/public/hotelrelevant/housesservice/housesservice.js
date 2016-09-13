@@ -169,9 +169,9 @@ class HousesService {
      * @param house_id
      * @param is_order
      */
-    updateIsOrder(house_id,is_order,modifier){
+    updateIsOrder(house_id,is_orders,modifier){
         return Houses.transaction(t=>{
-            return Houses.updateIsOrder(house_id,is_order,modifier,t);
+            return Houses.updateIsOrder(house_id,is_orders,modifier,t);
         }).then(result=>{
             return Houses.findById(house_id);
         }).then(house=>{

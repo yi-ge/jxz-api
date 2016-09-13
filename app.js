@@ -38,7 +38,6 @@ app.use((obj, req, res, next)=> {
 
 //数据返回接口
 app.use((data, req, res, next)=> {
-    console.log(data);
     if (typeof data == 'object' || typeof data == 'number')
         res.json({
             code: 200,

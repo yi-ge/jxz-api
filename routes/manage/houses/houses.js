@@ -414,10 +414,10 @@ router.post('/findhousedetails', (req, res, next)=> {
 router.post('/updateisorder', (req, res, next)=> {
     let param = req.body;
     let id = param.id,
-        is_order = param.is_order,
+        is_orders = param.is_orders,
         modifier = param.modifier;
     next({
-        $promise: HousesService.updateIsOrder(id, is_order, modifier),
+        $promise: HousesService.updateIsOrder(id, is_orders, modifier),
         msg: '酒店详情查询失败'
     });
 });

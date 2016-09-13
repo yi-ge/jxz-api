@@ -147,9 +147,9 @@ class Houses extends Base {
      * @param is_order
      * @returns {{}}
      */
-    getIsOrderValue(is_order){
+    getIsOrderValue(is_orders){
         let where = {};
-        switch (is_order){
+        switch (is_orders){
             case ISORDERS.YES:where.is_orders = ISORDERS.YES;break;
             case ISORDERS.NO:where.is_orders = ISORDERS.NO;break;
             default:where.is_orders = ISORDERS.YES;break;
