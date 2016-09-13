@@ -78,6 +78,15 @@ router.post('/findroomlist', (req, res, next)=> {
         msg: '酒店房型查询失败'
     });
 });
+//酒店房型列表
+router.get('/findroomlist', (req, res, next)=> {
+    let param = req.query;
+    let house_id = param.houses_id;
+    next({
+        $promise: HousesRoomService.findRoomCurrentPriceList(house_id),
+        msg: '酒店房型查询失败'
+    });
+});
 //酒店节气列表
 router.post('/findtermlist', (req, res, next)=> {
     let param = req.body;

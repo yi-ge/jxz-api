@@ -24,6 +24,7 @@ class HousesSolarTerms extends Base {
         });
         this.STATUS = STATUS;
         this.SEASON = SEASON;
+        this.ISSETPRICE = ISSETPRICE;
     }
 
     /**

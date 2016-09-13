@@ -10,8 +10,8 @@ class HousesRoomService {
      */
     addHousesRoom(house_id, houses_type, room_desc, roomprices, creater, modifier) {
         if (!house_id) return HousesRoom.errorPromise("参数不正确");
-        return HousesRoom.count({where:{houses_type:houses_type}}).then(count=>{
-            if(count != 0) return HousesRoom.errorPromise("房型名称重复");
+        return HousesRoom.count({where: {houses_type: houses_type}}).then(count=> {
+            if (count != 0) return HousesRoom.errorPromise("房型名称重复");
             return HousesRoom.transaction(t=> {
                 let returnResult;
                 return HousesRoom.insert(HousesRoom.createModel(house_id, houses_type, room_desc, creater, modifier || creater), {transaction: t}).then(room=> {
@@ -40,8 +40,8 @@ class HousesRoomService {
             return this.destroy(id).then(result=> {
                 return this.addHousesRoom(house_id, houses_type, room_desc, roomprices, creater, modifier);
             });
-        }).then(result=>{
-            return HousesRoom.findById(result.id,{
+        }).then(result=> {
+            return HousesRoom.findById(result.id, {
                 order: `prices.season ASC`,
                 attributes: ['id', 'houses_id', 'houses_type', 'room_desc'],
                 include: [{
@@ -99,44 +99,37 @@ class HousesRoomService {
      */
     findRoomCurrentPriceList(house_id) {
         let where = {houses_id: house_id}, currentDate = HousesRoom.formatDate(new Date(), 'yyyy-MM-dd');
-        let currentTerm,termslist;
+        let currentTerm, termslist;
         return HousesSolarTerms.findList({where: where}).then(terms=> {
             termslist = terms.list;
-            termslist.map(term=> {
-                term = HousesSolarTerms.formatHousesSolarTerms(term);
-                if (term.start_date <= currentDate && term.end_date >= currentDate) currentTerm = term;
-            });
             return currentTerm;
         }).then(result=> {
             return HousesRoom.findList({
                 where: where,
-                attributes: ['id', ['houses_type','name'], ['room_desc','desc']],
+                attributes: ['id', ['houses_type', 'name'], ['room_desc', 'desc']],
                 include: [{
                     model: HousesRoomPrice.sequlize,
-                    attributes:['id','price','season'],
+                    attributes: ['id', 'price', 'season'],
                     as: 'prices'
                 }]
             });
         }).then(roomlist=> {
             roomlist.list.map(room=> {
-                if (!currentTerm || currentTerm.is_set_price == 0) {
-                    room.dataValues.current_prices = null;
-                }else{
-                    room.prices.map(price=>{
-                        price.dataValues.terms = [];
-                        termslist.map(term=>{
-                            if(term.season == price.season){
-                                price.dataValues.terms.push({
-                                    start_date:term.start_date,
-                                    end_date:term.end_date,
-                                });
-                            }
-                        });
-                        if(price.season == currentTerm.season){
-                            room.dataValues.current_prices = price.price;
+                room.prices.map(price=> {
+                    price.dataValues.terms = [];
+                    termslist.map(term=> {
+                        term = HousesSolarTerms.formatHousesSolarTerms(term);
+                        if (term.start_date <= currentDate && term.end_date >= currentDate) currentTerm = term;
+                        if (term.season == price.season) {
+                            price.dataValues.terms.push({
+                                start_date: term.start_date,
+                                end_date: term.end_date,
+                            });
                         }
                     });
-                }
+                    if (currentTerm && currentTerm.is_set_price != HousesSolarTerms.ISSETPRICE.NO
+                        && price.season == currentTerm.season) room.dataValues.current_prices = price.price;
+                });
             });
             return roomlist;
         });
