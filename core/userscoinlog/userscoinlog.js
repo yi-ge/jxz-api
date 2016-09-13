@@ -71,6 +71,16 @@ class UsersCoinLog extends Base {
         return log;
     }
 
+    getOrderStatus(status){
+        let where = {};
+        switch (status){
+            case STATUS.DELETE:where.status = STATUS.DELETE;break;
+            case STATUS.NORMAL:where.status = STATUS.NORMAL;break;
+            case STATUS.DISABLE:where.status = STATUS.DISABLE;break;
+        }
+        return where;
+    }
+
     /**
      * 会员充值日志
      * @param user_id

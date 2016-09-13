@@ -27,30 +27,33 @@ class HousesSolarTermsService {
      * @param creater
      * @returns {*}
      */
-    addListHousesSolarTerms(house_id,termslist,creater){
-        let list = [],term,status = false;
-        for(let j = 0, l = termslist.length ; j < l;j++){
-            term = termslist[j];
-            let model = HousesSolarTerms.createModel(house_id, term.season, term.name, term.start_date, term.end_date, creater, creater, null, term.is_set_price);
-            let stratDate = model.solar_terms_begin_date,
+    addListHousesSolarTerms(house_id, termslist, creater) {
+        let list = [], term, status = false, model, stratDate, endDate;
+        try {
+            for (let j = 0, l = termslist.length; j < l; j++) {
+                term = termslist[j];
+                model = HousesSolarTerms.createModel(house_id, term.season, term.name, term.start_date, term.end_date, creater, creater, null, term.is_set_price);
+                stratDate = model.solar_terms_begin_date;
                 endDate = model.solar_terms_end_date;
-            for(let i = 0, len = list.list.length ; i < len ; i++){
-                term = list.list[i];
-                if(!(term.solar_terms_begin_date > endDate || term.solar_terms_end_date < stratDate)){
-                    status = true;
-                    break;
+                for (let i = 0, len = list.length; i < len; i++) {
+                    term = list[i];
+                    if (!(term.solar_terms_begin_date > endDate || term.solar_terms_end_date < stratDate)) {
+                        status = true;
+                        break;
+                    }
                 }
+                if (!status) list.push(model);
+                else return HousesSolarTerms.errorPromise("节气时间重复");
             }
-            if(!status) list.push(model);
-            else return HousesSolarTerms.errorPromise("节气时间重复");
+        }catch (e){
+            return HousesSolarTerms.errorPromise("节气添加失败");
         }
-        return HousesSolarTerms.transaction(t=>{
+        return HousesSolarTerms.transaction(t=> {
             return HousesSolarTerms.destroy({
-                where:{houses_id:house_id}
-            }).then((result)=>{
-                console.log(result);
-                return HousesSolarTerms.bulkCreate(list,{
-                    transaction:t,
+                where: {houses_id: house_id}
+            }).then((result)=> {
+                return HousesSolarTerms.bulkCreate(list, {
+                    transaction: t,
                 });
             });
         });
@@ -109,7 +112,7 @@ class HousesSolarTermsService {
             where: {houses_id: house_id}
         }).then(list=> {
             list.list.map(term=> {
-                HousesSolarTerms.formatHousesSolarTerms(term);
+                HousesSolarTerms.formatHousesSolarTerms(term.dataValues);
             });
             return list;
         });

@@ -57,6 +57,9 @@ class HousesSolarTerms extends Base {
     }
 
     formatHousesSolarTerms(terms){
+        if (terms == void(0)) return terms;
+        terms.solar_terms_begin_date != void(0) && (terms.start_date = this.formatDate(terms.solar_terms_begin_date, "yyyy-MM-dd"));
+        terms.solar_terms_end_date != void(0) && (terms.end_date = this.formatDate(terms.solar_terms_end_date, "yyyy-MM-dd"));
         return terms;
     }
 

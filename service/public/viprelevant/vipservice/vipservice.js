@@ -188,13 +188,19 @@ class VipService {
      * @returns {*}
      */
     rechargeCoin(id, order_id, coin, status) {
-        return UsersVip.transaction(t=> {
-            if (status)
-                return UsersCoinLog.rechargeLogFail(order_id, t).then(()=> {
-                    return UsersVip.errorPromise("充值失败");
+        if (status != 200) {
+            return UsersVip.transaction(t=> {
+                return UsersCoinLog.rechargeLogFail(order_id, t);
+            }).then(()=> {
+                return UsersVip.errorPromise("充值失败");
+            });
+        }
+        return UsersCoinLog.findById(order_id,Object.assign({},UsersCoinLog.getOrderStatus(UsersCoinLog.STATUS.DISABLE))).then(order=>{
+            if(order) return UsersCoinLog.errorPromise("订单已支付");
+            return UsersVip.transaction(t=> {
+                return UsersVip.rechargeCoin(id, coin, t).then(result=> {
+                    return UsersCoinLog.rechargeLogSuccess(order_id, t);
                 });
-            return UsersVip.rechargeCoin(id, coin, t).then(result=> {
-                return UsersCoinLog.rechargeLogSuccess(order_id, t);
             });
         });
     }

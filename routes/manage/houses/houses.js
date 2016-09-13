@@ -221,6 +221,7 @@ router.post('/addterm', (req, res, next)=> {
 router.post('/addtermlist', (req, res, next)=> {
     let param = req.body;
     let houses_id = param.houses_id,
+        termslist = param.list,
         creater = param.creater;
     next({
         $promise: HousesSolarTermsService.addListHousesSolarTerms(houses_id,termslist,creater),
