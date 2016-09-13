@@ -119,7 +119,7 @@ class SysInform extends Base {
                 where: where,
                 include:[{
                     model:Users.sequlize,
-                    attributes:['user_name','id','account_name'],
+                    attributes:['user_name','id','account_name','avatar'],
                 }],
                 order:`send_date DESC`
             }, page, count, 2, pagesize);
