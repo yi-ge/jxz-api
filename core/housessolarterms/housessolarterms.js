@@ -49,7 +49,7 @@ class HousesSolarTerms extends Base {
             creater:creater,
             modifier:modifier,
             status:status || STATUS.NORMAL,
-            is_set_price:is_set_price || ISSETPRICE.YES,
+            is_set_price:is_set_price !=void(0) ? is_set_price: ISSETPRICE.YES,
             created_at:new Date(),
             updated_at:new Date(),
         };

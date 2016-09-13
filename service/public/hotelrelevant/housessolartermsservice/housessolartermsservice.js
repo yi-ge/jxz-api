@@ -109,7 +109,8 @@ class HousesSolarTermsService {
      */
     findHousesSolarTermsList(house_id) {
         return HousesSolarTerms.findList({
-            where: {houses_id: house_id}
+            where: {houses_id: house_id},
+            order:`season ASC`
         }).then(list=> {
             list.list.map(term=> {
                 HousesSolarTerms.formatHousesSolarTerms(term.dataValues);
