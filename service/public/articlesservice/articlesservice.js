@@ -185,6 +185,11 @@ class ArticlesService {
      * @returns {*|Promise.<T>}
      */
     findPageList(page, title, startDate, endDate, status, house_name, sortType, pagesize) {
+        if(endDate != void(0)){
+            endDate = new Date(endDate);
+            endDate = endDate.setDate(endDate.getDate()+1);
+            endDate = Houses.formatDate(endDate,'yyyy-MM-dd');
+        }
         let where = Object.assign({is_draft: Articles.DRAFT.NO}, Articles.getAuditStatusWhere(status));
         if (!!startDate && !!endDate) where['created_at'] = {$between: [startDate, endDate]};
         else if (!!startDate) where['created_at'] = {$gte: startDate};
