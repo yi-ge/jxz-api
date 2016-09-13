@@ -86,5 +86,31 @@ class HousesComboService {
             return result;
         });
     }
+
+    /**
+     * 查询套餐列表(微信)
+     * @param house_id
+     * @returns {*}
+     */
+    findWeChatComboList(house_id){
+        let where = {houses_id:house_id};
+        return HousesCombo.findList({
+            where:where,
+            attributes:['id','name','combo_begin_date','combo_end_date',['combo_desc','desc'],['price','current_prices']],
+        }).then(combolist=>{
+            combolist.list.map(combo=>{
+                HousesCombo.formatHouserCombo(combo.dataValues);
+                combo.dataValues.prices = [{
+                    price:combo.dataValues.current_prices,
+                    terms:[{
+                        start_date:combo.dataValues.start_date,
+                        end_date:combo.dataValues.end_date
+                    }]
+                }];
+            });
+            return combolist;
+        });
+    }
+
 }
 export default new HousesComboService();

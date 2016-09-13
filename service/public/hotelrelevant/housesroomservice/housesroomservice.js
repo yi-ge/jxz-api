@@ -110,7 +110,7 @@ class HousesRoomService {
         }).then(result=> {
             return HousesRoom.findList({
                 where: where,
-                attributes: ['id', 'houses_type', 'room_desc'],
+                attributes: ['id', ['houses_type','name'], ['room_desc','desc']],
                 include: [{
                     model: HousesRoomPrice.sequlize,
                     attributes:['id','price','season'],

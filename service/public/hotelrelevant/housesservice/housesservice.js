@@ -165,6 +165,21 @@ class HousesService {
     }
 
     /**
+     * 修改可预约状态
+     * @param house_id
+     * @param is_order
+     */
+    updateIsOrder(house_id,is_order,modifier){
+        return Houses.transaction(t=>{
+            return Houses.updateIsOrder(house_id,is_order,modifier,t);
+        }).then(result=>{
+            return Houses.findById(house_id);
+        }).then(house=>{
+            return Houses.formatHouse(house);
+        });
+    }
+
+    /**
      * 模糊查询酒店
      * @param name
      * @returns {*}

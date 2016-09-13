@@ -410,6 +410,17 @@ router.post('/findhousedetails', (req, res, next)=> {
         msg: '酒店详情查询失败'
     });
 });
+//修改酒店是否可预约
+router.post('/updateisorder', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id,
+        is_order = param.is_order,
+        modifier = param.modifier;
+    next({
+        $promise: HousesService.updateIsOrder(id, is_order, modifier),
+        msg: '酒店详情查询失败'
+    });
+});
 //酒店上下架
 router.post('/putaway', (req, res, next)=> {
     let param = req.body;

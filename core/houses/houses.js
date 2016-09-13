@@ -141,6 +141,37 @@ class Houses extends Base {
             lock: t.LOCK.UPDATE,
         });
     }
+
+    /**
+     * 获取是否可预约状态条件
+     * @param is_order
+     * @returns {{}}
+     */
+    getIsOrderValue(is_order){
+        let where = {};
+        switch (is_order){
+            case ISORDERS.YES:where.is_orders = ISORDERS.YES;break;
+            case ISORDERS.NO:where.is_orders = ISORDERS.NO;break;
+            default:where.is_orders = ISORDERS.YES;break;
+        }
+        return where;
+    }
+
+    /**
+     * 修改是否可预约状态
+     * @param id
+     * @param is_orders
+     * @param t
+     * @returns {*}
+     */
+    updateIsOrder(id,is_orders,modifier,t){
+        let updateObj = Object.assign({modifier:modifier},this.getIsOrderValue(is_orders));
+        return this.update(updateObj,{
+            where:{id:id},
+            transaction:t,
+            lock: t.LOCK.UPDATE
+        });
+    }
 }
 
 export default new Houses();
