@@ -264,10 +264,11 @@ router.post('/addroom', (req, res, next)=> {
     let param = req.body;
     let houses_id = param.houses_id,
         houses_type = param.houses_type,
+        room_desc = param.room_desc,
         roomprices = param.roomprices,
         creater = param.creater;
     next({
-        $promise: HousesRoomService.addHousesRoom(houses_id, houses_type, roomprices, creater),
+        $promise: HousesRoomService.addHousesRoom(houses_id, houses_type, room_desc,roomprices, creater),
         msg: '房型添加失败'
     });
 });
@@ -277,11 +278,12 @@ router.post('/editroom', (req, res, next)=> {
     let id = param.id,
         houses_id = param.houses_id,
         houses_type = param.houses_type,
+        room_desc = param.room_desc,
         roomprices = param.roomprices,
         modifier = param.modifier,
         creater = param.creater;
     next({
-        $promise: HousesRoomService.editHousesRoom(id, houses_id, houses_type, roomprices, creater, modifier),
+        $promise: HousesRoomService.editHousesRoom(id, houses_id, houses_type,room_desc, roomprices, creater, modifier),
         msg: '房型编辑失败'
     });
 });

@@ -37,6 +37,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER(4),
       allowNull: true,
       defaultValue: '1'
+    },
+    room_desc: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }, {
     tableName: 'houses_room'

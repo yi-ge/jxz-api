@@ -25,11 +25,12 @@ class HousesRoom extends Base {
      * @param status 状态
      * @returns {{id: number, houses_id: *, houses_type: *, creater: *, modifier: *, status: (*|number), created_at: Date, updated_at: Date}}
      */
-    createModel(houses_id,houses_type,creater,modifier,status){
+    createModel(houses_id,houses_type,room_desc,creater,modifier,status){
         let model = {
             id:this.generateId(),
             houses_id:houses_id,
             houses_type:houses_type,
+            room_desc:room_desc,
             creater:creater,
             modifier:modifier,
             status:status || STATUS.NORMAL,

@@ -35,5 +35,9 @@ export default {
         type: DataTypes.INTEGER(4),
         allowNull: true,
         defaultValue: '1'
+    },
+    room_desc: {
+        type: DataTypes.STRING,
+        allowNull: true
     }
 };

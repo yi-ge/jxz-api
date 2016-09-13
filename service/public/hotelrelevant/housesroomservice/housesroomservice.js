@@ -8,10 +8,10 @@ class HousesRoomService {
      * @param creater
      * @returns {*}
      */
-    addHousesRoom(house_id, houses_type, roomprices, creater, modifier) {
+    addHousesRoom(house_id, houses_type,room_desc, roomprices, creater, modifier) {
         return HousesRoom.transaction(t=> {
             let returnResult;
-            return HousesRoom.insert(HousesRoom.createModel(house_id, houses_type, creater, modifier || creater), {transaction: t}).then(room=> {
+            return HousesRoom.insert(HousesRoom.createModel(house_id, houses_type,room_desc, creater, modifier || creater), {transaction: t}).then(room=> {
                 returnResult = room;
                 return HousesRoomPrice.bulkCreate(HousesRoomPrice.createListModel(house_id, room.id, roomprices, creater, modifier || creater));
             }).then(result=> {
@@ -31,10 +31,10 @@ class HousesRoomService {
      * @param modifier
      * @returns {*}
      */
-    editHousesRoom(id, house_id, houses_type, roomprices, creater, modifier) {
+    editHousesRoom(id, house_id, houses_type,room_desc, roomprices, creater, modifier) {
         return HousesRoom.transaction(t=> {
             return this.destroy(id).then(result=> {
-                return this.addHousesRoom(house_id, houses_type, roomprices, creater, modifier);
+                return this.addHousesRoom(house_id, houses_type,room_desc, roomprices, creater, modifier);
             });
         });
     }
@@ -48,7 +48,7 @@ class HousesRoomService {
         let where = {houses_id: house_id};
         return HousesRoom.findList({
             where: where,
-            attributes: ['id', 'houses_id', 'houses_type'],
+            attributes: ['id', 'houses_id', 'houses_type','room_desc'],
             include: [{
                 model: HousesRoomPrice.sequlize,
                 as: 'prices',
