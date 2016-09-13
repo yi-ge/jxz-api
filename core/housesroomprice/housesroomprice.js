@@ -18,6 +18,8 @@ class HousesRoomPrice extends Base {
         super("houses_room_price", housesroomprice, {
             tableName: 'houses_room_price'
         });
+        this.STATUS = STATUS;
+        this.SEASON = SEASON;
     }
 
     /**
@@ -47,6 +49,27 @@ class HousesRoomPrice extends Base {
             updated_at:new Date(),
         };
         return model;
+    }
+
+    /**
+     * 获取模块列表
+     * @param houses_id
+     * @param houses_room_id
+     * @param roomprices
+     * @param creater
+     * @param modifier
+     * @returns {Array}
+     */
+    createListModel(houses_id,houses_room_id,roomprices,creater,modifier){
+        let list = [];
+        if(Array.isArray(roomprices)){
+            roomprices.map(roomprice=>{
+                list.push(this.createModel(houses_id,houses_room_id,roomprice.season,roomprice.price,roomprice.price_desc,creater,modifier,roomprice.status));
+            });
+        }else if(Object.prototype.toString.call(roomprices) == '[object Object]'){
+            list.push(this.createModel(houses_id,houses_room_id,roomprices.season,roomprices.price,roomprices.price_desc,creater,modifier,roomprices.status));
+        }
+        return list;
     }
 
     formatHousesRoomPrice(roomprice){

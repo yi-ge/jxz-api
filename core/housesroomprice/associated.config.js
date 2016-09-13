@@ -10,6 +10,7 @@ HousesRoomPrice.sequlize.belongsTo(Houses.sequlize,{
 });
 //房屋价格
 HousesRoomPrice.sequlize.belongsTo(HousesRoom.sequlize,{
-    foreignKey:'houses_room_id'
+    foreignKey:'houses_room_id',
+    as:'prices'
 });
 export default HousesRoomPrice;

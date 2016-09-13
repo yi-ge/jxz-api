@@ -195,8 +195,9 @@ class VipService {
                 return UsersVip.errorPromise("充值失败");
             });
         }
-        return UsersCoinLog.findById(order_id,Object.assign({},UsersCoinLog.getOrderStatus(UsersCoinLog.STATUS.DISABLE))).then(order=>{
-            if(order) return UsersCoinLog.errorPromise("订单已支付");
+        return UsersCoinLog.findById(order_id).then(order=>{
+            if(order.status == UsersCoinLog.STATUS.DELETE) return UsersCoinLog.errorPromise("订单已取消");
+            if(order.status == UsersCoinLog.STATUS.NORMAL) return UsersCoinLog.errorPromise("订单已支付");
             return UsersVip.transaction(t=> {
                 return UsersVip.rechargeCoin(id, coin, t).then(result=> {
                     return UsersCoinLog.rechargeLogSuccess(order_id, t);

@@ -6,6 +6,7 @@ import {
     SysHousesKeywordService,
     HousesCommentService,
     HousesSolarTermsService,
+    HousesRoomService,
 } from './../../../service/manage';
 const router = express.Router();
 //添加系统酒店亮点
@@ -27,7 +28,7 @@ router.post('/findsyshousekeyword', (req, res, next)=> {
         pagesize = param.pagesize,
         endDate = param.endDate;
     next({
-        $promise: SysHousesKeywordService.findSysHousesKeywordList(page, startDate, endDate,pagesize),
+        $promise: SysHousesKeywordService.findSysHousesKeywordList(page, startDate, endDate, pagesize),
         msg: '系统酒店亮点查询失败'
     });
 });
@@ -156,7 +157,7 @@ router.post('/findhousecommentpage', (req, res, next)=> {
         pagesize = param.pagesize,
         page = param.page;
     next({
-        $promise: HousesCommentService.findHouseCommentsPage(id,page,pagesize),
+        $promise: HousesCommentService.findHouseCommentsPage(id, page, pagesize),
         msg: '评论查询失败'
     });
 });
@@ -213,7 +214,7 @@ router.post('/addterm', (req, res, next)=> {
         is_set_price = param.is_set_price,
         name = param.name;
     next({
-        $promise: HousesSolarTermsService.addHousesSolarTerms(houses_id,season,name,solar_terms_begin_date,solar_terms_end_date,is_set_price,creater),
+        $promise: HousesSolarTermsService.addHousesSolarTerms(houses_id, season, name, solar_terms_begin_date, solar_terms_end_date, is_set_price, creater),
         msg: '节气添加失败'
     });
 });
@@ -224,7 +225,7 @@ router.post('/addtermlist', (req, res, next)=> {
         termslist = param.list,
         creater = param.creater;
     next({
-        $promise: HousesSolarTermsService.addListHousesSolarTerms(houses_id,termslist,creater),
+        $promise: HousesSolarTermsService.addListHousesSolarTerms(houses_id, termslist, creater),
         msg: '节气添加失败'
     });
 });
@@ -245,7 +246,7 @@ router.post('/editterm', (req, res, next)=> {
         solar_terms_end_date = param.end_date,
         modifier = param.modifier;
     next({
-        $promise: HousesSolarTermsService.editHousesSolarTerms(id,solar_terms_begin_date,solar_terms_end_date,modifier),
+        $promise: HousesSolarTermsService.editHousesSolarTerms(id, solar_terms_begin_date, solar_terms_end_date, modifier),
         msg: '编辑失败'
     });
 });
@@ -256,6 +257,50 @@ router.post('/destroyterm', (req, res, next)=> {
     next({
         $promise: HousesSolarTermsService.destroyHousesSolarTerms(id),
         msg: '删除失败'
+    });
+});
+//添加酒店房间
+router.post('/addroom', (req, res, next)=> {
+    let param = req.body;
+    let houses_id = param.houses_id,
+        houses_type = param.houses_type,
+        roomprices = param.roomprices,
+        creater = param.creater;
+    next({
+        $promise: HousesRoomService.addHousesRoom(houses_id, houses_type, roomprices, creater),
+        msg: '房型添加失败'
+    });
+});
+//编辑酒店房型
+router.post('/editroom', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id,
+        houses_id = param.houses_id,
+        houses_type = param.houses_type,
+        roomprices = param.roomprices,
+        modifier = param.modifier,
+        creater = param.creater;
+    next({
+        $promise: HousesRoomService.editHousesRoom(id, houses_id, houses_type, roomprices, creater, modifier),
+        msg: '房型编辑失败'
+    });
+});
+//查询酒店房型
+router.post('/findroomlist', (req, res, next)=> {
+    let param = req.body;
+    let houses_id = param.houses_id;
+    next({
+        $promise: HousesRoomService.findHousesRoomList(houses_id),
+        msg: '房型查询失败'
+    });
+});
+//删除酒店房间
+router.post('/destroyroom', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id;
+    next({
+        $promise: HousesRoomService.destroy(id),
+        msg: '房型删除失败'
     });
 });
 //添加酒店
@@ -301,7 +346,7 @@ router.post('/findhouses', (req, res, next)=> {
         endDate = param.endDate,
         startDate = param.startDate;
     next({
-        $promise: HousesService.findHousesList(page, startDate, endDate, is_putaway, name, sys_id,pagesize),
+        $promise: HousesService.findHousesList(page, startDate, endDate, is_putaway, name, sys_id, pagesize),
         msg: '酒店查询失败'
     });
 });
