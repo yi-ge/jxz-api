@@ -202,7 +202,7 @@ class ArticlesService {
                         model: Users.sequlize,
                         attributes: ['id', 'user_name'],
                     }],
-                }, sortType ? {order: `read_num ${sortType == 1 ? `ASC` : `DESC`}`} : {})
+                }, sortType ? {order: `read_num ${sortType == 1 ? `ASC` : `DESC`}`} : (sortType = 2, {order: `created_at DESC`}))
                 , page, count, sortType, pagesize);
         }).then(result=> {
             result.list.map(article=> {
@@ -262,30 +262,26 @@ class ArticlesService {
      * @param status
      */
     updateAudit(id, status, modifier) {
-        return Articles.findById(id, {
-            include: [{
-                model: Users.sequlize,
-                attributes: ['id', 'user_name', 'avatar', 'user_vip_id']
-            }, {
-                model: Houses.sequlize,
-                as: 'houses',
-                attributes: ['id', 'address']
-            }]
+        return Articles.transaction(t=> {
+            return Articles.updateAuditStatus(id, status, modifier, t).then((result)=> {
+                if (status == Articles.AUDITING.HIGHLINE) return SysInform.articleAuditPass(article.title, article.author, null, t);
+                return result;
+            })
+        }).then(()=> {
+            return Articles.findById(id, {
+                include: [{
+                    model: Users.sequlize,
+                    attributes: ['id', 'user_name', 'avatar', 'user_vip_id']
+                }, {
+                    model: Houses.sequlize,
+                    as: 'houses',
+                    attributes: ['id', 'address']
+                }]
+            })
         }).then(article=> {
-            let returnResult = article;
-            if (!article) return Articles.errorPromise("文章不存在");
-            return Articles.transaction(t=> {
-                return Articles.updateAuditStatus(id, status, modifier, t).then((result)=> {
-                    if (status == Articles.AUDITING.HIGHLINE) return SysInform.articleAuditPass(article.title, article.author, null, t);
-                    return result;
-                }).then(()=> {
-                    return returnResult;
-                });
-            }).then(article=> {
-                article.user && Users.formatUser(article.user.dataValues);
-                return Articles.formatArticle(article.dataValues);
-            });
-        })
+            article.user && Users.formatUser(article.user.dataValues);
+            return Articles.formatArticle(article.dataValues);
+        });
     }
 
     /**
@@ -666,33 +662,33 @@ class ArticlesService {
      * @param pagesize
      * @returns {*}
      */
-    findUserCollectionArticle(user_id,page,pagesize) {
-        let where ={},
+    findUserCollectionArticle(user_id, page, pagesize) {
+        let where = {},
             include = [{
-            model: Users.sequlize,
-            through:{attributes:[]},
-            attributes:['id'],
-            as:'favorite_user'
-        }];
+                model: Users.sequlize,
+                through: {attributes: []},
+                attributes: ['id'],
+                as: 'favorite_user'
+            }];
         where.$and = Users.where(Users.col('favorite_user.id'), '=', user_id);
         return Articles.count({
             where: where,
-            include:include
-        }).then(count=>{
+            include: include
+        }).then(count=> {
             return Articles.findList({
                 where: where,
                 include: include.concat([{
-                    model:Users.sequlize,
+                    model: Users.sequlize,
                     attributes: ['id', 'user_name', 'avatar', 'user_vip_id']
-                },{
+                }, {
                     model: Houses.sequlize,
                     as: 'houses',
                     attributes: ['id', 'address'],
                 }]),
-                order:`read_num DESC`
-            },page,5,count,page,pagesize);
-        }).then(articlelist=>{
-            articlelist.list.map(article=>{
+                order: `read_num DESC`
+            }, page, 5, count, page, pagesize);
+        }).then(articlelist=> {
+            articlelist.list.map(article=> {
                 Articles.formatArticle(article.dataValues);
                 delete article.dataValues.favorite_user;
             });
