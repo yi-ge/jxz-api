@@ -7,6 +7,7 @@ import {
     HousesCommentService,
     HousesSolarTermsService,
     HousesRoomService,
+    HousesComboService,
 } from './../../../service/manage';
 const router = express.Router();
 //添加系统酒店亮点
@@ -303,6 +304,54 @@ router.post('/destroyroom', (req, res, next)=> {
     next({
         $promise: HousesRoomService.destroy(id),
         msg: '房型删除失败'
+    });
+});
+//添加套餐
+router.post('/addcombo', (req, res, next)=> {
+    let param = req.body;
+    let houses_id = param.houses_id,
+        name = param.name,
+        combo_desc = param.combo_desc,
+        combo_begin_date = param.start_date,
+        combo_end_date = param.end_date,
+        price = param.price,
+        creater = param.creater;
+    next({
+        $promise: HousesComboService.addCombo(houses_id,name,combo_desc,combo_begin_date,combo_end_date,price,creater),
+        msg: '套餐添加失败'
+    });
+});
+//编辑套餐
+router.post('/editcombo', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id,
+        name = param.name,
+        combo_desc = param.combo_desc,
+        combo_begin_date = param.start_date,
+        combo_end_date = param.end_date,
+        price = param.price,
+        modifier = param.modifier;
+    next({
+        $promise: HousesComboService.editCombo(id,name,combo_desc,combo_begin_date,combo_end_date,price,modifier),
+        msg: '套餐编辑失败'
+    });
+});
+//查询酒店套餐
+router.post('/findcombolist', (req, res, next)=> {
+    let param = req.body;
+    let houses_id = param.houses_id;
+    next({
+        $promise: HousesComboService.findComboList(houses_id),
+        msg: '套餐查询失败'
+    });
+});
+//删除酒店套餐
+router.post('/destroycombo', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id;
+    next({
+        $promise: HousesComboService.destroy(id),
+        msg: '套餐删除失败'
     });
 });
 //添加酒店

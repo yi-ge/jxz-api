@@ -5,6 +5,7 @@ import HousesCommentService from './housescommentservice';
 import HousesSolarTermsService from './housessolartermsservice';
 import HousesRoomService from './housesroomservice';
 import HousesRoomPriceService from './housesroompriceservice';
+import HousesComboService from './housescomboservice';
 
 export {
     HousesService,
@@ -14,4 +15,5 @@ export {
     HousesSolarTermsService,
     HousesRoomService,
     HousesRoomPriceService,
+    HousesComboService,
 }

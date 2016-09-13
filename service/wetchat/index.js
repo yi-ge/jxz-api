@@ -11,6 +11,9 @@ import {
     SysHotKeywordService,
     SysCoinService,
     CoinLogService,
+    HousesRoomService,
+    HousesSolarTermsService,
+    HousesComboService,
 } from './../public';
 
 import {UsersAtService,UsersFavoriteService,UsersMsgService} from './userslevant';
@@ -30,4 +33,7 @@ export {
     SysHotKeywordService,
     SysCoinService,
     CoinLogService,
+    HousesRoomService,
+    HousesSolarTermsService,
+    HousesComboService,
 }

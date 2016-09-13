@@ -13,6 +13,7 @@ import {HousesService,
     HousesSolarTermsService,
     HousesRoomService,
     HousesRoomPriceService,
+    HousesComboService,
 } from './hotelrelevant';
 import {VipService,CoinLogService} from './viprelevant';
 
@@ -34,4 +35,5 @@ export {
     HousesSolarTermsService,
     HousesRoomService,
     HousesRoomPriceService,
+    HousesComboService,
 }

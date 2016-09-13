@@ -11,7 +11,8 @@ HousesRoom.sequlize.belongsTo(Houses.sequlize,{
     targetKey:'id'
 });
 //房屋价格
-HousesRoom.sequlize.hasOne(HousesRoomPrice.sequlize,{
-    foreignKey:"houses_room_id"
+HousesRoom.sequlize.hasMany(HousesRoomPrice.sequlize,{
+    foreignKey:"houses_room_id",
+    as:'prices'
 });
 export default HousesRoom;

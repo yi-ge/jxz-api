@@ -1,5 +1,9 @@
 import express from "express";
-import {HousesCommentService,HousesService,HousesKeywordService,HousesAttachService} from './../../../service/wetchat';
+import {HousesCommentService,HousesService,
+    HousesKeywordService,HousesAttachService,
+    HousesRoomService,HousesSolarTermsService,
+    HousesComboService
+} from './../../../service/wetchat';
 const router = express.Router();
 //添加酒店评论
 router.post('/addcomment', (req, res, next)=> {
@@ -63,6 +67,42 @@ router.post('/regiontohouseslist', (req, res, next)=> {
     next({
         $promise: HousesService.findRegionToHouseList(state,country,region,page,pagesize),
         msg: '酒店列表查询失败'
+    });
+});
+//酒店房型列表
+router.post('/findroomlist', (req, res, next)=> {
+    let param = req.body;
+    let house_id = param.houses_id;
+    next({
+        $promise: HousesRoomService.findRoomCurrentPriceList(house_id),
+        msg: '酒店房型查询失败'
+    });
+});
+//酒店房型列表
+router.get('/findroomlist', (req, res, next)=> {
+    let param = req.query;
+    let house_id = param.houses_id;
+    next({
+        $promise: HousesRoomService.findRoomCurrentPriceList(house_id),
+        msg: '酒店房型查询失败'
+    });
+});
+//酒店节气列表
+router.post('/findtermlist', (req, res, next)=> {
+    let param = req.body;
+    let house_id = param.houses_id;
+    next({
+        $promise: HousesSolarTermsService.findHousesSolarTermsList(house_id),
+        msg: '酒店节气查询失败'
+    });
+});
+//酒店套餐列表
+router.post('/findcombolist', (req, res, next)=> {
+    let param = req.body;
+    let house_id = param.houses_id;
+    next({
+        $promise: HousesComboService.findComboList(house_id),
+        msg: '酒店节气查询失败'
     });
 });
 export default router;

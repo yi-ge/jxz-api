@@ -27,6 +27,7 @@ import {
     HousesSolarTermsService,
     HousesRoomService,
     HousesRoomPriceService,
+    HousesComboService,
 } from './../public';
 
 
@@ -52,4 +53,5 @@ export {
     HousesSolarTermsService,
     HousesRoomService,
     HousesRoomPriceService,
+    HousesComboService,
 }

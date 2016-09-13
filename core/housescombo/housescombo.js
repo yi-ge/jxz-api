@@ -43,6 +43,10 @@ class HousesCombo extends Base {
     }
 
     formatHouserCombo(combo){
+        combo.combo_begin_date != void(0) && (combo.start_date = this.formatDate(combo.combo_begin_date,'yyyy-MM-dd'));
+        combo.combo_end_date != void(0) && (combo.end_date = this.formatDate(combo.combo_end_date,'yyyy-MM-dd'));
+        delete combo.combo_begin_date;
+        delete combo.combo_end_date;
         return combo;
     }
 }
