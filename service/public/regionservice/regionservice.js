@@ -179,7 +179,7 @@ class RegionService {
                     as: 'modifier_user',
                 }, {
                     model: SysDict.sequlize,
-                    as: 'country',
+                    as: 'country_p',
                     attributes: ['id', 'name'],
                     include: [{
                         model: SysDict.sequlize,
