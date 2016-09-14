@@ -149,5 +149,9 @@ export default {
     coin: {
         type: DataTypes.DECIMAL,
         allowNull: true
+    },
+    checkin_people_num: {
+        type: DataTypes.INTEGER(9),
+        allowNull: true
     }
 };

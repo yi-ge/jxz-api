@@ -71,15 +71,20 @@ class VipService {
             if (user.user_vip_id) return Users.errorPromise("已经有会员账号,不能重复注册");
             return user;
         }).then(()=> {
+            let returnVip;
             return UsersVip.findAccountName(account_name).then(vip=> {
                 if (!!vip) return UsersVip.errorPromise('用户已存在');
+                returnVip = vip;
                 return vip;
             }).then(() => {
                 return UsersVip.transaction(t=> {
                     return UsersVip.insert(UsersVip.createModel(account_name, null, null, 2, password, UsersVip.NORECHARGE, UsersVip.BINDING), {
                         transaction: t,
                     }).then(vip=> {
+                        returnVip = vip;
                         return Users.relationVip(users_id, vip.id, t); //绑定vip
+                    }).then(result=>{
+                        return UsersVip.formatUserVip(returnVip.dataValues);
                     });
                 });
             });

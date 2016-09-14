@@ -48,6 +48,7 @@ class Orders extends Base {
      * @param expect_coin 预计精币
      * @param expect_order_date2 预约时间
      * @param houses_id 房屋id
+     * @param checkin_people_num 入住人数
      * @param houses_room 房间id
      * @param houses_combo 房间的套餐
      * @param checkin_time 入住时间
@@ -64,8 +65,9 @@ class Orders extends Base {
                 order_user_name,//预约姓名
                 contacts_email, //联系邮箱
                 expect_houses_id,//期望的酒店id
-                creater,modifier,
-                order_user_sex,
+                order_user_sex,//预约性别,0先生1女士
+                creater,modifier, // 创建人 ， 修改人
+                checkin_people_num,
                 cancel_opinion,city,region,status,order_remark,
                 expect_houses_room,expect_houses_combo,expect_need_room_num,
                 expect_checkin_day,expect_coin,houses_id,houses_room,houses_combo,
@@ -75,9 +77,13 @@ class Orders extends Base {
             order_user_id:order_user_id,
             order_user_phone:order_user_phone,
             contacts:contacts,
+            order_user_name:order_user_name,
+            expect_houses_id:expect_houses_id,
             contacts_email:contacts_email,
             contacts_phone:contacts_phone,
             order_status:order_status,
+            order_user_sex:order_user_sex,
+            checkin_people_num:checkin_people_num,
             creater:creater,
             modifier:modifier,
             finish_date:new Date(),
@@ -92,6 +98,12 @@ class Orders extends Base {
     }
 
     formatOrders(order){
+        order.finish_date != void(0) && (order.finish_date = this.formatDate(order.finish_date, "yyyy-MM-dd hh:mm:ss"));
+        order.expect_order_date != void(0) && (order.expect_order_date = this.formatDate(order.expect_order_date, "yyyy-MM-dd hh:mm:ss"));
+        order.expect_checkin_time != void(0) && (order.expect_checkin_time = this.formatDate(order.expect_checkin_time, "yyyy-MM-dd hh:mm:ss"));
+        order.expect_order_date2 != void(0) && (order.expect_order_date2 = this.formatDate(order.expect_order_date2, "yyyy-MM-dd hh:mm:ss"));
+        order.created_at != void(0) && (order.created_at = this.formatDate(order.created_at, "yyyy-MM-dd hh:mm:ss"));
+        order.updated_at != void(0) && (order.updated_at = this.formatDate(order.updated_at, "yyyy-MM-dd hh:mm:ss"));
         return order;
     }
 
@@ -102,7 +114,7 @@ class Orders extends Base {
      */
     getOrderStatus(status){
         let where = {};
-        switch (status){
+        switch (parseInt(status)){
             case ORDER_STATUS.MAKE_APPOINTMENT:where.order_status = ORDER_STATUS.MAKE_APPOINTMENT;break;
             case ORDER_STATUS.WAIT_CONFIRMED:where.order_status = ORDER_STATUS.WAIT_CONFIRMED;break;
             case ORDER_STATUS.MAKE_CONFIRMED:where.order_status = ORDER_STATUS.MAKE_CONFIRMED;break;
@@ -113,7 +125,6 @@ class Orders extends Base {
         }
         return where;
     }
-
 }
 
 export default new Orders();

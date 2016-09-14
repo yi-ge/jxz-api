@@ -91,8 +91,4 @@ Users.sequlize.hasMany(SysInform.sequlize, {
     foreignKey: 'send_user',
     as: 'send_notices'
 });
-//用户存在多个订单
-Users.sequlize.hasMany(Orders.sequlize,{
-    foreignKey:'order_user_id'
-});
 export default Users;

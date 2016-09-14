@@ -27,6 +27,10 @@ module.exports = function(sequelize, DataTypes) {
     eventer: {
       type: DataTypes.BIGINT,
       allowNull: true
+    },
+    event_module_id: {
+      type: DataTypes.BIGINT,
+      allowNull: true
     }
   }, {
     tableName: 'audit_edit_log'

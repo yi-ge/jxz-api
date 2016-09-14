@@ -7,8 +7,8 @@ const EVENT_TYPE = {
     MAKE_APPOINTMENT:{
         VALUE:1,
         TEMPLATE:'已预约',
-        CONTENT_FUNCTION:function(vip_id,house_name){
-            return `会员${vip_id}已经预约${house_name}`
+        CONTENT_FUNCTION:function(vip_id,user_name,house_name){
+            return `会员${user_name}(${vip_id})已经预约${house_name}`
         }
     },
     WAIT_CONFIRMED:{

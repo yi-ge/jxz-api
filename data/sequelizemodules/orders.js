@@ -151,6 +151,10 @@ module.exports = function(sequelize, DataTypes) {
     coin: {
       type: DataTypes.DECIMAL,
       allowNull: true
+    },
+    checkin_people_num: {
+      type: DataTypes.INTEGER(9),
+      allowNull: true
     }
   }, {
     tableName: 'orders'

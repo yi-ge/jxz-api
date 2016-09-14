@@ -151,6 +151,7 @@ CREATE TABLE `audit_edit_log` (
   `event_content` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '事件内容',
   `event_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '事件时间',
   `eventer` bigint(20) DEFAULT NULL COMMENT '事件人',
+  `event_module_id` bigint(20) DEFAULT NULL COMMENT '事件模块id',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='审计-编辑日志';
 
@@ -469,6 +470,7 @@ CREATE TABLE `orders` (
   `need_room_num` tinyint(4) DEFAULT NULL COMMENT '需要房间数量',
   `heckin_day` tinyint(4) DEFAULT NULL COMMENT '入住几天',
   `coin` decimal(10,2) DEFAULT NULL COMMENT '精币',
+  `checkin_people_num` mediumint(9) DEFAULT NULL COMMENT '入住人数',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='预约订单';
 
@@ -787,7 +789,7 @@ CREATE TABLE `sys_users` (
 
 /*Data for the table `sys_users` */
 
-insert  into `sys_users`(`id`,`account_name`,`user_name`,`phone`,`sex`,`city`,`region`,`address`,`head_portrait`,`email`,`info_integrity`,`creater`,`modifier`,`created_at`,`updated_at`,`status`,`post_roles`,`last_login_ip`,`last_login_date`,`passwd`,`users_id`) values (1471406458817,'15928681754','文浩君',NULL,2,NULL,NULL,NULL,NULL,'nx@qq.com',0,NULL,NULL,'2016-08-17 12:00:56','2016-09-05 14:30:02',1,NULL,NULL,'2016-09-13 09:53:28','5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8',1471406460390),(1471415842054,'15928681754','倪祥',NULL,2,NULL,NULL,NULL,NULL,'wen@qq.com',0,NULL,NULL,'2016-08-17 14:37:14','2016-09-05 16:07:18',1,NULL,NULL,'2016-09-13 09:53:28','5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8',1471415839601),(1472453950181,'18010680802','郝洧',NULL,2,NULL,NULL,NULL,NULL,'haovei@gmail.com',0,NULL,NULL,'2016-08-29 14:59:02','2016-09-07 09:45:37',1,NULL,NULL,'2016-09-13 09:59:58','5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8',1472453946284),(1473127005731,'haovei','郝洧',18010680802,2,NULL,NULL,NULL,NULL,'haovei1@qq.com',0,NULL,NULL,'2016-09-06 09:56:41','2016-09-07 09:50:05',1,NULL,NULL,'2016-09-13 09:33:28','df2983700ffecb52e6649f0cb3981b66537083a4',1473127005994);
+insert  into `sys_users`(`id`,`account_name`,`user_name`,`phone`,`sex`,`city`,`region`,`address`,`head_portrait`,`email`,`info_integrity`,`creater`,`modifier`,`created_at`,`updated_at`,`status`,`post_roles`,`last_login_ip`,`last_login_date`,`passwd`,`users_id`) values (1471406458817,'15928681754','文浩君',NULL,2,NULL,NULL,NULL,NULL,'nx@qq.com',0,NULL,NULL,'2016-08-17 12:00:56','2016-09-05 14:30:02',1,NULL,NULL,'2016-09-13 19:18:21','5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8',1471406460390),(1471415842054,'15928681754','倪祥',NULL,2,NULL,NULL,NULL,NULL,'wen@qq.com',0,NULL,NULL,'2016-08-17 14:37:14','2016-09-05 16:07:18',1,NULL,NULL,'2016-09-13 19:18:21','5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8',1471415839601),(1472453950181,'18010680802','郝洧',NULL,2,NULL,NULL,NULL,NULL,'haovei@gmail.com',0,NULL,NULL,'2016-08-29 14:59:02','2016-09-07 09:45:37',1,NULL,NULL,'2016-09-13 19:18:07','5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8',1472453946284),(1473127005731,'haovei','郝洧',18010680802,2,NULL,NULL,NULL,NULL,'haovei1@qq.com',0,NULL,NULL,'2016-09-06 09:56:41','2016-09-07 09:50:05',1,NULL,NULL,'2016-09-13 09:33:28','df2983700ffecb52e6649f0cb3981b66537083a4',1473127005994);
 
 /*Table structure for table `user_oauth` */
 
