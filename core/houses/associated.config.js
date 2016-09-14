@@ -9,6 +9,7 @@ import HousesCombo from './../housescombo/housescombo';
 import HousesSolarTerms from './../housessolarterms/housessolarterms';
 import HousesRoom from './../housesroom/housesroom';
 import HousesRoomPrice from './../housesroomprice/housesroomprice';
+import Orders from './../orders/orders';
 //一个酒店对应多篇文章
 Houses.sequlize.hasMany(Articles.sequlize, {
     foreignKey: 'houses_id',
@@ -58,5 +59,10 @@ Houses.sequlize.hasMany(HousesRoom.sequlize,{
 //酒店房屋价格
 Houses.sequlize.hasMany(HousesRoomPrice.sequlize,{
     foreignKey:'houses_id'
-})
+});
+//期望酒店
+Houses.sequlize.hasMany(Orders.sequlize,{
+    foreignKey:'expect_houses_id',
+    as:'expect_orders'
+});
 export default Houses;

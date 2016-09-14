@@ -1,5 +1,5 @@
 import express from "express";
-import {VipService,CoinLogService} from './../../../service/wetchat';
+import {VipService,CoinLogService,OrdersService} from './../../../service/wetchat';
 const router = express.Router();
 //会员注册
 router.post('/register', (req, res, next)=> {
@@ -77,4 +77,17 @@ router.post('/wechatpay', (req, res, next)=> {
         msg: '充值失败'
     });
 });
+//会员预约
+router.post('/appointment', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id,
+        phone = param.phone,
+        contacts = param.contacts,
+        house_id = param.house_id;
+    next({
+        $promise: OrdersService.createOrder(id,phone,contacts,house_id),
+        msg: '预约失败,请稍后再试'
+    });
+});
+
 export default router;

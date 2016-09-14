@@ -14,6 +14,7 @@ import {
     HousesRoomService,
     HousesSolarTermsService,
     HousesComboService,
+    OrdersService,
 } from './../public';
 
 import {UsersAtService,UsersFavoriteService,UsersMsgService} from './userslevant';
@@ -36,4 +37,5 @@ export {
     HousesRoomService,
     HousesSolarTermsService,
     HousesComboService,
+    OrdersService,
 }

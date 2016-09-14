@@ -33,6 +33,7 @@ import UsersCoinLog from './userscoinlog';
 import UsersPayType from './userspaytype';
 import SysArticleDeclare from './sysarticledeclare';
 import Orders from './orders';
+import OrdersLog from './orderslog';
 import HousesCombo from './housescombo';
 import HousesSolarTerms from './housessolarterms';
 import HousesRoom from './housesroom';
@@ -72,6 +73,7 @@ export {
     UsersPayType,//用户-支付类型
     SysArticleDeclare,//系统-条款声明
     Orders,//订单
+    OrdersLog,//订单日志
     HousesCombo,//套餐
     HousesSolarTerms,//节气
     HousesRoom,//酒店房型

@@ -16,6 +16,7 @@ import {HousesService,
     HousesComboService,
 } from './hotelrelevant';
 import {VipService,CoinLogService} from './viprelevant';
+import {OrdersService} from './ordersrelevant';
 
 export {
     UsersService,
@@ -36,4 +37,5 @@ export {
     HousesRoomService,
     HousesRoomPriceService,
     HousesComboService,
+    OrdersService,
 }
