@@ -40,31 +40,34 @@ class OrdersService {
     /**
      * 编辑订单
      * @param id
-     * @param expect_houses_room
-     * @param expect_houses_combo
-     * @param expect_need_room_num
-     * @param expect_checkin_day
-     * @param expect_coin
-     * @param contacts
-     * @param phone
-     * @param email
-     * @param order_remark
-     * @param modifier
+     * @param expect_houses_room 期望的房间id
+     * @param expect_houses_combo 期望房间的套餐
+     * @param expect_need_room_num 期望的需要房间数量
+     * @param expect_checkin_day expect_checkin_day
+     * @param expect_checkin_time 期望的入住时间
+     * @param expect_coin 预计精币
+     * @param contacts 联系人
+     * @param phone 联系人手机号
+     * @param email 联系邮箱
+     * @param order_remark 订单备注
+     * @param modifier 修改人
      */
-    editOrder(id,expect_houses_room,expect_houses_combo,expect_need_room_num,expect_checkin_day,expect_coin,contacts,phone,email,order_remark,modifier){
+    editOrder(id,expect_houses_room,expect_checkin_time,expect_houses_combo,expect_need_room_num,
+              expect_checkin_day,expect_coin,contacts,phone,email,order_remark,modifier){
         let updateObj = {};
         return Orders.findById(id).then(order=>{
             if(!order) return Orders.errorPromise("订单不存在");
-            expect_houses_room != void(0) &&(updateObj.expect_houses_room = expect_houses_room);
-            expect_houses_combo != void(0) &&(updateObj.expect_houses_combo = expect_houses_combo);
-            expect_need_room_num != void(0) &&(updateObj.expect_need_room_num = expect_need_room_num);
-            expect_checkin_day != void(0) &&(updateObj.expect_checkin_day = expect_checkin_day);
-            expect_coin != void(0) &&(updateObj.expect_coin = expect_coin);
-            contacts != void(0) &&(updateObj.contacts = contacts);
-            phone != void(0) &&(updateObj.phone = phone);
-            email != void(0) &&(updateObj.email = email);
-            order_remark != void(0) &&(updateObj.order_remark = order_remark);
-            modifier != void(0) &&(updateObj.modifier = modifier);
+            expect_houses_room != void(0) && expect_houses_room != '' &&(updateObj.expect_houses_room = expect_houses_room);
+            expect_houses_combo != void(0) && expect_houses_combo != '' &&(updateObj.expect_houses_combo = expect_houses_combo);
+            expect_need_room_num != void(0) && expect_need_room_num != '' &&(updateObj.expect_need_room_num = expect_need_room_num);
+            expect_checkin_day != void(0) && expect_checkin_day != '' &&(updateObj.expect_checkin_day = expect_checkin_day);
+            expect_checkin_time != void(0) && expect_checkin_time != '' &&(updateObj.expect_checkin_time = expect_checkin_time);
+            expect_coin != void(0) && expect_coin != '' &&(updateObj.expect_coin = expect_coin);
+            contacts != void(0) && contacts != '' &&(updateObj.contacts = contacts);
+            phone != void(0) && phone != '' &&(updateObj.contacts_phone = phone);
+            email != void(0) && email != '' &&(updateObj.contacts_email = email);
+            order_remark != void(0) && order_remark != '' &&(updateObj.order_remark = order_remark);
+            modifier != void(0) && modifier != '' &&(updateObj.modifier = modifier);
 
             return Orders.transaction(t=>{
                 return Orders.update(Object.assign(updateObj,{
@@ -87,7 +90,7 @@ class OrdersService {
     findOrderDetails(id){
         return Orders.findById(id,{
             attributes:['id','contacts','contacts_phone','contacts_email','checkin_people_num',
-                'expect_houses_id','order_status','expect_checkin_time','expect_coin',
+                'expect_houses_id','order_status','expect_checkin_time','expect_coin','order_remark',
                 'order_user_name',[UsersVip.col('order_user.account_name'),'account_name'],
                 [Houses.col('expect_houses.name'),'expect_houses_name'],
                 [Houses.col('expect_houses.address'),'expect_houses_address'],

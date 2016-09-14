@@ -297,6 +297,15 @@ router.post('/findroomlist', (req, res, next)=> {
         msg: '房型查询失败'
     });
 });
+//酒店房型当前节气列表
+router.post('/findroomcurrentlist', (req, res, next)=> {
+    let param = req.body;
+    let house_id = param.houses_id;
+    next({
+        $promise: HousesRoomService.findRoomCurrentPriceList(house_id),
+        msg: '酒店房型查询失败'
+    });
+});
 //删除酒店房间
 router.post('/destroyroom', (req, res, next)=> {
     let param = req.body;
