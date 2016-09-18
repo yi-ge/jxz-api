@@ -185,10 +185,10 @@ class ArticlesService {
      * @returns {*|Promise.<T>}
      */
     findPageList(page, title, startDate, endDate, status, house_name, sortType, pagesize) {
-        if(endDate != void(0)){
+        if (endDate != void(0)) {
             endDate = new Date(endDate);
-            endDate = endDate.setDate(endDate.getDate()+1);
-            endDate = Houses.formatDate(endDate,'yyyy-MM-dd');
+            endDate = endDate.setDate(endDate.getDate() + 1);
+            endDate = Houses.formatDate(endDate, 'yyyy-MM-dd');
         }
         let where = Object.assign({is_draft: Articles.DRAFT.NO}, Articles.getAuditStatusWhere(status));
         if (!!startDate && !!endDate) where['created_at'] = {$between: [startDate, endDate]};
@@ -267,24 +267,29 @@ class ArticlesService {
      * @param status
      */
     updateAudit(id, status, modifier) {
-        return Articles.transaction(t=> {
-            return Articles.updateAuditStatus(id, status, modifier, t).then((result)=> {
-                if (status == Articles.AUDITING.HIGHLINE) return SysInform.articleAuditPass(article.title, article.author, null, t);
-                return result;
-            })
-        }).then(()=> {
-            return Articles.findById(id, {
-                include: [{
-                    model: Users.sequlize,
-                    attributes: ['id', 'user_name', 'avatar', 'user_vip_id']
-                }, {
-                    model: Houses.sequlize,
-                    as: 'houses',
-                    attributes: ['id', 'address']
-                }]
-            })
+        let articleResult;
+        return Articles.findById(id, {
+            include: [{
+                model: Users.sequlize,
+                attributes: ['id', 'user_name', 'avatar', 'user_vip_id']
+            }, {
+                model: Houses.sequlize,
+                as: 'houses',
+                attributes: ['id', 'address']
+            }]
         }).then(article=> {
+            articleResult = article;
+            return Articles.transaction(t=> {
+                return Articles.updateAuditStatus(id, status, modifier, t).then(()=> {
+                    if (status == Articles.AUDITING.HIGHLINE) return SysInform.articleAuditPass(article.title, article.author, null, t).then(result=> {
+                        return articleResult;
+                    });
+                    return articleResult;
+                });
+            });
+        }).then(article => {
             article.user && Users.formatUser(article.user.dataValues);
+            article.dataValues && Object.assign(article.dataValues,Articles.getAuditStatusWhere(status));
             return Articles.formatArticle(article.dataValues);
         });
     }
