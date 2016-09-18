@@ -38,6 +38,32 @@ router.post('/edit', (req, res, next)=> {
         msg: '编辑失败'
     });
 });
+//确认订单
+router.post('/confirm', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id,
+        tomail = param.tomail,
+        subject = param.subject,
+        text = param.text,
+        modifier = param.modifier;
+    next({
+        $promise: OrdersService.confirmOrders(id,tomail,subject,text,modifier),
+        msg: '确认失败'
+    });
+});
+//确认变更订单
+router.post('/changeconfirm', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id,
+        tomail = param.tomail,
+        subject = param.subject,
+        text = param.text,
+        modifier = param.modifier;
+    next({
+        $promise: OrdersService.confirmedChangeOrder(id,tomail,subject,text,modifier),
+        msg: '变更失败'
+    });
+});
 //订单详情
 router.post('/details', (req, res, next)=> {
     let param = req.body;
@@ -47,4 +73,5 @@ router.post('/details', (req, res, next)=> {
         msg: '查看详情失败'
     });
 });
+
 export default router;

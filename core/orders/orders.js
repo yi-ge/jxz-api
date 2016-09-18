@@ -125,6 +125,25 @@ class Orders extends Base {
         }
         return where;
     }
+
+    /**
+     * 改变订单状态
+     * @param id
+     * @param order_status
+     * @param t
+     * @returns {*}
+     */
+    updateOrderStatus(id,order_status,modifier,t){
+        return this.update({
+            order_status:this.getOrderStatus(order_status),
+            modifier:modifier
+        },{
+            where:{id:id},
+            transaction:t,
+            lock: t.LOCK.UPDATE,
+        })
+    }
+
 }
 
 export default new Orders();

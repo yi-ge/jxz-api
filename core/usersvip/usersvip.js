@@ -134,6 +134,31 @@ class UsersVip extends Base {
         });
     }
 
+    /**
+     * 会员消费精选币
+     * @param id
+     * @param coin_money
+     * @param t
+     * @returns {*}
+     */
+    consumeCoin(id,coin_money,t){
+        let returnVip;
+        return this.findById(id).then(vip=>{
+            if(!vip) return this.errorPromise("会员不存在");
+            returnVip = vip;
+            return vip.coin;
+        }).then(coin=>{
+            coin = coin - coin_money;
+            return this.update({
+                coin:coin
+            },{
+                where:{id:id},
+                transaction:t,
+                lock: t.LOCK.UPDATE,
+            });
+        });
+    }
+
 }
 
 export default new UsersVip();

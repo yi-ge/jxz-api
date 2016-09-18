@@ -20,7 +20,7 @@ class SysInfoTemplate extends Base {
     getTemplate(id){
         return this.findById(id).then(result=>{
             return this.formateInfoTemplate(result.dataValues);
-        })
+        });
     }
 }
 

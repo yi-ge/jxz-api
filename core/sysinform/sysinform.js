@@ -176,6 +176,37 @@ class SysInform extends Base {
     }
 
     /**
+     * 预约确认后发送通知
+     * @param vip_id
+     * @param house_name
+     * @param coin
+     * @param t
+     * @returns {*}
+     */
+    userConfirmAppointment(vip_id,house_name,coin,t){
+        return SysInfoTemplate.getTemplate(SysInfoTemplate.TEMPLATE.ORDER.MAKE_CONFIRMED).then(template=>{
+            if (!template) return SysInfoTemplate.errorPromise("预约确认模板不存在");
+            let content = template.content.replace("#酒店名称#",`#${house_name}#`);
+            content.replace("#数量#",coin);
+            return this.systemNnotification(CLASSIFY.USER,1,"系统通知",content,null,vip_id,t);
+        });
+    }
+
+    /**
+     * 预约变更后通知
+     * @param vip_id
+     * @param house_name
+     * @param coin
+     * @param t
+     */
+    usersChangeConfirmAppointment(vip_id,house_name,coin,t){
+        let content = `精选者会员，您的酒店#${house_name}#已预订成功！`;
+        if(coin > 0) content += `本次退还精选币#数量#`;
+        if(coin < 0) content += `本次消费精选币#数量#`;
+        return this.systemNnotification(CLASSIFY.USER,1,"系统通知",content,null,vip_id,t);
+    }
+
+    /**
      * 用户与文章相关的消息
      * @param type
      * @param send_user

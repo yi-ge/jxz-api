@@ -44,6 +44,7 @@ class Base {
             | parseInt(result[4])) >>> 0;
     }
 
+
     /**
      * INTEGER转换为IP
      * @param INT
@@ -103,6 +104,15 @@ class Base {
      */
     static query(sql, option) {
         return sequelize.query(sql, option);
+    }
+
+    /**
+     * 数据库函数
+     * @param fnName
+     * @param columnName
+     */
+    databaseFn(fnName,columnName){
+        return Sequelize.fn(fnName,columnName);
     }
 
     /**

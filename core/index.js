@@ -38,6 +38,7 @@ import HousesCombo from './housescombo';
 import HousesSolarTerms from './housessolarterms';
 import HousesRoom from './housesroom';
 import HousesRoomPrice from './housesroomprice';
+import AuditEditLog from './auditeditlog';
 
 export {
     Users, //会员
@@ -78,4 +79,5 @@ export {
     HousesSolarTerms,//节气
     HousesRoom,//酒店房型
     HousesRoomPrice,//酒店房型价格
+    AuditEditLog,//审计-编辑日志
 }

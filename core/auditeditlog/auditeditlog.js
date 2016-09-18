@@ -4,15 +4,36 @@
 import auditeditlog from './auditeditlog.config';
 import Base from './../base';
 const EVENT_TYPE = {
-    ADD:1,
-    UPDATE:2,
-    DELETE:3
+    ADD:1, //添加
+    UPDATE:2, //修改
+    DELETE:3 //删除
+};
+const EVENT_MODULE = {
+    ORDER_MODULE:{
+        MAKE_CONFIRMED:{
+            CONTENT:'扣除精选币#数量#',
+            NAME:'确认流程',
+            GET_CONTENT:(coin)=>{
+                return this.CONTENT.replace("#数量#",coin);
+            }
+        },
+        MAKE_CONFIRMED_CHANGE:{
+            CONTENT:'扣除精选币#数量#',
+            NAME:'需求变更流程',
+            GET_CONTENT:(coin)=>{
+                if(coin > 0) return `退还精选币￥{coin}`;
+                if(coin < 0) return `扣除精选币￥{coin}`;
+            }
+        }
+    }
 };
 class AuditEditLog extends Base {
     constructor() {
         super("audit_edit_log", auditeditlog, {
             tableName: 'audit_edit_log'
         });
+        this.EVENT_TYPE = EVENT_TYPE;
+        this.EVENT_MODULE = EVENT_MODULE;
     }
 
     /**

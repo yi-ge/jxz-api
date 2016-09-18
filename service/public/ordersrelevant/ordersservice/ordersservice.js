@@ -1,4 +1,4 @@
-import {Orders,OrdersLog,UsersVip,Houses,HousesRoom} from './../../../../core';
+import {Orders,OrdersLog,UsersVip,Houses,HousesRoom,SysInform,AuditEditLog,UsersCoinLog} from './../../../../core';
 import Email from './../../../../data/nodemailer.config';
 
 class OrdersService {
@@ -201,5 +201,117 @@ class OrdersService {
         return this.findOrderPageList(where,page,pagesize);
     }
 
+    /**
+     * 确认订单
+     * @param id
+     * @returns {*}
+     */
+    confirmOrders(id,tomail,subject,text,modifier){
+        if(!tomail) return Orders.errorPromise("收件人格式不正确");
+        if(!id || typeof id != 'number') return Orders.errorPromise("参数不正确");
+        let orderResult,vipResult,houseResult;
+        return Orders.findById(id).then(order=>{
+            if(!order) return Orders.errorPromise("订单不存在");
+            return order;
+        }).then(order=>{
+            orderResult = order;
+            return UsersVip.findById(order.order_user_id);
+        }).then(vip=>{
+            if(!vip) return UsersVip.errorPromise("预约用户不存在");
+            return vip;
+        }).then(vip=>{
+            vipResult = vip;
+            return Houses.findById(orderResult.expect_houses_id);
+        }).then(house=>{
+            if(!house) Houses.errorPromise("预约酒店不存在");
+            houseResult = house;
+            return Orders.transaction(t=>{
+                let changeCoin = orderResult.expect_coin;
+                return UsersVip.consumeCoin(vipResult.id,changeCoin,t).then(result=>{ //扣除用户精选币
+                    return UsersCoinLog.appointmentLog(vipResult.id,-changeCoin,
+                        houseResult.name,orderResult.id,modifier,t); //创建用户币日志
+                }).then(result=>{
+                    return SysInform.userConfirmAppointment(vipResult.id,houseResult.name,-changeCoin,t); //创建系统通知模板
+                }).then(result=>{
+                    return Orders.updateOrderStatus(orderResult.id,Orders.ORDER_STATUS.MAKE_CONFIRMED,modifier,t);//修改订单状态
+                }).then(result=>{
+                    let MAKE_CONFIRMED = OrdersLog.EVENT_TYPE.MAKE_CONFIRMED;
+                    return OrdersLog.insert(OrdersLog.createModel(orderResult.id,MAKE_CONFIRMED.VALUE,
+                        MAKE_CONFIRMED.TEMPLATE,null,modifier),{transaction:t});//创建订单日志
+                }).then(result=>{
+                    let MAKE_CONFIRMED = AuditEditLog.EVENT_MODULE.ORDER_MODULE.MAKE_CONFIRMED;
+                    return AuditEditLog.insert(AuditEditLog.createModel(AuditEditLog.EVENT_TYPE.UPDATE,
+                        MAKE_CONFIRMED.NAME,MAKE_CONFIRMED.GET_CONTENT(-changeCoin),modifier,orderResult.id),{transaction:t});//创建编辑-审核日志
+                }).then(result=>{ //发送邮件
+                    return Email.sendMail(tomail,subject,text);
+                });
+            });
+        });
+    }
+
+    /**
+     * 订单确认修改
+     * @param id
+     * @param tomail
+     * @param subject
+     * @param text
+     * @param modifier
+     * @returns {*}
+     */
+    confirmedChangeOrder(id,tomail,subject,text,modifier){
+        if(!tomail) return Orders.errorPromise("收件人格式不正确");
+        if(!id || typeof id != 'number') return Orders.errorPromise("参数不正确");
+        let orderResult,vipResult,houseResult;
+        return Orders.findById(id).then(order=>{
+            if(!order) return Orders.errorPromise("订单不存在");
+            return order;
+        }).then(order=>{
+            orderResult = order;
+            return UsersVip.findById(order.order_user_id);
+        }).then(vip=>{
+            if(!vip) return UsersVip.errorPromise("预约用户不存在");
+            return vip;
+        }).then(vip=>{
+            vipResult = vip;
+            return Houses.findById(orderResult.expect_houses_id);
+        }).then(house=>{
+            if(!house) Houses.errorPromise("预约酒店不存在");
+            houseResult = house;
+            return UsersCoinLog.findOnlyOne({ //查询确认预约消耗的精选币
+                where:{event_id:orderResult.id,event_type:UsersCoinLog.EVENT.TYPE.RESERVE.VALUE}
+            }).then(log=>{
+                return log.coin_money;
+            });
+        }).then(confirmCoin=>{
+            return UsersCoinLog.findOnlyOne({ //统计变更订单总共消耗的精选币
+                where:{event_id:orderResult.id,event_type:UsersCoinLog.EVENT.TYPE.CHANGE_RESERVE.VALUE},
+                attributes:[[UsersCoinLog.databaseFn("SUM",UsersCoinLog.col('coin_money')),'money_sum']]
+            }).then(log_sum=>{
+                return confirmCoin + log_sum.money_sum;
+            });
+        }).then(confirmCon=>{
+            return Orders.transaction(t=>{
+                let changeCoin = orderResult.expect_coin-Math.abs(confirmCon); //需要扣除的精选比
+                return UsersVip.consumeCoin(vipResult.id,changeCoin,t).then(result=>{//扣除消费精选币
+                    return UsersCoinLog.changeAppointmentLog(vipResult.id,-changeCoin,houseResult.name,orderResult.id,t); //变更预约扣除
+                }).then(result=>{
+                    return SysInform.usersChangeConfirmAppointment(vipResult.id,houseResult.name,-changeCoin,t); //创建系统通知模板(变更确认)
+                }).then(result=>{
+                    return Orders.updateOrderStatus(orderResult.id,Orders.ORDER_STATUS.MAKE_CONFIRMED_CHANGE,modifier,t);//修改订单状态
+                }).then(result=>{
+                    let MAKE_CONFIRMED_CHANGE = OrdersLog.EVENT_TYPE.MAKE_CONFIRMED_CHANGE;
+                    return OrdersLog.insert(OrdersLog.createModel(orderResult.id,MAKE_CONFIRMED_CHANGE.VALUE,
+                        MAKE_CONFIRMED_CHANGE.TEMPLATE,null,modifier),{transaction:t});//创建订单日志
+                }).then(result=>{
+                    let MAKE_CONFIRMED_CHANGE = AuditEditLog.EVENT_MODULE.ORDER_MODULE.MAKE_CONFIRMED_CHANGE;
+                    return AuditEditLog.insert(AuditEditLog.createModel(AuditEditLog.EVENT_TYPE.UPDATE,
+                        MAKE_CONFIRMED_CHANGE.NAME,MAKE_CONFIRMED_CHANGE.GET_CONTENT(-changeCoin),
+                        modifier,orderResult.id),{transaction:t});//创建编辑-审核日志
+                }).then(result=>{
+                    return Email.sendMail(tomail,subject,text); //发送邮件
+                });;
+            });
+        });
+    }
 }
 export default new OrdersService();

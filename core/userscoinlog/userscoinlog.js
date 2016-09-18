@@ -14,6 +14,10 @@ const EVENT = {
             VALUE: 2,
             TEMPLATE: "预订#酒店名称#消费使用"
         },
+        CHANGE_RESERVE:{ //变更预订
+            VALUE:4,
+            TEMPLATE:'变更预约#酒店名称#消费使用'
+        },
         RETURN: {//退还
             VALUE: 3,
             TEMPLATE: '退还精选币'
@@ -77,6 +81,7 @@ class UsersCoinLog extends Base {
             case STATUS.DELETE:where.status = STATUS.DELETE;break;
             case STATUS.NORMAL:where.status = STATUS.NORMAL;break;
             case STATUS.DISABLE:where.status = STATUS.DISABLE;break;
+            case STATUS.CHANGE_RESERVE:where.status = STATUS.CHANGE_RESERVE;break;
         }
         return where;
     }
@@ -96,6 +101,41 @@ class UsersCoinLog extends Base {
         });
     }
 
+    /**
+     * 预约酒店消费使用日志
+     * @param vip_id
+     * @param coin_money
+     * @param house_name
+     * @param order_id
+     * @param creater
+     * @param t
+     * @returns {Promise.<Instance>}
+     */
+    appointmentLog(vip_id,coin_money,house_name ,order_id,creater,t){
+        let RESERVE = EVENT.TYPE.RESERVE;
+        let template = RESERVE.TEMPLATE.replace("#酒店名称#",`#${house_name}#`)
+        return this.insert(this.createModel(vip_id, -Math.abs(coin_money),RESERVE.VALUE,template,order_id,null,STATUS.LOCKUP,null,creater,creater),{
+            transaction:t
+        });
+    }
+
+    /**
+     * 变更预订消费日志
+     * @param vip_id
+     * @param coin_money
+     * @param house_name
+     * @param order_id
+     * @param creater
+     * @param t
+     * @returns {Promise.<Instance>}
+     */
+    changeAppointmentLog(vip_id,coin_money,house_name ,order_id,creater,t){
+        let CHANGE_RESERVE = EVENT.TYPE.CHANGE_RESERVE;
+        let template = CHANGE_RESERVE.TEMPLATE.replace("#酒店名称#",`#${house_name}#`);
+        return this.insert(this.createModel(vip_id, coin_money,CHANGE_RESERVE.VALUE,template,order_id,null,STATUS.LOCKUP,null,creater,creater),{
+            transaction:t
+        });
+    }
     /**
      * 充值成功以后改变状态为充值
      * @param id
