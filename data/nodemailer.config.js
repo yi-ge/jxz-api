@@ -1,33 +1,37 @@
 import NodeMailer from 'nodemailer';
 import  SysParameterService from './../service/public/sysparameterservice';
 const PARAM = {
-    EMAIL: 'email',
-    PASSWORD: 'email_pwd'
+    EMAIL:'email',
+    PASSWORD:'email_pwd'
 };
 
-class NodeMailerConfig {
-    constructor() {}
+class NodeMailerConfig{
+    constructor(){
+        this.resizeInit();
+    }
 
-    resizeInit() {
-        let sys_email, sys_email_password, host;
-        SysParameterService.findKey(PARAM.EMAIL).then(email=> {
+    resizeInit(){
+        let sys_email,sys_email_password,host;
+        SysParameterService.findKey(PARAM.EMAIL).then(email=>{
             sys_email = email.param_value;
             return SysParameterService.findKey(PARAM.PASSWORD);
-        }).then(password=> {
+        }).then(password=>{
             sys_email_password = password.param_value;
-            host = sys_email.replace(/^[a-zA-Z1-9]+\@{1}/ig, "smtp.");
+            host = sys_email.replace(/^[a-zA-Z1-9]+\@{1}/ig,"smtp.");
             this.transport = NodeMailer.createTransport({
-                host: host,
-                port: 465,
-                auth: {
-                    user: sys_email,
-                    pass: sys_email_password,//"lswuaddrlhrxbjaa" //tipilbmymrwlbjbh
+                host:host,
+                port:465,
+                auth:{
+                    user:sys_email,
+                    pass:sys_email_password,//"lswuaddrlhrxbjaa" //tipilbmymrwlbjbh
                 }
             });
             this.host = host;
             this.email = sys_email;
             this.password = sys_email_password;
             return true;
+        }).catch(e=>{
+            process.exit();
         });
     }
 
@@ -36,7 +40,7 @@ class NodeMailerConfig {
      * @param subject 邮件头
      * @param text 类容
      */
-    getMailOptions(tomail, subject, text) {
+    getMailOptions(tomail,subject,text){
         return {
             from: this.email,
             to: tomail,
@@ -52,13 +56,11 @@ class NodeMailerConfig {
      * @param text
      * @returns {Promise}
      */
-    sendMail(tomail, subject, text) {
-        return new Promise((resolve, reject)=> {
-            this.resizeInit().then(()=> {
-                this.transport.sendMail(this.getMailOptions(tomail, subject, text), (error, info)=> {
-                    if (error) reject(error);
-                    resolve(info);
-                });
+    sendMail(tomail,subject,text){
+        return new Promise((resolve,reject)=>{
+            this.transport.sendMail(this.getMailOptions(tomail,subject,text),(error,info)=>{
+                if(error) reject(error);
+                resolve(info);
             });
         });
     }

@@ -30,11 +30,12 @@ router.post('/edit', (req, res, next)=> {
         order_remark = param.order_remark,
         expect_coin = param.expect_coin,
         expect_checkin_time = param.expect_checkin_time,
+        order_status = param.order_status,
         modifier = param.modifier;
     next({
         $promise: OrdersService.editOrder(id,expect_houses_room,expect_checkin_time,
             expect_houses_combo,expect_need_room_num,expect_checkin_day,expect_coin,
-            contacts,phone,email,order_remark,modifier),
+            contacts,phone,email,order_remark,order_status,modifier),
         msg: '编辑失败'
     });
 });
@@ -62,6 +63,32 @@ router.post('/changeconfirm', (req, res, next)=> {
     next({
         $promise: OrdersService.confirmedChangeOrder(id,tomail,subject,text,modifier),
         msg: '变更失败'
+    });
+});
+//取消订单
+router.post('/cancel', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id,
+        tomail = param.tomail,
+        subject = param.subject,
+        text = param.text,
+        modifier = param.modifier;
+    next({
+        $promise: OrdersService.cancelOrder(id,tomail,subject,text,modifier),
+        msg: '取消失败'
+    });
+});
+//订单退款
+router.post('/refund', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id,
+        tomail = param.tomail,
+        subject = param.subject,
+        text = param.text,
+        modifier = param.modifier;
+    next({
+        $promise: OrdersService.refundCoin(id,tomail,subject,text,modifier),
+        msg: '取消失败'
     });
 });
 //订单详情

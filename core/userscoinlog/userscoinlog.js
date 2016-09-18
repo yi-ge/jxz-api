@@ -113,7 +113,8 @@ class UsersCoinLog extends Base {
      */
     appointmentLog(vip_id,coin_money,house_name ,order_id,creater,t){
         let RESERVE = EVENT.TYPE.RESERVE;
-        let template = RESERVE.TEMPLATE.replace("#酒店名称#",`#${house_name}#`)
+        let template = RESERVE.TEMPLATE.replace("#酒店名称#",`#${house_name}#`);
+        console.log(-Math.abs(coin_money));
         return this.insert(this.createModel(vip_id, -Math.abs(coin_money),RESERVE.VALUE,template,order_id,null,STATUS.NORMAL,null,creater,creater),{
             transaction:t
         });
@@ -197,15 +198,30 @@ class UsersCoinLog extends Base {
      */
     sumMoney(event_id){
         return this.findOnlyOne({
-            where:{
+            where:Object.assign({
                 event_id:event_id,
                 event_type:{$in:[EVENT.TYPE.RESERVE.VALUE,EVENT.TYPE.CHANGE_RESERVE.VALUE]}
-            },
-            attributes:[[UsersCoinLog.databaseFn("SUM",UsersCoinLog.col('coin_money')),'moneys']]
+            },this.getOrderStatus(STATUS.NORMAL)),
+            attributes:[[this.databaseFn("SUM",this.col('coin_money')),'moneys']]
         }).then(result=>{
-            return result.moneys;
-        })
+            return result.moneys || result.dataValues.moneys;
+        });
     }
+
+    /**
+     * 日志失效
+     * @param event_id
+     * @param t
+     * @returns {*}
+     */
+    abateLog(event_id,t){
+        return this.update(this.getOrderStatus(STATUS.DELETE),{
+            where:{event_id:event_id},
+            transaction:t,
+            lock: t.LOCK.UPDATE
+        });
+    }
+
 }
 
 export default new UsersCoinLog();

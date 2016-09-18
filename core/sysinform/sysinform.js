@@ -187,7 +187,7 @@ class SysInform extends Base {
         return SysInfoTemplate.getTemplate(SysInfoTemplate.TEMPLATE.ORDER.MAKE_CONFIRMED).then(template=>{
             if (!template) return SysInfoTemplate.errorPromise("预约确认模板不存在");
             let content = template.content.replace("#酒店名称#",`#${house_name}#`);
-            content.replace("#数量#",coin);
+            content = content.replace("#数量#",`${Math.abs(coin)}`);
             return this.systemNnotification(CLASSIFY.USER,1,"系统通知",content,null,vip_id,t);
         });
     }

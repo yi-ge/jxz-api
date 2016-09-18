@@ -14,22 +14,30 @@ const EVENT_MODULE = {
             CONTENT:'扣除精选币#数量#',
             NAME:'确认流程',
             GET_CONTENT:(coin)=>{
-                return this.CONTENT.replace("#数量#",coin);
+                let CONTENT = '扣除精选币#数量#';
+                return CONTENT.replace("#数量#",coin);
             }
         },
         MAKE_CONFIRMED_CHANGE:{
             CONTENT:'扣除精选币#数量#',
             NAME:'需求变更流程',
             GET_CONTENT:(coin)=>{
-                if(coin > 0) return `退还精选币￥{coin}`;
-                if(coin < 0) return `扣除精选币￥{coin}`;
+                if(coin > 0) return `退还精选币${coin}`;
+                if(coin < 0) return `扣除精选币${coin}`;
             }
         },
         MAKE_CANCEL:{
-            CONTENT:'退还精选币#数量#',
-            NAME:'需求变更流程',
+            CONTENT:'订单已取消',
+            NAME:'取消流程',
+            GET_CONTENT:()=>{
+                return '订单已取消';
+            }
+        },
+        MAKE_REFUND:{
+            CONTENT:'订单已退款#消费#',
+            NAME:'退款流程',
             GET_CONTENT:(coin)=>{
-                return this.CONTENT.replace("#数量#",coin);
+                return `订单已退款${coin}`;
             }
         }
     }
@@ -59,7 +67,8 @@ class AuditEditLog extends Base {
             event_module:event_module,
             event_content:event_content,
             eventer:eventer,
-            event_module_id:event_module_id
+            event_module_id:event_module_id,
+            event_date:new Date()
         };
         return model;
     }
