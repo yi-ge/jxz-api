@@ -121,9 +121,9 @@ class UsersVip extends Base {
         return this.findById(id).then(vip=>{
             if(!vip) return this.errorPromise("会员不存在");
             returnVip = vip;
-            return vip.coin;
+            return parseInt(vip.coin);
         }).then(coin=>{
-            coin = coin + coin_money;
+            coin = coin + parseInt(coin_money);
             return this.update({
                 coin:coin
             },{
@@ -146,9 +146,9 @@ class UsersVip extends Base {
         return this.findById(id).then(vip=>{
             if(!vip) return this.errorPromise("会员不存在");
             returnVip = vip;
-            return vip.coin;
+            return parseInt(vip.coin);
         }).then(coin=>{
-            coin = coin - coin_money;
+            coin = coin - parseInt(coin_money);
             return this.update({
                 coin:coin
             },{

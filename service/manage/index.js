@@ -3,6 +3,7 @@
  */
 import SysUsersService from './sysusersservice';
 import SysHousesKeywordService from './syshouseskeywordservice';
+import AuditEditLogService from './auditeditlogservice';
 
 import {
     ResourceService,
@@ -56,4 +57,5 @@ export {
     HousesRoomPriceService,
     HousesComboService,
     OrdersService,
+    AuditEditLogService,
 }

@@ -53,7 +53,7 @@ class OrdersService {
      * @param modifier 修改人
      */
     editOrder(id, expect_houses_room, expect_checkin_time, expect_houses_combo, expect_need_room_num,
-              expect_checkin_day, expect_coin, contacts, phone, email, order_remark, order_status,modifier) {
+              expect_checkin_day, expect_coin, contacts, phone, email, order_remark, order_status, modifier) {
         let updateObj = {};
         return Orders.findById(id).then(order=> {
             if (!order) return Orders.errorPromise("订单不存在");
@@ -206,12 +206,12 @@ class OrdersService {
      * @param id
      * @returns {Promise}
      */
-    procedureOrderBefore(id , order_status) {
+    procedureOrderBefore(id, order_status) {
         if (!id) return Orders.errorPromise("参数不正确");
-        let orderResult, vipResult, houseResult,userResult;
+        let orderResult, vipResult, houseResult, userResult;
         return Orders.findById(id).then(order=> {
             if (!order) return Orders.errorPromise("订单不存在");
-            if(order.order_status === Orders.ORDER_STATUS.MAKE_REFUND) return Orders.errorPromise("订单已失效");
+            if (order.order_status === Orders.ORDER_STATUS.MAKE_REFUND) return Orders.errorPromise("订单已失效");
             return order;
         }).then(order=> {
             orderResult = order;
@@ -219,10 +219,10 @@ class OrdersService {
         }).then(vip=> {
             if (!vip) return UsersVip.errorPromise("预约用户不存在");
             return vip;
-        }).then(vip=>{
+        }).then(vip=> {
             vipResult = vip;
             return Users.findOnlyOne({
-                user_vip_id:vip.id
+                where: {user_vip_id: vip.id}
             });
         }).then(user=> {
             userResult = user;
@@ -232,7 +232,7 @@ class OrdersService {
             return UsersCoinLog.sumMoney(orderResult.id); //统计该条订单一共消费多少
         }).then((confirmCoin)=> {
             return {
-                userResult:userResult,
+                userResult: userResult,
                 orderResult: orderResult,
                 vipResult: vipResult,
                 houseResult: houseResult,
@@ -249,8 +249,9 @@ class OrdersService {
     confirmOrders(id, tomail, subject, text, modifier) {
         return this.procedureOrderBefore(id).then(({orderResult,vipResult,houseResult,userResult})=> {
             let changeCoin = orderResult.expect_coin;
-            if(orderResult.order_status !== Orders.ORDER_STATUS.WAIT_CONFIRMED) return Orders.errorPromise("订单不是待确认状态");
+            if (orderResult.order_status !== Orders.ORDER_STATUS.WAIT_CONFIRMED) return Orders.errorPromise("订单不是待确认状态");
             if (vipResult.coin < changeCoin) Orders.errorPromise("用户精选币不足");
+            if (true) Orders.errorPromise("用户精选币不足");
             return Orders.transaction(t=> {
                 return UsersVip.consumeCoin(vipResult.id, changeCoin, t).then(result=> { //扣除用户精选币
                     return UsersCoinLog.appointmentLog(vipResult.id, -changeCoin,
@@ -286,11 +287,11 @@ class OrdersService {
     confirmedChangeOrder(id, tomail, subject, text, modifier) {
         return this.procedureOrderBefore(id).then(({orderResult,vipResult,houseResult,confirmCoin})=> {
             let changeCoin = orderResult.expect_coin - Math.abs(confirmCoin); //需要扣除的精选比
-            if(orderResult.order_status !== Orders.ORDER_STATUS.WAIT_CONFIRMED) return Orders.errorPromise("订单不是待确认状态");
+            if (orderResult.order_status !== Orders.ORDER_STATUS.WAIT_CONFIRMED) return Orders.errorPromise("订单不是待确认状态");
             if (vipResult.coin < Math.abs(changeCoin)) return Orders.errorPromise("用户精选币不足");
             return Orders.transaction(t=> {
                 return UsersVip.consumeCoin(vipResult.id, changeCoin, t).then(()=> {//扣除消费精选币
-                    return UsersCoinLog.changeAppointmentLog(vipResult.id, -changeCoin, houseResult.name, orderResult.id, modifier,t); //变更预约扣除
+                    return UsersCoinLog.changeAppointmentLog(vipResult.id, -changeCoin, houseResult.name, orderResult.id, modifier, t); //变更预约扣除
                 }).then(()=> {
                     return Orders.updateOrderStatus(orderResult.id, Orders.ORDER_STATUS.MAKE_CONFIRMED_CHANGE, modifier, t);//修改订单状态
                 }).then(()=> {
@@ -302,9 +303,9 @@ class OrdersService {
                     return AuditEditLog.insert(AuditEditLog.createModel(AuditEditLog.EVENT_TYPE.UPDATE,
                         MAKE_CONFIRMED_CHANGE.NAME, MAKE_CONFIRMED_CHANGE.GET_CONTENT(-changeCoin),
                         modifier, orderResult.id), {transaction: t});//创建编辑-审核日志
-                })/*.then(()=> {
+                }).then(()=> {
                     return Email.sendMail(tomail, subject, text); //发送邮件
-                })*/;
+                });
             });
         });
     }
@@ -319,15 +320,15 @@ class OrdersService {
      */
     cancelOrder(id, tomail, subject, text, modifier) {
         return this.procedureOrderBefore(id).then(({orderResult})=> {
-            if(orderResult.order_status === Orders.ORDER_STATUS.MAKE_CANCEL) return Orders.errorPromise("不能再次取消");
+            if (orderResult.order_status === Orders.ORDER_STATUS.MAKE_CANCEL) return Orders.errorPromise("不能再次取消");
             return Orders.transaction(t=> {
                 return Orders.updateOrderStatus(orderResult.id, Orders.ORDER_STATUS.MAKE_CANCEL, modifier, t).then(()=> {//修改订单状态
                     let MAKE_CANCEL = OrdersLog.EVENT_TYPE.MAKE_CANCEL;
                     return OrdersLog.insert(OrdersLog.createModel(orderResult.id, MAKE_CANCEL.VALUE,
                         MAKE_CANCEL.TEMPLATE, null, modifier), {transaction: t});//创建订单日志
-                }).then(()=>{
+                }).then(()=> {
                     let MAKE_CANCEL = AuditEditLog.EVENT_MODULE.ORDER_MODULE.MAKE_CANCEL;
-                    return AuditEditLog.insert(AuditEditLog.createModel(AuditEditLog.EVENT_TYPE.UPDATE,MAKE_CANCEL.NAME,
+                    return AuditEditLog.insert(AuditEditLog.createModel(AuditEditLog.EVENT_TYPE.UPDATE, MAKE_CANCEL.NAME,
                         MAKE_CANCEL.GET_CONTENT(),
                         modifier, orderResult.id), {transaction: t});//创建编辑-审核日志
                 }).then(()=> {
@@ -345,23 +346,25 @@ class OrdersService {
      * @param text
      * @param modifier
      */
-    refundCoin(id, tomail, subject, text,refundcoin , modifier){
+    refundCoin(id, tomail, subject, text, refundcoin, modifier) {
+        if (refundcoin < 0) return Orders.errorPromise("退款数不能小于0");
         return this.procedureOrderBefore(id).then(({orderResult,vipResult,confirmCoin})=> {
             let changeCoin = Math.abs(confirmCoin); //需要退还的精选比
-            if(refundcoin > changeCoin) return Orders.errorPromise("退款精选币多余预约精选币");
-            return Orders.transaction(t=>{
+            if (refundcoin > changeCoin) return Orders.errorPromise("退款精选币多余预约精选币");
+            console.log(refundcoin);
+            return Orders.transaction(t=> {
                 return UsersVip.rechargeCoin(vipResult.id, refundcoin, t).then(()=> {//用户退费
                     return UsersCoinLog.cancelLog(vipResult.id, refundcoin, orderResult.id, modifier, t); //预约退款日志
                 }).then(()=> {
                     return Orders.updateOrderStatus(orderResult.id, Orders.ORDER_STATUS.MAKE_REFUND, modifier, t);//修改订单状态
-                }).then(()=>{
+                }).then(()=> {
                     let MAKE_REFUND = OrdersLog.EVENT_TYPE.MAKE_REFUND;
-                    return OrdersLog.insert(OrdersLog.createModel(orderResult.id, MAKE_REFUND.VALUE,MAKE_REFUND.TEMPLATE, null, modifier), {//创建订单日志
+                    return OrdersLog.insert(OrdersLog.createModel(orderResult.id, MAKE_REFUND.VALUE, MAKE_REFUND.TEMPLATE, null, modifier), {//创建订单日志
                         transaction: t
                     });
-                }).then(()=>{
+                }).then(()=> {
                     let MAKE_REFUND = AuditEditLog.EVENT_MODULE.ORDER_MODULE.MAKE_REFUND;
-                    return AuditEditLog.insert(AuditEditLog.createModel(AuditEditLog.EVENT_TYPE.UPDATE,MAKE_REFUND.NAME,
+                    return AuditEditLog.insert(AuditEditLog.createModel(AuditEditLog.EVENT_TYPE.UPDATE, MAKE_REFUND.NAME,
                         MAKE_REFUND.GET_CONTENT(refundcoin),
                         modifier, orderResult.id), {transaction: t});//创建编辑-审核日志
                 }).then(()=> {

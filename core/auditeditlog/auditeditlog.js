@@ -74,6 +74,7 @@ class AuditEditLog extends Base {
     }
 
     formatAuditEditLog(log){
+        log.event_date != void(0) && (log.event_date = this.formatDate(log.event_date, "yyyy-MM-dd hh:mm:ss"));
         return log;
     }
 }

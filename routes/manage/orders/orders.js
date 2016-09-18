@@ -1,5 +1,5 @@
 import express from "express";
-import {OrdersService} from './../../../service/manage';
+import {OrdersService,AuditEditLogService} from './../../../service/manage';
 const router = express.Router();
 router.post('/findpagelist', (req, res, next)=> {
     let param = req.body;
@@ -85,9 +85,10 @@ router.post('/refund', (req, res, next)=> {
         tomail = param.tomail,
         subject = param.subject,
         text = param.text,
+        refundcoin = param.refundcoin,
         modifier = param.modifier;
     next({
-        $promise: OrdersService.refundCoin(id,tomail,subject,text,modifier),
+        $promise: OrdersService.refundCoin(id,tomail,subject,text,refundcoin,modifier),
         msg: '取消失败'
     });
 });
@@ -100,5 +101,13 @@ router.post('/details', (req, res, next)=> {
         msg: '查看详情失败'
     });
 });
-
+//查询管理员操作订单
+router.post('/auditloglist', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id;
+    next({
+        $promise: AuditEditLogService.findOrderAuditEditLog(id),
+        msg: '查看操作失败'
+    });
+});
 export default router;
