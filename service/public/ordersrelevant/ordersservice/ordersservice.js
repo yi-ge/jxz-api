@@ -351,7 +351,6 @@ class OrdersService {
         return this.procedureOrderBefore(id).then(({orderResult,vipResult,confirmCoin})=> {
             let changeCoin = Math.abs(confirmCoin); //需要退还的精选比
             if (refundcoin > changeCoin) return Orders.errorPromise("退款精选币多余预约精选币");
-            console.log(refundcoin);
             return Orders.transaction(t=> {
                 return UsersVip.rechargeCoin(vipResult.id, refundcoin, t).then(()=> {//用户退费
                     return UsersCoinLog.cancelLog(vipResult.id, refundcoin, orderResult.id, modifier, t); //预约退款日志
