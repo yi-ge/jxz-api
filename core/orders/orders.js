@@ -134,14 +134,11 @@ class Orders extends Base {
      * @returns {*}
      */
     updateOrderStatus(id,order_status,modifier,t){
-        return this.update({
-            order_status:this.getOrderStatus(order_status),
-            modifier:modifier
-        },{
+        return this.update(Object.assign(this.getOrderStatus(order_status,{modifier:modifier})),{
             where:{id:id},
             transaction:t,
             lock: t.LOCK.UPDATE,
-        })
+        });
     }
 
 }

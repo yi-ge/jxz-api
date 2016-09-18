@@ -114,7 +114,7 @@ class UsersCoinLog extends Base {
     appointmentLog(vip_id,coin_money,house_name ,order_id,creater,t){
         let RESERVE = EVENT.TYPE.RESERVE;
         let template = RESERVE.TEMPLATE.replace("#酒店名称#",`#${house_name}#`)
-        return this.insert(this.createModel(vip_id, -Math.abs(coin_money),RESERVE.VALUE,template,order_id,null,STATUS.LOCKUP,null,creater,creater),{
+        return this.insert(this.createModel(vip_id, -Math.abs(coin_money),RESERVE.VALUE,template,order_id,null,STATUS.NORMAL,null,creater,creater),{
             transaction:t
         });
     }
@@ -132,10 +132,27 @@ class UsersCoinLog extends Base {
     changeAppointmentLog(vip_id,coin_money,house_name ,order_id,creater,t){
         let CHANGE_RESERVE = EVENT.TYPE.CHANGE_RESERVE;
         let template = CHANGE_RESERVE.TEMPLATE.replace("#酒店名称#",`#${house_name}#`);
-        return this.insert(this.createModel(vip_id, coin_money,CHANGE_RESERVE.VALUE,template,order_id,null,STATUS.LOCKUP,null,creater,creater),{
+        return this.insert(this.createModel(vip_id, coin_money,CHANGE_RESERVE.VALUE,template,order_id,null,STATUS.NORMAL,null,creater,creater),{
             transaction:t
         });
     }
+
+    /**
+     * 退还精选币
+     * @param vip_id
+     * @param coin_money
+     * @param order_id
+     * @param creater
+     * @param t
+     * @returns {Promise.<Instance>}
+     */
+    cancelLog(vip_id,coin_money,order_id,creater,t){
+        let RETURN = EVENT.TYPE.RETURN;
+        return this.insert(this.createModel(vip_id, coin_money,RETURN.VALUE,RETURN.TEMPLATE,order_id,null,STATUS.NORMAL,null,creater,creater),{
+            transaction:t
+        });
+    }
+
     /**
      * 充值成功以后改变状态为充值
      * @param id
@@ -172,6 +189,22 @@ class UsersCoinLog extends Base {
                 lock: t.LOCK.UPDATE
             });
         });
+    }
+
+    /**
+     * 统计预约总共消耗多少精选币
+     * @param event_id
+     */
+    sumMoney(event_id){
+        return this.findOnlyOne({
+            where:{
+                event_id:event_id,
+                event_type:{$in:[EVENT.TYPE.RESERVE.VALUE,EVENT.TYPE.CHANGE_RESERVE.VALUE]}
+            },
+            attributes:[[UsersCoinLog.databaseFn("SUM",UsersCoinLog.col('coin_money')),'moneys']]
+        }).then(result=>{
+            return result.moneys;
+        })
     }
 }
 

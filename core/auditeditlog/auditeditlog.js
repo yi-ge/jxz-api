@@ -9,7 +9,7 @@ const EVENT_TYPE = {
     DELETE:3 //删除
 };
 const EVENT_MODULE = {
-    ORDER_MODULE:{
+    ORDER_MODULE:{ //订单
         MAKE_CONFIRMED:{
             CONTENT:'扣除精选币#数量#',
             NAME:'确认流程',
@@ -23,6 +23,13 @@ const EVENT_MODULE = {
             GET_CONTENT:(coin)=>{
                 if(coin > 0) return `退还精选币￥{coin}`;
                 if(coin < 0) return `扣除精选币￥{coin}`;
+            }
+        },
+        MAKE_CANCEL:{
+            CONTENT:'退还精选币#数量#',
+            NAME:'需求变更流程',
+            GET_CONTENT:(coin)=>{
+                return this.CONTENT.replace("#数量#",coin);
             }
         }
     }
