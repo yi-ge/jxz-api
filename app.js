@@ -2,6 +2,9 @@ import express from "express";
 import path from "path";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
+import {orderTimer} from './data/startbefore'; //程序运行前执行
+
+orderTimer();
 const app = express();
 
 app.use(bodyParser.json());
@@ -12,6 +15,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 /**
  * 路由
  */
+
 import {
     wetchat,
     manage,

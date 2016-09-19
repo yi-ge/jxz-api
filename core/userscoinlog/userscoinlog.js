@@ -16,7 +16,7 @@ const EVENT = {
         },
         CHANGE_RESERVE:{ //变更预订
             VALUE:4,
-            TEMPLATE:'变更预约#酒店名称#消费使用'
+            TEMPLATE:'变更预订#酒店名称#消费使用'
         },
         RETURN: {//退还
             VALUE: 3,

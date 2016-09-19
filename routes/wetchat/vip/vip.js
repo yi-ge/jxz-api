@@ -89,5 +89,15 @@ router.post('/appointment', (req, res, next)=> {
         msg: '预约失败,请稍后再试'
     });
 });
-
+//会员币日志
+router.post('/coinlog', (req, res, next)=> {
+    let param = req.body;
+    let id = param.id,
+        page = param.page,
+        pagesize = param.pagesize;
+    next({
+        $promise: CoinLogService.findCoinLog(id,page,pagesize),
+        msg: '查询失败'
+    });
+});
 export default router;

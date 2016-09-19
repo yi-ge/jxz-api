@@ -30,6 +30,7 @@ import {
     HousesRoomPriceService,
     HousesComboService,
     OrdersService,
+    CoinLogService,
 } from './../public';
 
 
@@ -58,4 +59,5 @@ export {
     HousesComboService,
     OrdersService,
     AuditEditLogService,
+    CoinLogService,
 }

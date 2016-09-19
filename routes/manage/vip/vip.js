@@ -1,5 +1,5 @@
 import express from "express";
-import {VipService} from './../../../service/manage';
+import {VipService,CoinLogService} from './../../../service/manage';
 const router = express.Router();
 //录入用户
 router.post('/createvip', (req, res, next)=> {
@@ -34,6 +34,19 @@ router.post('/details',(req,res,next)=>{
     next({
         $promise:VipService.vipDetails(id),
         msg: '用户录入失败'
+    });
+});
+//会员币日志
+router.post('/coinlog', (req, res, next)=> {
+    let param = req.body;
+    let page = param.page,
+        pagesize = param.pagesize,
+        startDate = param.startDate,
+        endDate = param.endDate,
+        account_name = param.account_name;
+    next({
+        $promise: CoinLogService.findCoinLogPageListManage(startDate,endDate,account_name,page,pagesize),
+        msg: '查询失败'
     });
 });
 export default router;

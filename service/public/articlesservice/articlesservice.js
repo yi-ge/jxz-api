@@ -9,6 +9,7 @@ class ArticlesService {
      */
     manageAddArticles(sys_id, title, content) {
         return SysUsers.getJXZUser(sys_id).then(user=> { //获取管理员精选者
+            if(!user) return Users.errorPromise("不是精选者");
             return Users.getArticleCount(user.id).then(count=> { //统计发布的文章数
                 return Articles.transaction(t=> {
                     return Articles.insert(Articles.createModel(title, content, user.id, Articles.AUTHORTYPE.BACKSTAGE, Articles.DRAFT.NO, user.id, user.id), {

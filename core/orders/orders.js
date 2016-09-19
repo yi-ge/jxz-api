@@ -141,6 +141,23 @@ class Orders extends Base {
         });
     }
 
+    /**
+     * 查询当前时间日期没有完成的订单
+     * @returns {*}
+     */
+    findNowDateNotFinish(){
+        let startDate = new Date(),endDate = new Date();
+        endDate.setDate(endDate.getDate()+1);
+        endDate.setHours(0,0,0);
+        startDate.setHours(0,0,0);
+        return this.findList({
+            where:{
+                order_status:{$in:[ORDER_STATUS.MAKE_CONFIRMED,ORDER_STATUS.MAKE_CONFIRMED_CHANGE]},
+                expect_checkin_time:{$between:[startDate,endDate]}
+            },
+            attributes:['id','expect_checkin_time']
+        });
+    }
 }
 
 export default new Orders();

@@ -1,5 +1,7 @@
 import {Orders,OrdersLog,UsersVip,Houses,HousesRoom,Users,SysInform,AuditEditLog,UsersCoinLog} from './../../../../core';
-import Email from './../../../../data/nodemailer.config';
+import Email from './../../../../data/sendemail';
+import {UtilApi} from './../../../../data/api_fetch';
+import {orderTimer} from './../../../../data/startbefore';
 
 class OrdersService {
     /**
@@ -21,7 +23,8 @@ class OrdersService {
                     return vip;
                 });
             }).then(vip=> {
-                return Orders.insert(Orders.createModel(vip_id, vip.phone, contacts, phone,
+                let phoneValue = phone != void(0) && phone != '' ? phone : vip.account_name;
+                return Orders.insert(Orders.createModel(vip_id, vip.account_name, contacts, phoneValue,
                     Orders.ORDER_STATUS.MAKE_APPOINTMENT, vip.user_name, vip.email, house_id, vip.sex, vip_id, vip_id), {
                     transaction: t
                 });
@@ -68,7 +71,7 @@ class OrdersService {
             email != void(0) && email != '' && (updateObj.contacts_email = email);
             order_remark != void(0) && order_remark != '' && (updateObj.order_remark = order_remark);
             modifier != void(0) && modifier != '' && (updateObj.modifier = modifier);
-            order_status != void(0) && order_status != '' && (updateObj.order_status = Orders.ORDER_STATUS.WAIT_CONFIRMED);
+            order_status != void(0) && order_status == Orders.ORDER_STATUS.MAKE_APPOINTMENT && (updateObj.order_status = Orders.ORDER_STATUS.WAIT_CONFIRMED);
             return Orders.transaction(t=> {
                 return Orders.update(Object.assign(updateObj, {
                     updated_at: new Date(),
@@ -268,9 +271,22 @@ class OrdersService {
                     let MAKE_CONFIRMED = AuditEditLog.EVENT_MODULE.ORDER_MODULE.MAKE_CONFIRMED;
                     return AuditEditLog.insert(AuditEditLog.createModel(AuditEditLog.EVENT_TYPE.UPDATE,
                         MAKE_CONFIRMED.NAME, MAKE_CONFIRMED.GET_CONTENT(-changeCoin), modifier, orderResult.id), {transaction: t});//创建编辑-审核日志
-                }).then(()=> { //发送邮件
+                }).then(()=>{
+                    return UtilApi('/sms/sendintohotel',{
+                        mobile:orderResult.contacts_phone,
+                        userName:orderResult.contacts,
+                        hotelName:houseResult.name,
+                        intoDate:Orders.formatDate(orderResult.expect_checkin_time,'yyyy-MM-dd hh:mm:ss'),
+                        cost:orderResult.expect_coin,
+                        fee:vipResult.coin,
+                        days:orderResult.expect_checkin_day,
+                    });
+                }).then((result)=> { //发送邮件
                     return Email.sendMail(tomail, subject, text);
                 });
+            }).then(()=>{
+                orderTimer();
+                return orderResult;
             });
         });
     }
@@ -287,7 +303,8 @@ class OrdersService {
     confirmedChangeOrder(id, tomail, subject, text, modifier) {
         return this.procedureOrderBefore(id).then(({orderResult,vipResult,houseResult,confirmCoin})=> {
             let changeCoin = orderResult.expect_coin - Math.abs(confirmCoin); //需要扣除的精选比
-            if (orderResult.order_status !== Orders.ORDER_STATUS.WAIT_CONFIRMED) return Orders.errorPromise("订单不是待确认状态");
+            if (orderResult.order_status !== Orders.ORDER_STATUS.MAKE_CONFIRMED &&
+                orderResult.order_status !== Orders.ORDER_STATUS.MAKE_CONFIRMED_CHANGE) return Orders.errorPromise("订单不能变更");
             if (vipResult.coin < Math.abs(changeCoin)) return Orders.errorPromise("用户精选币不足");
             return Orders.transaction(t=> {
                 return UsersVip.consumeCoin(vipResult.id, changeCoin, t).then(()=> {//扣除消费精选币
@@ -306,6 +323,9 @@ class OrdersService {
                 }).then(()=> {
                     return Email.sendMail(tomail, subject, text); //发送邮件
                 });
+            }).then(()=>{
+                orderTimer();
+                return orderResult;
             });
         });
     }
@@ -334,6 +354,9 @@ class OrdersService {
                 }).then(()=> {
                     return Email.sendMail(tomail, subject, text); //发送邮件
                 });
+            }).then(()=>{
+                orderTimer();
+                return orderResult;
             });
         });
     }
@@ -369,8 +392,52 @@ class OrdersService {
                 }).then(()=> {
                     return Email.sendMail(tomail, subject, text); //发送邮件
                 });
-            })
+            }).then(()=>{
+                orderTimer();
+                return orderResult;
+            });
         });
     }
+
+    /**
+     * 订单已完成
+     * @param id
+     * @param tomail
+     * @param subject
+     * @param text
+     * @param refundcoin
+     * @param modifier
+     */
+    finishOrder(id,modifier){
+        return this.procedureOrderBefore(id).then(({orderResult,houseResult,vipResult})=> {
+            return Orders.transaction(t=>{
+                return Orders.updateOrderStatus(orderResult.id, Orders.ORDER_STATUS.MAKE_FINISH, modifier, t).then(()=>{
+                    let MAKE_FINISH = OrdersLog.EVENT_TYPE.MAKE_FINISH;
+                    return OrdersLog.insert(OrdersLog.createModel(orderResult.id, MAKE_FINISH.VALUE, MAKE_FINISH.TEMPLATE, null, modifier), {//创建订单日志
+                        transaction: t
+                    }).then(()=>{
+                        return UtilApi('/sms/sendintohotel',{
+                            mobile:orderResult.contacts_phone,
+                            userName:orderResult.contacts,
+                            hotelName:houseResult.name,
+                            url:'http:/www.baidu.com'
+                        }).then(result=>{
+                            if(result.code != 0) return Orders.errorPromise("短信发送失败");
+                            return orderResult;
+                        });
+                    });
+                });
+            });
+        });
+    }
+
+    /**
+     * 服务器时间没有入住用户
+     * @returns {*}
+     */
+    findNowDateNotFinish(){
+        return Orders.findNowDateNotFinish();
+    }
+
 }
 export default new OrdersService();

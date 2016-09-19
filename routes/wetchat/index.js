@@ -8,8 +8,6 @@ import region from './region';
 import syscoin from './syscoin';
 import orders from './orders';
 
-import Email from './../../data/nodemailer.config';
-
 /**
  * 微信端 用户模块
  */
