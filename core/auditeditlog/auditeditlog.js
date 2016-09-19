@@ -22,8 +22,8 @@ const EVENT_MODULE = {
             CONTENT:'扣除精选币#数量#',
             NAME:'需求变更流程',
             GET_CONTENT:(coin)=>{
-                if(coin > 0) return `退还精选币${coin}`;
-                if(coin < 0) return `扣除精选币${coin}`;
+                if(coin >= 0) return `退还精选币${coin}`;
+                else if(coin < 0) return `扣除精选币${coin}`;
             }
         },
         MAKE_CANCEL:{

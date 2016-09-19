@@ -423,7 +423,6 @@ class OrdersService {
                             url:'http:/www.baidu.com'
                         }).then(result=>{
                             if(result.code != 0) return Orders.errorPromise("短信发送失败");
-                            return orderResult;
                         });
                     });
                 });

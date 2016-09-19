@@ -12,6 +12,7 @@ const config = process.env.NODE_ENV ? {
     database: process.env.dbName,
     username: process.env.dbUsername,
     password: process.env.dbPassword,
+
 } : localhost;
 const sequelize = new Sequelize(config.database, config.username, config.password, {
     host: config.host,

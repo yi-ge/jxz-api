@@ -7,7 +7,6 @@ const PARAM = {
 
 class NodeMailerConfig{
     constructor(){}
-
     resizeInit(){
         let sys_email,sys_email_password,host;
         return SysParameterService.findKey(PARAM.EMAIL).then(email=>{
@@ -61,9 +60,12 @@ class NodeMailerConfig{
         return this.resizeInit().then(({email,transport})=>{
             return new Promise((resolve,reject)=>{
                 transport.sendMail(this.getMailOptions(email,tomail,subject,text),(error,info)=>{
-                    if(error) reject(error);
+                    if(error) {
+                        console.log(error);
+                        reject("邮件发送失败");
+                    }
                     resolve(info);
-                })
+                });
             });
         });
     }

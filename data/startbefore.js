@@ -11,7 +11,7 @@ class OrderTime{
         this.dayTimer = null;
         this.sendTimer = null;
         this.maxSendNumber = 3;
-        this.advanceTimer = 3600;
+        this.advanceTimer = 0;
     }
 
     orderTimer(){

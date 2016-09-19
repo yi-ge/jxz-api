@@ -50,7 +50,7 @@ class CoinLogService {
         if (endDate != void(0)) {
             endDate = new Date(endDate);
             endDate = endDate.setDate(endDate.getDate() + 1);
-            endDate = Houses.formatDate(endDate, 'yyyy-MM-dd');
+            endDate = UsersCoinLog.formatDate(endDate, 'yyyy-MM-dd');
         }
         if (!!startDate && !!endDate) where['created_at'] = {$between: [startDate, endDate]};
         else if (!!startDate) where['created_at'] = {$gte: startDate};
