@@ -17,7 +17,7 @@ class HousesRoomService {
                 return HousesRoom.insert(HousesRoom.createModel(house_id, houses_type, room_desc, creater, modifier || creater), {transaction: t}).then(room=> {
                     returnResult = room;
                     return HousesRoomPrice.bulkCreate(HousesRoomPrice.createListModel(house_id, room.id, roomprices, creater, modifier || creater));
-                }).then(result=> {
+                }).then(()=> {
                     return returnResult;
                 });
             });
