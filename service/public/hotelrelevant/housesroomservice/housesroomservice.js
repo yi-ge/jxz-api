@@ -10,7 +10,7 @@ class HousesRoomService {
      */
     addHousesRoom(house_id, houses_type, room_desc, roomprices, creater, modifier) {
         if (!house_id) return HousesRoom.errorPromise("参数不正确");
-        return HousesRoom.count({where: {houses_type: houses_type}}).then(count=> {
+        return HousesRoom.count({where: {houses_id:house_id,houses_type: houses_type}}).then(count=> {
             if (count != 0) return HousesRoom.errorPromise("房型名称重复");
             return HousesRoom.transaction(t=> {
                 let returnResult;
