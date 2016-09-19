@@ -57,7 +57,7 @@ class HousesKeywordService {
      */
     destroyHousesKeyword(id){
         return HousesKeyword.transaction(t=>{
-            return HousesKeyword.destroy({where:{id:id}});
+            return HousesKeyword.destroy({where:{id:id},transaction:t});
         })
     }
 

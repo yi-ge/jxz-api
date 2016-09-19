@@ -140,7 +140,7 @@ class ResourceService {
             return count;
         }).then(()=>{
             return SysResources.transaction(t=>{
-                return SysResources.destroy({where:{id:id}});
+                return SysResources.destroy({where:{id:id},transaction:t});
             });
         });
     }

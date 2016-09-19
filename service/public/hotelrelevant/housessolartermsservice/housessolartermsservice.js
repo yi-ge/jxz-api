@@ -50,7 +50,8 @@ class HousesSolarTermsService {
         }
         return HousesSolarTerms.transaction(t=> {
             return HousesSolarTerms.destroy({
-                where: {houses_id: house_id}
+                where: {houses_id: house_id},
+                transaction:t
             }).then((result)=> {
                 return HousesSolarTerms.bulkCreate(list, {
                     transaction: t,
@@ -98,7 +99,7 @@ class HousesSolarTermsService {
      */
     destroyHousesSolarTerms(id) {
         return HousesSolarTerms.transaction(t=> {
-            return HousesSolarTerms.destroy({where: {id: id}});
+            return HousesSolarTerms.destroy({where: {id: id},transaction:t});
         });
     }
 

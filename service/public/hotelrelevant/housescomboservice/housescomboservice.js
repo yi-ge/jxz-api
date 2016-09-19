@@ -81,7 +81,7 @@ class HousesComboService {
      */
     destroy(id){
         return HousesCombo.transaction(t=>{
-            return HousesCombo.destroy({where:{id:id}});
+            return HousesCombo.destroy({where:{id:id},transaction:t});
         }).then(result=>{
             return result;
         });
