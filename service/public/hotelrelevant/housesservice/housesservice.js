@@ -44,6 +44,7 @@ class HousesService {
         !!is_putaway && (is_putaway == Houses.ISPUTAWAY.NO || is_putaway == Houses.ISPUTAWAY.YES) && (where['is_putaway'] = is_putaway);
         !!name && (where['name'] = {$like: `%${name}%`});
         !!sys_id && (where['creater'] = sys_id);
+        console.log(where);
         return Houses.count({where: where}).then(count=> {
             return Houses.findPage({where: where,}, page, count, 2, pagesize);
         }).then(result=> {

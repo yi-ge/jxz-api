@@ -398,11 +398,11 @@ router.post('/edithouse', (req, res, next)=> {
 //查询酒店列表
 router.post('/findhouses', (req, res, next)=> {
     let param = req.body;
-    let name = param.name,
+    let name = param.house_name,
         sys_id = param.sys_id,
         page = param.page,
         pagesize = param.pagesize,
-        is_putaway = param.is_putaway,
+        is_putaway = param.status,
         endDate = param.endDate,
         startDate = param.startDate;
     next({
