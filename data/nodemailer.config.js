@@ -6,32 +6,33 @@ const PARAM = {
 };
 
 class NodeMailerConfig{
-    constructor(){
-        this.resizeInit();
-    }
+    constructor(){}
 
     resizeInit(){
         let sys_email,sys_email_password,host;
-        SysParameterService.findKey(PARAM.EMAIL).then(email=>{
+        return SysParameterService.findKey(PARAM.EMAIL).then(email=>{
             sys_email = email.param_value;
             return SysParameterService.findKey(PARAM.PASSWORD);
         }).then(password=>{
             sys_email_password = password.param_value;
             host = sys_email.replace(/^[a-zA-Z1-9]+\@{1}/ig,"smtp.");
-            this.transport = NodeMailer.createTransport({
+            console.log(sys_email);
+            console.log(sys_email_password);
+            console.log(host);
+            return {
+                email:sys_email,
+                password:sys_email_password,
                 host:host,
                 port:465,
-                auth:{
-                    user:sys_email,
-                    pass:sys_email_password,//"lswuaddrlhrxbjaa" //tipilbmymrwlbjbh
-                }
-            });
-            this.host = host;
-            this.email = sys_email;
-            this.password = sys_email_password;
-            return true;
-        }).catch(e=>{
-            process.exit();
+                transport:NodeMailer.createTransport({
+                    host:host,
+                    port:465,
+                    auth:{
+                        user:sys_email,
+                        pass:sys_email_password,//"lswuaddrlhrxbjaa" //tipilbmymrwlbjbh
+                    }
+                })
+            };
         });
     }
 
@@ -40,9 +41,9 @@ class NodeMailerConfig{
      * @param subject 邮件头
      * @param text 类容
      */
-    getMailOptions(tomail,subject,text){
+    getMailOptions(formemail,tomail,subject,text){
         return {
-            from: this.email,
+            from: formemail,
             to: tomail,
             subject: subject,
             text: text
@@ -57,14 +58,15 @@ class NodeMailerConfig{
      * @returns {Promise}
      */
     sendMail(tomail,subject,text){
-        return new Promise((resolve,reject)=>{
-            this.transport.sendMail(this.getMailOptions(tomail,subject,text),(error,info)=>{
-                if(error) reject(error);
-                resolve(info);
+        return this.resizeInit().then(({email,transport})=>{
+            return new Promise((resolve,reject)=>{
+                transport.sendMail(this.getMailOptions(email,tomail,subject,text),(error,info)=>{
+                    if(error) reject(error);
+                    resolve(info);
+                })
             });
         });
     }
 }
 
 export default new NodeMailerConfig();
-
