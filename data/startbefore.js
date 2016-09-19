@@ -51,16 +51,12 @@ class OrderTime{
             },intervalTime);
         }
     }
-
     init(){
         this.dayTimer = this.orderTimer();
         return this.findCatch().then(()=>{
             if(this.sendCatch.length > 0) return this.sendOrderTimer();
         });
     }
-
-
-
     /**
      * 将当天没有完成的订单放入缓存并排序
      */
