@@ -8,15 +8,17 @@ class HousesRoomService {
      * @param creater
      * @returns {*}
      */
-    addHousesRoom(house_id, houses_type, room_desc, roomprices, creater, modifier) {
+    addHousesRoom(house_id, houses_type, room_desc, roomprices, creater, modifier,t1) {
         if (!house_id) return HousesRoom.errorPromise("参数不正确");
         return HousesRoom.count({where: {houses_id:house_id,houses_type: houses_type}}).then(count=> {
             if (count != 0) return HousesRoom.errorPromise("房型名称重复");
             return HousesRoom.transaction(t=> {
                 let returnResult;
-                return HousesRoom.insert(HousesRoom.createModel(house_id, houses_type, room_desc, creater, modifier || creater), {transaction: t}).then(room=> {
+                return HousesRoom.insert(HousesRoom.createModel(house_id, houses_type, room_desc, creater, modifier || creater), {transaction: t1 || t}).then(room=> {
                     returnResult = room;
-                    return HousesRoomPrice.bulkCreate(HousesRoomPrice.createListModel(house_id, room.id, roomprices, creater, modifier || creater));
+                    return HousesRoomPrice.bulkCreate(HousesRoomPrice.createListModel(house_id, room.id, roomprices, creater, modifier || creater),{
+                        transaction:t1 || t
+                    });
                 }).then(()=> {
                     return returnResult;
                 });
@@ -36,8 +38,8 @@ class HousesRoomService {
      */
     editHousesRoom(id, house_id, houses_type, room_desc, roomprices, creater, modifier) {
         return HousesRoom.transaction(t=> {
-            return this.destroy(id).then(result=> {
-                return this.addHousesRoom(house_id, houses_type, room_desc, roomprices, creater, modifier);
+            return this.destroy(id,t).then(result=> {
+                return this.addHousesRoom(house_id, houses_type, room_desc, roomprices, creater, modifier,t);
             });
         }).then(result=> {
             return HousesRoom.findById(result.id, {
@@ -80,11 +82,11 @@ class HousesRoomService {
      * @param id
      * @returns {*}
      */
-    destroy(id) {
+    destroy(id,t1) {
         let whereRoom = {id: id}, whereRoomPrice = {houses_room_id: id};
         return HousesRoom.transaction(t=> {
-            return HousesRoom.destroy({where: whereRoom}).then(result=> {
-                return HousesRoomPrice.destroy({where: whereRoomPrice});
+            return HousesRoom.destroy({where: whereRoom,transaction:t1 || t}).then(result=> {
+                return HousesRoomPrice.destroy({where: whereRoomPrice,transaction:t1 || t});
             }).then(result=> {
                 return result;
             });
