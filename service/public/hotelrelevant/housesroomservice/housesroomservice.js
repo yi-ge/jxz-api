@@ -18,7 +18,6 @@ class HousesRoomService {
                     returnResult = room;
                     return HousesRoomPrice.bulkCreate(HousesRoomPrice.createListModel(house_id, room.id, roomprices, creater, modifier || creater));
                 }).then(result=> {
-                    console.log(result);
                     return returnResult;
                 });
             });
